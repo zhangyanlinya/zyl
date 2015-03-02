@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <com.yanlin.GameView
+            android:id="@+id/gameView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dip" >
+
+        <FrameLayout
+            android:layout_width="126dip"
+            android:layout_height="126dip"
+            android:layout_marginLeft="6dip" >
+
+            <Button
+                android:id="@+id/up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:background="@drawable/selector_up" />
+
+            <Button
+                android:id="@+id/left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:background="@drawable/left" />
+
+            <Button
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:background="@drawable/right" />
+
+            <Button
+                android:id="@+id/down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:background="@drawable/down" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="146dip"
+            android:layout_height="116dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dip" >
+
+            <Button
+                android:id="@+id/bartlett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:background="@drawable/btn_bartlett" />
+
+            <Button
+                android:id="@+id/sup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/sup" />
+
+            <TextView
+                android:id="@+id/bartlett_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:layout_marginBottom="26dip"
+                android:layout_marginLeft="12dip"
+                android:textColor="#FF0000" />
+
+            <TextView
+                android:id="@+id/sup_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="26dip"
+                android:textColor="#FF0000" />
+
+            <Button
+                android:id="@+id/fire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:background="@drawable/enter" />
+        </FrameLayout>
+    </RelativeLayout>
+
+</LinearLayout>

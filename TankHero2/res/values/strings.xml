@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	  <string name="userid">用户名</string>
+    <string name="password">口令</string>
+    <string name="userid_default"></string>
+    <string name="password_default"></string>
+    <string name="ip_port">设置</string>
+    <string name="ip">IP地址</string>
+    <string name="ip_default">192.168.0.199</string>
+    <string name="port">UDP端口</string>
+    <string name="port_default">22221</string>
+    <string name="SystemTips">提示</string>
+    <string name="Timeout">接连超时，请检查IP和端口。</string>
+    <string name="hello">Hello World, AndroidTankActivity!</string>
+    <string name="app_name">坦克英雄</string>
+
+</resources>

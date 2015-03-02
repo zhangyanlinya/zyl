@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/tank_background"
+    android:orientation="vertical"
+    android:weightSum="1" >
+    <Button
+        android:id="@+id/Btn_single"
+        android:layout_width="180px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="单人模式" />
+    <Button
+        android:id="@+id/Btn_network"
+        android:layout_width="180px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="网络模式" />
+    <CheckBox
+        android:id="@+id/ipPortCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15px"
+        android:text="@string/ip_port" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0px"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/TextIp"
+            style="@style/text_field_style"
+            android:layout_width="70px"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/ip"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/EditText03"
+            style="@style/input_text_field_style"
+            android:layout_width="200px"
+            android:layout_height="45px"
+            android:maxLength="15"
+            android:singleLine="true"
+            android:text="@string/ip_default"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0px"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/TextPort"
+            style="@style/text_field_style"
+            android:layout_width="70px"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/port"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/EditText04"
+            style="@style/input_text_field_style"
+            android:layout_width="200px"
+            android:layout_height="45px"
+            android:maxLength="5"
+            android:singleLine="true"
+            android:text="@string/port_default"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</LinearLayout>
