@@ -1,8 +1,10 @@
-package com.yanlin;
+package com.yanlin.entity;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.yanlin.R;
+import com.yanlin.R.drawable;
 import com.yanlin.activity.AndroidTankActivity;
 import com.yanlin.util.CollisionUtil;
 import com.yanlin.view.GameView;

@@ -2,8 +2,8 @@ package com.yanlin.thread;
 
 import java.util.ArrayList;
 
-import com.yanlin.Explode;
-import com.yanlin.Particle;
+import com.yanlin.entity.Explode;
+import com.yanlin.entity.Particle;
 
 public class ParticleThread extends Thread {
 	boolean isRunning;

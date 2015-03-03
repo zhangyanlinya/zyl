@@ -1,4 +1,4 @@
-package com.yanlin;
+package com.yanlin.entity;
 /**
  * ����
  * @author ZhangYanlin

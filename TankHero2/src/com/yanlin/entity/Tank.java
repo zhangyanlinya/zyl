@@ -1,7 +1,9 @@
-package com.yanlin;
+package com.yanlin.entity;
 
 import java.util.List;
 
+import com.yanlin.R;
+import com.yanlin.R.raw;
 import com.yanlin.activity.AndroidTankActivity;
 import com.yanlin.util.CollisionUtil;
 import com.yanlin.view.GameView;

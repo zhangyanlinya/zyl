@@ -2,11 +2,11 @@ package com.yanlin.activity;
 
 import java.util.Random;
 
-import com.yanlin.Bomber;
-import com.yanlin.Direction;
 import com.yanlin.R;
 import com.yanlin.R.id;
 import com.yanlin.R.layout;
+import com.yanlin.entity.Bomber;
+import com.yanlin.entity.Direction;
 import com.yanlin.view.GameView;
 
 import android.annotation.SuppressLint;

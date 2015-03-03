@@ -30,16 +30,16 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-import com.yanlin.Bomber;
-import com.yanlin.Direction;
-import com.yanlin.Explode;
-import com.yanlin.MapData;
-import com.yanlin.Missile;
-import com.yanlin.Prize;
 import com.yanlin.R;
-import com.yanlin.Tank;
-import com.yanlin.Wall;
 import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.entity.Bomber;
+import com.yanlin.entity.Direction;
+import com.yanlin.entity.Explode;
+import com.yanlin.entity.MapData;
+import com.yanlin.entity.Missile;
+import com.yanlin.entity.Prize;
+import com.yanlin.entity.Tank;
+import com.yanlin.entity.Wall;
 import com.yanlin.thread.BoomThread;
 
 /**
