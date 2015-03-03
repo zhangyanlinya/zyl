@@ -102,7 +102,7 @@ public class Missile implements Comparable<Missile>{
 		}else{
 			queue.clear();
 		}
-		for(int i = 0; i< 10; i++){
+		for(int i = 0; i< 20; i++){
 			Missile m  = new Missile();
 			try {
 				queue.put(m);
