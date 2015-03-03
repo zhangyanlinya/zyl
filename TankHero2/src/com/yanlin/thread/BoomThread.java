@@ -1,9 +1,9 @@
 package com.yanlin.thread;
 
-import com.yanlin.view.GameView;
-
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+
+import com.yanlin.view.GameView;
 
 /*
  * ����Ϊ��ӭ����ĺ�̨�̣߳�����ʱ������Ļ

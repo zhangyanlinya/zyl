@@ -2,12 +2,6 @@ package com.yanlin.entity;
 
 import java.util.List;
 
-import com.yanlin.R;
-import com.yanlin.R.raw;
-import com.yanlin.activity.AndroidTankActivity;
-import com.yanlin.util.CollisionUtil;
-import com.yanlin.view.GameView;
-
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,13 +11,19 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 
+import com.yanlin.R;
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.entity.abstr.Sprite;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 /**
  * ̹�˶���
  * 
  * @author ZhangYanlin
  * 
  */
-public class Tank {
+public class Tank  extends Sprite{
 
 	public int speed = 2;
 	public static final int TANK_WIDTH = 16;

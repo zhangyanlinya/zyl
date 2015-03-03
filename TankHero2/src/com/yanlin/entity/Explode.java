@@ -2,14 +2,14 @@ package com.yanlin.entity;
 
 import java.util.List;
 
-import com.yanlin.util.CollisionUtil;
-import com.yanlin.view.GameView;
-
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+
+import com.yanlin.entity.abstr.Sprite;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
 
 /**
  * ��ըЧ��
@@ -17,7 +17,7 @@ import android.graphics.Paint;
  * @author ZhangYanlin
  * 
  */
-public class Explode {
+public class Explode  extends Sprite{
 	int x, y;
 	int radius;
 	GameView gameView;

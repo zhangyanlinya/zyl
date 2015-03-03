@@ -1,10 +1,5 @@
 package com.yanlin.activity;
 
-import com.yanlin.R;
-import com.yanlin.R.id;
-import com.yanlin.R.layout;
-import com.yanlin.view.GameView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yanlin.R;
+import com.yanlin.view.GameView;
 
 public class LogonActivity extends Activity {
 

@@ -2,13 +2,6 @@ package com.yanlin.activity;
 
 import java.util.Random;
 
-import com.yanlin.R;
-import com.yanlin.R.id;
-import com.yanlin.R.layout;
-import com.yanlin.entity.Bomber;
-import com.yanlin.entity.Direction;
-import com.yanlin.view.GameView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +15,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.yanlin.R;
+import com.yanlin.entity.Bomber;
+import com.yanlin.entity.Direction;
+import com.yanlin.view.GameView;
 
 public class AndroidTankActivity extends Activity {
 	private byte[] lock = new byte[0];

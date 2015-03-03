@@ -3,12 +3,6 @@ package com.yanlin.entity;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import com.yanlin.R;
-import com.yanlin.R.drawable;
-import com.yanlin.activity.AndroidTankActivity;
-import com.yanlin.util.CollisionUtil;
-import com.yanlin.view.GameView;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,13 +10,19 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.yanlin.R;
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.entity.abstr.Sprite;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 /**
  * �ӵ�
  * 
  * @author ZhangYanlin
  * 
  */
-public class Missile implements Comparable<Missile>{
+public class Missile  extends Sprite implements Comparable<Missile>{
 	int x, y;
 	int speed=6;
 	public static final int WIDTH = 5;

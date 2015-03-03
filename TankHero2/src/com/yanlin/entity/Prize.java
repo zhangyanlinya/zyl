@@ -2,12 +2,6 @@ package com.yanlin.entity;
 
 import java.util.List;
 
-import com.yanlin.R;
-import com.yanlin.R.raw;
-import com.yanlin.util.CollisionUtil;
-import com.yanlin.view.GameView;
-
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,13 +9,18 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 
+import com.yanlin.R;
+import com.yanlin.entity.abstr.Sprite;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 /**
  * ����
  * 
  * @author ZhangYanlin
  * 
  */
-public class Prize {
+public class Prize  extends Sprite{
 	public static final int BOOLD = 0;
 	public static final int SPEED = 1;
 	public static final int MOVE = 2;

@@ -2,19 +2,19 @@ package com.yanlin.entity;
 
 import java.util.Random;
 
-import com.yanlin.activity.AndroidTankActivity;
-import com.yanlin.view.GameView;
-
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.entity.abstr.Sprite;
+import com.yanlin.view.GameView;
 
 /**
  * 
  * @author ZhangYanlin
  * 
  */
-public class Bomber {
+public class Bomber extends Sprite{
 	int x;
 	int y;
 	int speed;
