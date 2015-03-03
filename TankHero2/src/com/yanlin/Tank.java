@@ -228,7 +228,7 @@ public class Tank {
 
 	// �����Ͳ�ķ��������ƶ�
 	public void move() {
-		if (hitSprites(GameView.walls) || hitTank(gameView.tank)
+		if (hitWalls(GameView.walls) || hitTank(gameView.tank)
 				|| hitTanks(GameView.tanks)) {
 
 		} else {
@@ -358,7 +358,7 @@ public class Tank {
 	}
 
 	// ���ϰ�����ײ
-	public boolean hitSprites(List<Wall> walls) {
+	public boolean hitWalls(List<Wall> walls) {
 		if (walls.size() > 0) {
 			for (Wall s : walls) {
 				if (this.live
@@ -489,7 +489,7 @@ public class Tank {
 
 	// ������
 	public void recoil(Direction dir) {
-		if (hitSprites(GameView.walls) || hitTank(gameView.tank)
+		if (hitWalls(GameView.walls) || hitTank(gameView.tank)
 				|| hitTanks(GameView.tanks)) {
 		} else {
 			if (x < TANK_WIDTH / 2) {
