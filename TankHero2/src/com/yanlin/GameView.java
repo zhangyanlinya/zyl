@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
@@ -329,17 +330,24 @@ public class GameView extends SurfaceView implements Callback, Runnable {
 	public void playMusic(int id) {
 		if (soundFlag) {
 			mediaPlayer = MediaPlayer.create(getContext(), id);
-			mediaPlayer.start();
+			mediaPlayer.setOnPreparedListener(new OnPreparedListener(){
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					mediaPlayer.start();
+				}
+				
+			});
 			mediaPlayer
 					.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
 						@Override
 						public void onCompletion(MediaPlayer mp) {
 							try {
-								mediaPlayer.stop();
+//								mediaPlayer.stop();
 								mediaPlayer.release();
 							} catch (IllegalStateException e) {
 								Log.e("Media", "mp3 err");
+								e.printStackTrace();
 							}
 						}
 					});
