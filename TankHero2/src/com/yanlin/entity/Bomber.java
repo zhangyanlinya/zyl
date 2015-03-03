@@ -61,7 +61,7 @@ public class Bomber {
 			Missile m = Missile.valueOf(100, x + i*140 + r.nextInt(60)-140, y
 					+ bm.getHeight() / 2 + r.nextInt(110)+80, Direction.U,
 					true, gv, 2,100);
-			GameView.missiles.add(m);
+			GameView.missiles.add(m); 
 		}
 		if(gv.soundFlag)
 		gv.sp.play(gv.soundMap.get(1), 100, 100, 0, 0, 0);
