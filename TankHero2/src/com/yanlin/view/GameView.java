@@ -6,21 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.yanlin.Bomber;
-import com.yanlin.Direction;
-import com.yanlin.Explode;
-import com.yanlin.MapData;
-import com.yanlin.Missile;
-import com.yanlin.Prize;
-import com.yanlin.R;
-import com.yanlin.Tank;
-import com.yanlin.Wall;
-import com.yanlin.R.drawable;
-import com.yanlin.R.raw;
-import com.yanlin.activity.AndroidTankActivity;
-import com.yanlin.thread.BoomThread;
-
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -44,6 +29,18 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
+
+import com.yanlin.Bomber;
+import com.yanlin.Direction;
+import com.yanlin.Explode;
+import com.yanlin.MapData;
+import com.yanlin.Missile;
+import com.yanlin.Prize;
+import com.yanlin.R;
+import com.yanlin.Tank;
+import com.yanlin.Wall;
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.thread.BoomThread;
 
 /**
  * SurfaceView
