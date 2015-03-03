@@ -87,9 +87,9 @@ public class Missile implements Comparable<Missile>{
 		return m;
 	}
 	
-	static{
-		initAllMissile();
-	}
+//	static{
+//		initAllMissile();
+//	}
 	/**
 	 * all missile cache
 	 */
