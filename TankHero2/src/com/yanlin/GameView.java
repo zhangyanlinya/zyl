@@ -133,6 +133,7 @@ public class GameView extends SurfaceView implements Callback, Runnable {
 	private AlertDialog ad;
 	
 	//test remote edit;
+	//test remote edit2;
 	public Missile tempMissile ;
 
 	@SuppressLint("HandlerLeak")
