@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.constant.Direction;
 import com.yanlin.entity.abstr.Sprite;
 import com.yanlin.view.GameView;
 

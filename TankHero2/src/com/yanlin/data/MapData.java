@@ -1,4 +1,4 @@
-package com.yanlin.entity;
+package com.yanlin.data;
 
 /**
  * ��Ϸ��ͼ���

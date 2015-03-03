@@ -17,8 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.yanlin.R;
+import com.yanlin.constant.Direction;
 import com.yanlin.entity.Bomber;
-import com.yanlin.entity.Direction;
 import com.yanlin.view.GameView;
 
 public class AndroidTankActivity extends Activity {

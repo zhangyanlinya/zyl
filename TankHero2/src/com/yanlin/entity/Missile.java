@@ -12,6 +12,7 @@ import android.graphics.Rect;
 
 import com.yanlin.R;
 import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.constant.Direction;
 import com.yanlin.entity.abstr.Sprite;
 import com.yanlin.util.CollisionUtil;
 import com.yanlin.view.GameView;

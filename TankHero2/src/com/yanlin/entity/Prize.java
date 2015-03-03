@@ -10,6 +10,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 
 import com.yanlin.R;
+import com.yanlin.constant.Direction;
 import com.yanlin.entity.abstr.Sprite;
 import com.yanlin.util.CollisionUtil;
 import com.yanlin.view.GameView;

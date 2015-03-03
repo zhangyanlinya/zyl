@@ -33,7 +33,6 @@ public class Explode  extends Sprite{
 	Matrix m = new Matrix();
 	int holex;
 	int holey;
-	public ParticleSet ps;
 
 	// ParticleThread pt;
 

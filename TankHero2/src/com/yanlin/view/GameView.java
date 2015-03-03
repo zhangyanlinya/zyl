@@ -32,10 +32,10 @@ import android.view.SurfaceView;
 
 import com.yanlin.R;
 import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.constant.Direction;
+import com.yanlin.data.MapData;
 import com.yanlin.entity.Bomber;
-import com.yanlin.entity.Direction;
 import com.yanlin.entity.Explode;
-import com.yanlin.entity.MapData;
 import com.yanlin.entity.Missile;
 import com.yanlin.entity.Prize;
 import com.yanlin.entity.Tank;
