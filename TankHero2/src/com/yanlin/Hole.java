@@ -1,7 +1,9 @@
 package com.yanlin;
 
+import com.yanlin.view.GameView;
+
 /**
- * ±¬Õ¨¿Ó
+ * ï¿½ï¿½Õ¨ï¿½ï¿½
  * @author ZhangYanlin
  */
 import android.graphics.Canvas;

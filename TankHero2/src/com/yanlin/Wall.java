@@ -2,6 +2,10 @@ package com.yanlin;
 
 import java.util.List;
 
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;

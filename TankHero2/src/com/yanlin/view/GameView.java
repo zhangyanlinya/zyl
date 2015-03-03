@@ -1,10 +1,24 @@
-package com.yanlin;
+package com.yanlin.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import com.yanlin.Bomber;
+import com.yanlin.Direction;
+import com.yanlin.Explode;
+import com.yanlin.MapData;
+import com.yanlin.Missile;
+import com.yanlin.Prize;
+import com.yanlin.R;
+import com.yanlin.Tank;
+import com.yanlin.Wall;
+import com.yanlin.R.drawable;
+import com.yanlin.R.raw;
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.thread.BoomThread;
 
 
 import android.annotation.SuppressLint;
@@ -50,69 +64,69 @@ public class GameView extends SurfaceView implements Callback, Runnable {
 	Thread thead;
 	private Context context;
 	public Handler handler;
-	Tank tank;
+	public Tank tank;
 	// ��Ϸģʽ
-	static boolean single;
+	public static boolean single;
 	// ����������
-	int bomber_num;
+	public int bomber_num;
 	// ��Ϸ״̬
-	int status;
+	public int status;
 	BoomThread bt;
-	static Random random = new Random();
+	public static Random random = new Random();
 	SurfaceHolder mSurfaceHolder = null;
-	boolean mIsRunning = true;
+	public boolean mIsRunning = true;
 	boolean flag;
-	boolean soundFlag = true;
-	Paint paint = new Paint();
-	Paint paint2 = new Paint();
-	Paint paint3 = new Paint();
+	public boolean soundFlag = true;
+	public Paint paint = new Paint();
+	public Paint paint2 = new Paint();
+	public Paint paint3 = new Paint();
 
-	Point point;
+	public Point point;
 	// �ڼ���
-	int level = 1;
+	public int level = 1;
 	// ��ǰ�ؿ�
-	int[][] currentMap;
-	Canvas mCanvas;
+	public int[][] currentMap;
+	public Canvas mCanvas;
 	// �ְ�
-	Bitmap steelTile;
+	public Bitmap steelTile;
 	// ש
-	Bitmap zhuanTile;
+	public Bitmap zhuanTile;
 	// ˮ
-	Bitmap shuiTile;
+	public Bitmap shuiTile;
 	// �ݵ�
-	Bitmap grassTile;
+	public Bitmap grassTile;
 	// ���
-	Bitmap kingTile;
+	public Bitmap kingTile;
 	// �з�̹��
-	Bitmap enemyTank;
+	public Bitmap enemyTank;
 	// �ѷ�̹��
-	Bitmap myTank;
+	public Bitmap myTank;
 
-	Bitmap hole;
-	Bitmap speed;
-	Bitmap move;
-	Bitmap attack;
-	Bitmap defence;
-	Bitmap bomber;
-	Bitmap[] bmpBoom;
+	public Bitmap hole;
+	public Bitmap speed;
+	public Bitmap move;
+	public Bitmap attack;
+	public Bitmap defence;
+	public Bitmap bomber;
+	public Bitmap[] bmpBoom;
 
-	Bitmap superm;
-	Bitmap mybomber;
-	Bitmap enemybomber;
-	Bitmap boomfirst;
-	Bitmap blood;
-	Bitmap bartlett;
-	Bitmap visible;
-	Bitmap background;
-	Bitmap mine;
+	public Bitmap superm;
+	public Bitmap mybomber;
+	public Bitmap enemybomber;
+	public Bitmap boomfirst;
+	public Bitmap blood;
+	public Bitmap bartlett;
+	public Bitmap visible;
+	public Bitmap background;
+	public Bitmap mine;
 
 //	RectF oval;
 //	RectF oval3;
 
 	Wall wall;
 	MediaPlayer mediaPlayer;
-	SoundPool sp;
-	Map<Integer, Integer> soundMap;
+	public SoundPool sp;
+	public Map<Integer, Integer> soundMap;
 	// �ϰ��Ｏ��
 	public static final List<Wall> walls = new ArrayList<Wall>();
 	// �ӵ�����
@@ -648,6 +662,7 @@ public class GameView extends SurfaceView implements Callback, Runnable {
 		return false;
 	}
 
+	@SuppressLint("WrongCall")
 	private void draw(Canvas canvas, int frameCount) {
 		// onDrawController(canvas);
 		// if (holes.size() > 0) {

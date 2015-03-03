@@ -2,6 +2,9 @@ package com.yanlin;
 
 import java.util.Random;
 
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.view.GameView;
+
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

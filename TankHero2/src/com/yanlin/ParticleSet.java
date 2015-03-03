@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.graphics.Color;
 
 public class ParticleSet {
-	ArrayList<Particle> particleSet;  
+	public ArrayList<Particle> particleSet;  
     public ParticleSet(){  
         particleSet = new ArrayList<Particle>();  
     }  

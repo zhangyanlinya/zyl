@@ -2,6 +2,10 @@ package com.yanlin;
 
 import java.util.List;
 
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -19,38 +23,39 @@ import android.graphics.Rect;
  */
 public class Tank {
 
-	int speed = 2;
+	public int speed = 2;
 	public static final int TANK_WIDTH = 16;
 	public static final int TANK_HIGHT = 16;
 	int width;
 	int height;
 	public static int ID = 100;
 	int id;
-	int x, y;
+	public int x;
+	public int y;
 //	Timer t = new Timer();
 //	Random random = new Random();
 	public GameView gameView;
 	Direction dir = Direction.STOP;
-	Direction ptDir = Direction.U;
+	public Direction ptDir = Direction.U;
 	Direction oldDir;
 	// ����ֵ
-	int life = 100;
+	public int life = 100;
 	// �ȼ�
 	int level = 1;
 	// ����
-	int missileSpeed = 100;
+	public int missileSpeed = 100;
 	// ����״̬
-	boolean isFire = true;
+	public boolean isFire = true;
 	//�Ƿ�����
 	boolean visible ;
-	boolean keyup;
+	public boolean keyup;
 	// ������
-	int attack = 30;
+	public int attack = 30;
 	// ������
-	int defence = 1;
-	Missile missile;
+	public int defence = 1;
+	public Missile missile;
 	Missile bartlettMissile;
-	Bitmap upmap;
+	public Bitmap upmap;
 	Bitmap downmap;
 	Bitmap leftmap;
 	Bitmap rightmap;
@@ -67,10 +72,10 @@ public class Tank {
 	// �Ƿ����
 	private boolean live = true;
 	BloodBar bb = new BloodBar();
-	Bitmap tankBmp;
+	public Bitmap tankBmp;
 	Matrix m = new Matrix();
 	boolean barrettFlag;
-	int btNum;
+	public int btNum;
 	private int btAttack;
 	private int btLife;
 	private int btSpeed;
@@ -309,7 +314,7 @@ public class Tank {
 			 * }
 			 */
 
-		} else if (keyup) {//不给连发
+		} else if (keyup) {//not keep fire;
 //			fire();
 		}
 
@@ -359,16 +364,14 @@ public class Tank {
 
 	// ���ϰ�����ײ
 	public boolean hitWalls(List<Wall> walls) {
-		if (walls.size() > 0) {
-			for (Wall w : walls) {
-				if (this.live
-						&& w.isLive()
-						&& w.style != 4
-						&& CollisionUtil.IsRectCollision(rect,
-								w.getRect())) {
-					this.stay();
-					return true;
-				}
+		for (Wall w : walls) {
+			if (this.live
+					&& w.isLive()
+					&& w.style != 4
+					&& CollisionUtil.IsRectCollision(rect,
+							w.getRect())) {
+				this.stay();
+				return true;
 			}
 		}
 		return false;

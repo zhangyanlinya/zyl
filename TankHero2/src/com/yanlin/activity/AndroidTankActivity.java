@@ -1,6 +1,13 @@
-package com.yanlin;
+package com.yanlin.activity;
 
 import java.util.Random;
+
+import com.yanlin.Bomber;
+import com.yanlin.Direction;
+import com.yanlin.R;
+import com.yanlin.R.id;
+import com.yanlin.R.layout;
+import com.yanlin.view.GameView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,8 +34,8 @@ public class AndroidTankActivity extends Activity {
 	public static final int STATUS_PASS = 5; // ͨȫ��
 	GameView gameView;
 	AlertDialog ad;
-	static	TextView bartlett_number ;
-	static	TextView sup_number ;
+	public static	TextView bartlett_number ;
+	public static	TextView sup_number ;
 	Random random = new Random();
 
 	public static int screanW;

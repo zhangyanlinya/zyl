@@ -1,21 +1,23 @@
-package com.yanlin;
+package com.yanlin.thread;
+
+import com.yanlin.view.GameView;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 /*
- * ¸ÃÀàÎª»¶Ó­½çÃæµÄºóÌ¨Ïß³Ì£¬¸ºÔð¶¨Ê±»æÖÆÆÁÄ»
+ * ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ó­ï¿½ï¿½ï¿½ï¿½Äºï¿½Ì¨ï¿½ß³Ì£ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»
  */
 public class BoomThread extends Thread {
-	GameView father; // WelcomeViewÒýÓÃ
-	SurfaceHolder surfaceHolder; // WelcomeViewµÄSurfaceHolder
-	boolean flag; // Ñ­»·±êÖ¾Î»
-	int sleepSpan = 10; // ÐÝÃßÊ±¼ä
+	GameView father; // WelcomeViewï¿½ï¿½ï¿½ï¿½
+	SurfaceHolder surfaceHolder; // WelcomeViewï¿½ï¿½SurfaceHolder
+	boolean flag; // Ñ­ï¿½ï¿½ï¿½ï¿½Ö¾Î»
+	int sleepSpan = 10; // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	int x;
 	int y;
 	int boomIndex;
 
-	// ¹¹ÔìÆ÷
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public BoomThread(GameView father, SurfaceHolder surfaceHolder, int x, int y) {
 		this.father = father;
 		this.surfaceHolder = surfaceHolder;
@@ -24,7 +26,7 @@ public class BoomThread extends Thread {
 		this.y = y;
 	}
 
-	// Ïß³ÌÖ´ÐÐ·½·¨
+	// ï¿½ß³ï¿½Ö´ï¿½Ð·ï¿½ï¿½ï¿½
 	public void run() {
 		Canvas canvas = null;
 		while (flag) {

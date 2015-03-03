@@ -2,6 +2,9 @@ package com.yanlin;
 
 import java.util.List;
 
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

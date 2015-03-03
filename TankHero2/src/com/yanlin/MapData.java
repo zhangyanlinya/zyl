@@ -8,7 +8,7 @@ package com.yanlin;
  */
 public class MapData {
 	// 1 שǽ 2 ˮ 3 ��ǽ 4 �� 6 �����
-	static int[][][] map = {
+	public static int[][][] map = {
 
 			// ��һ��
 			{ 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

@@ -1,9 +1,9 @@
-package com.yanlin;
+package com.yanlin.util;
 
 import android.graphics.Rect;
 
 /**
- * ÓÎÏ·Åö×²¼ì²âÀà
+ * ï¿½ï¿½Ï·ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
  * @author ZhangYanlin
  * 
@@ -11,25 +11,25 @@ import android.graphics.Rect;
 public class CollisionUtil {
 
 	/**
-	 * ¾ØÐÎÅö×²¼ì²â ²ÎÊýÎªx,y,width,height
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Îªx,y,width,height
 	 * 
 	 * @param x1
-	 *            µÚÒ»¸ö¾ØÐÎµÄx
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½x
 	 * @param y1
-	 *            µÚÒ»¸ö¾ØÐÎµÄy
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½y
 	 * @param w1
-	 *            µÚÒ»¸ö¾ØÐÎµÄw
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½w
 	 * @param h1
-	 *            µÚÒ»¸ö¾ØÐÎµÄh
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½h
 	 * @param x2
-	 *            µÚ¶þ¸ö¾ØÐÎµÄx
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½x
 	 * @param y2
-	 *            µÚ¶þ¸ö¾ØÐÎµÄy
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½y
 	 * @param w2
-	 *            µÚ¶þ¸ö¾ØÐÎµÄw
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½w
 	 * @param h2
-	 *            µÚ¶þ¸ö¾ØÐÎµÄh
-	 * @return ÊÇ·ñÅö×²
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½h
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½×²
 	 */
 	public static boolean IsRectCollision(int x1, int y1, int w1, int h1,
 			int x2, int y2, int w2, int h2) {
@@ -47,13 +47,13 @@ public class CollisionUtil {
 	}
 
 	/**
-	 * ¾ØÐÎÅö×²¼ì²â ²ÎÊýÎªRect¶ÔÏó
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ÎªRectï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param r1
-	 *            µÚÒ»¸öRect¶ÔÏó
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½Rectï¿½ï¿½ï¿½ï¿½
 	 * @param r2
-	 *            µÚ¶þ¸öRect¶ÔÏó
-	 * @return ÊÇ·ñÅö×²
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½Rectï¿½ï¿½ï¿½ï¿½
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½×²
 	 */
 	public static boolean IsRectCollision(Rect r1, Rect r2) {
 		return IsRectCollision(r1.left, r1.top, r1.right - r1.left, r1.bottom
@@ -62,25 +62,25 @@ public class CollisionUtil {
 	}
 
 	/**
-	 * Ô²ÐÎÅö×²¼ì²â
+	 * Ô²ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½
 	 * 
 	 * @param x1
-	 *            µÚÒ»¸öÔ²µÄÔ²ÐÄx
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½Ô²ï¿½ï¿½Ô²ï¿½ï¿½x
 	 * @param y1
-	 *            µÚÒ»¸öÔ²µÄÔ²ÐÄy
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½Ô²ï¿½ï¿½Ô²ï¿½ï¿½y
 	 * @param r1
-	 *            µÚÒ»¸öÔ²µÄ°ë¾¶
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½Ô²ï¿½Ä°ë¾¶
 	 * @param x2
-	 *            µÚ¶þ¸öÔ²µÄÔ²ÐÄx
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½Ô²ï¿½ï¿½Ô²ï¿½ï¿½x
 	 * @param y2
-	 *            µÚ¶þ¸öÔ²µÄÔ²ÐÄy
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½Ô²ï¿½ï¿½Ô²ï¿½ï¿½y
 	 * @param r2
-	 *            µÚ¶þ¸öÔ²µÄ°ë¾¶
-	 * @return ÊÇ·ñÅö×²
+	 *            ï¿½Ú¶ï¿½ï¿½ï¿½Ô²ï¿½Ä°ë¾¶
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½×²
 	 */
 	public static boolean IsCircleCollision(int x1, int y1, int r1, int x2,
 			int y2, int r2) {
-		// Á½µã¾à´óÓÚ 2Ô²ÐÎ°ë¾¶¾àÀë
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2Ô²ï¿½Î°ë¾¶ï¿½ï¿½ï¿½ï¿½
 		if (Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)) > r1 + r2) {
 			return false;
 		}
@@ -88,23 +88,23 @@ public class CollisionUtil {
 	}
 
 	/**
-	 * Ô²ÐÎÓë¾ØÐÎÅö×²¼ì²â
+	 * Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½
 	 * 
 	 * @param x1
-	 *            µÚÒ»¸ö¾ØÐÎµÄx
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½x
 	 * @param y1
-	 *            µÚÒ»¸ö¾ØÐÎµÄy
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½y
 	 * @param w1
-	 *            µÚÒ»¸ö¾ØÐÎµÄ¿í
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÎµÄ¿ï¿½
 	 * @param h1
-	 *            µÚÒ»¸ö¾ØÐÎµÄ¸ß
+	 *            ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÎµÄ¸ï¿½
 	 * @param x2
-	 *            Ô²µÄÔ²ÐÄx
+	 *            Ô²ï¿½ï¿½Ô²ï¿½ï¿½x
 	 * @param y2
-	 *            Ô²µÄÔ²ÐÄy
+	 *            Ô²ï¿½ï¿½Ô²ï¿½ï¿½y
 	 * @param r2
-	 *            Ô²µÄ°ë¾¶r
-	 * @return ÊÇ·ñÅö×²
+	 *            Ô²ï¿½Ä°ë¾¶r
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½×²
 	 */
 	public static boolean IsC2RCollision(int x1, int y1, int w1, int h1,
 			int x2, int y2, int r2) {
@@ -116,11 +116,11 @@ public class CollisionUtil {
 	}
 
 	/**
-	 * ¶à¾ØÐÎÅö×²
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²
 	 * 
 	 * @param rArray1
 	 * @param rArray2
-	 * @return ÊÇ·ñÅö×²
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½×²
 	 */
 	public boolean IsRectsCollision(Rect[] rArray1, Rect[] rArray2) {
 		for (Rect rt1 : rArray1) {

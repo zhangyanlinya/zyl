@@ -3,6 +3,10 @@ package com.yanlin;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.yanlin.activity.AndroidTankActivity;
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -87,9 +91,9 @@ public class Missile implements Comparable<Missile>{
 		return m;
 	}
 	
-//	static{
-//		initAllMissile();
-//	}
+	static{
+		initAllMissile();
+	}
 	/**
 	 * all missile cache
 	 */

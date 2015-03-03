@@ -1,19 +1,19 @@
 package com.yanlin;
 /**
- * Á£×Ó
+ * ï¿½ï¿½ï¿½ï¿½
  * @author ZhangYanlin
  *
  */
 public class Particle {
-	int color;          //Á£×ÓÑÕÉ«   
-    int r;              //Á£×Ó°ë¾¶   
-    double ver_v;       //´¹Ö±ËÙ¶È   
-    double hor_v;       //Ë®Æ½ËÙ¶È   
-    int startX;         //³õÊ¼X×ø±ê   
-    int startY;         //³õÊ¼Y×ø±ê   
-    int x;              //ÊµÊ±X×ø±ê   
-    int y;              //ÊµÊ±Y×ø±ê   
-    double startTime;   //ÆðÊ¼Ê±¼ä   
+	public int color;          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«   
+	public int r;              //ï¿½ï¿½ï¿½Ó°ë¾¶   
+    public double ver_v;       //ï¿½ï¿½Ö±ï¿½Ù¶ï¿½   
+    public double hor_v;       //Ë®Æ½ï¿½Ù¶ï¿½   
+    public int startX;         //ï¿½ï¿½Ê¼Xï¿½ï¿½ï¿½   
+    public int startY;         //ï¿½ï¿½Ê¼Yï¿½ï¿½ï¿½   
+    public int x;              //ÊµÊ±Xï¿½ï¿½ï¿½   
+    public int y;              //ÊµÊ±Yï¿½ï¿½ï¿½   
+    public double startTime;   //ï¿½ï¿½Ê¼Ê±ï¿½ï¿½   
       
     public Particle(int color, int r, double ver_v, double hor_v, int x, int y, double startTime) {  
         super();  

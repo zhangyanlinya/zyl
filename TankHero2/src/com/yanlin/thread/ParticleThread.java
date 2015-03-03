@@ -1,6 +1,9 @@
-package com.yanlin;
+package com.yanlin.thread;
 
 import java.util.ArrayList;
+
+import com.yanlin.Explode;
+import com.yanlin.Particle;
 
 public class ParticleThread extends Thread {
 	boolean isRunning;
@@ -28,12 +31,12 @@ public class ParticleThread extends Thread {
 				
 				Particle particle = tempSet.get(i);
 				double timeSpan = time - particle.startTime;
-				// ¼ÆËãX×ø±ê
+				// ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½
 				int tempx = (int) (particle.startX + particle.hor_v * timeSpan);
-				// ¼ÆËãY×ø±ê
+				// ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½
 				int tempy = (int) (particle.startY + particle.ver_v * timeSpan + 4.9
 						* timeSpan * timeSpan);
-				// ³¬¹ýÆÁÄ»ÏÂ±ß
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Â±ï¿½
 				if (tempy > particle.startY + 5
 						|| tempx > particle.startX + 5) {
 					tempSet.remove(particle);

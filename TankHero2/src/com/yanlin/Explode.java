@@ -2,6 +2,9 @@ package com.yanlin;
 
 import java.util.List;
 
+import com.yanlin.util.CollisionUtil;
+import com.yanlin.view.GameView;
+
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,7 +23,7 @@ public class Explode {
 	GameView gameView;
 	int a = 100;
 	int color = 0xff00ff;
-	boolean live = true;
+	public boolean live = true;
 	float sx = 0.2f;
 	float sy = 0.21f;
 	Paint paint = new Paint();
@@ -30,7 +33,7 @@ public class Explode {
 	Matrix m = new Matrix();
 	int holex;
 	int holey;
-	ParticleSet ps;
+	public ParticleSet ps;
 
 	// ParticleThread pt;
 

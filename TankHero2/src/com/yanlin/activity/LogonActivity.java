@@ -1,4 +1,9 @@
-package com.yanlin;
+package com.yanlin.activity;
+
+import com.yanlin.R;
+import com.yanlin.R.id;
+import com.yanlin.R.layout;
+import com.yanlin.view.GameView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,7 +32,7 @@ public class LogonActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		 //ÉèÖÃÈ«ÆÁ
+		 //ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.login);
@@ -40,7 +45,7 @@ public class LogonActivity extends Activity {
 		btn_single = (Button) findViewById(R.id.Btn_single);
 		btn_network = (Button) findViewById(R.id.Btn_network);
 
-		// µ¥ÈËÄ£Ê½ÓÎÏ·
+		// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ï·
 		btn_single.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				
@@ -52,7 +57,7 @@ public class LogonActivity extends Activity {
 
 			}
 		});
-		// ¶àÈËÄ£Ê½ÓÎÏ·
+		// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ï·
 		btn_network.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (checkIpPort()) {
@@ -94,7 +99,7 @@ public class LogonActivity extends Activity {
 				.toString()
 				.matches(
 						"^(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|[1-9])\\.(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)\\.(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)\\.(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|[1-9])$") == false) {
-			Toast.makeText(LogonActivity.this, "ÇëÊäÈëÕýÈ·µÄIPµØÖ·", Toast.LENGTH_SHORT)
+			Toast.makeText(LogonActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½IPï¿½ï¿½Ö·", Toast.LENGTH_SHORT)
 					.show();
 			ip.setFocusable(true);
 			
@@ -103,7 +108,7 @@ public class LogonActivity extends Activity {
 		}
 		if (port.getText().toString()
 				.matches("^([1-9]|[1-9]\\d{1,3}|[1-6][0-5][0-5][0-3][0-5])$") == false) {
-			Toast.makeText(LogonActivity.this, "ÇëÊäÈëÕýÈ·µÄ¶Ë¿Ú", Toast.LENGTH_SHORT)
+			Toast.makeText(LogonActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½Ä¶Ë¿ï¿½", Toast.LENGTH_SHORT)
 					.show();
 			port.setFocusable(true);
 			return false;
@@ -118,7 +123,7 @@ public class LogonActivity extends Activity {
 	}
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if(keyCode == 4){			//°´ÏÂ·µ»Ø¼ü
+		if(keyCode == 4){			//ï¿½ï¿½ï¿½Â·ï¿½ï¿½Ø¼ï¿½
 				System.exit(0);
 			}
 		return true;
