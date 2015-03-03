@@ -360,12 +360,12 @@ public class Tank {
 	// ���ϰ�����ײ
 	public boolean hitWalls(List<Wall> walls) {
 		if (walls.size() > 0) {
-			for (Wall s : walls) {
+			for (Wall w : walls) {
 				if (this.live
-						&& s.isLive()
-						&& s.style != 4
+						&& w.isLive()
+						&& w.style != 4
 						&& CollisionUtil.IsRectCollision(rect,
-								s.getRect())) {
+								w.getRect())) {
 					this.stay();
 					return true;
 				}
