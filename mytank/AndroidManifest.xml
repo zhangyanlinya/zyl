@@ -1,0 +1,40 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.trance.trancetank"
+    android:installLocation="auto"
+    android:versionCode="12"
+    android:versionName="1.12" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="21" />
+    
+    <!-- 权限 -->
+	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<!-- 以下为可选权限 -->
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+    
+    <application
+       android:allowBackup="true"
+       android:icon="@drawable/logo"
+       android:label="@string/app_name"
+       android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.trance.tranceview.MainActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.trance.tranceview.GameActivity"
+            android:screenOrientation="portrait">
+        </activity>
+    </application>
+   
+</manifest>
