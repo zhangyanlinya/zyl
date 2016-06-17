@@ -19,8 +19,6 @@ import com.trance.trancetank.config.Module;
  */
 public class MapDataHandler extends HandlerSupport {
 	
-	public static int[][] map ;
-	
 	public MapDataHandler(SimpleSocketClient socketClient) {
 		super(socketClient);
 	}
