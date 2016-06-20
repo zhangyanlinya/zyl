@@ -192,6 +192,7 @@ public class WorldScreen implements Screen, GestureListener {
 						MainActivity.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
 						Music music = AssetsManager.assetManager.get("audio/get_barrett.mp3");
 						music.play();
+						return false;
 					}
 					
 					MapData.playerId = target.getId();
