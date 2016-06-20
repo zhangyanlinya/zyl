@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
@@ -122,7 +123,7 @@ public class GameScreen implements Screen{
 				if(MapData.playerId > 0L && MainActivity.player != null && MapData.playerId != MainActivity.player.getId()){
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", MapData.playerId);
-					MainActivity.socket.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
+					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
 					Music music = AssetsManager.assetManager.get("audio/get_bomber.mp3");
 					music.play();
 				}

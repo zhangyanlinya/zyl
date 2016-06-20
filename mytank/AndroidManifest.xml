@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.trance.trancetank"
     android:installLocation="auto"
-    android:versionCode="12"
-    android:versionName="1.12" >
+    android:versionCode="13"
+    android:versionName="1.13" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -17,6 +17,8 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<!-- 以下为可选权限 -->
 	<uses-permission android:name="android.permission.BLUETOOTH" />
+	
+	<uses-permission android:name="com.android.vending.BILLIN" />
     
     <application
        android:allowBackup="true"

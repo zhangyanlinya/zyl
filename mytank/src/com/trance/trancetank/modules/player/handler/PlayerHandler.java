@@ -7,11 +7,11 @@ import java.util.Map;
 import org.apache.mina.core.session.IoSession;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Message;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.badlogic.gdx.Gdx;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessorAdapter;
@@ -22,7 +22,6 @@ import com.trance.common.util.CryptUtil;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.tranceview.GameActivity;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
 
@@ -103,7 +102,7 @@ public class PlayerHandler extends HandlerSupport {
 					}
 					int code = (Integer) result.get("result");
 					if (code == -4) {
-						String src = MainActivity.userName + MainActivity.LoginKey;
+						String src = MainActivity.userName + MainActivity.loginKey;
 						String LoginMD5 = null;
 						try {
 							LoginMD5 = CryptUtil.md5(src);
@@ -118,7 +117,7 @@ public class PlayerHandler extends HandlerSupport {
 						params.put("loginKey", LoginMD5);
 						params.put("loginWay", "0");
 						params.put("adultStatus", 2);
-						response = MainActivity.socket.send(Request.valueOf(Module.PLAYER,
+						response = SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER,
 								PlayerCmd.CREATE_PLAYER, params));
 						status = response.getStatus();
 						if (status == ResponseStatus.SUCCESS) {
@@ -146,12 +145,16 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public void handleMessage(Message msg, Context context) {
-				Intent intent = new Intent();
-				intent.setClass(context, GameActivity.class);
-				MainActivity activity = (MainActivity)context;
-				activity.startActivityForResult(intent, 0);
+				final MainActivity activity = (MainActivity)context;
+				
+				Gdx.app.postRunnable(new Runnable() {
+					
+					@Override
+					public void run() {
+						activity.tanceGame.startGame();
+					}
+				});
 			}
-			
 		});
 		
 	}

@@ -6,27 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.util.CryptUtil;
-import com.trance.trancetank.R;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
@@ -37,19 +32,17 @@ import com.trance.tranceview.utils.GetDeviceId;
 import com.trance.tranceview.version.UpdateManager;
 
 
-public class MainActivity extends Activity {
-
-	public static SimpleSocketClient socket;
+public class MainActivity extends AndroidApplication {
+	
+	public TranceGame tanceGame;
 	public final static String IP = "112.74.30.92";
 	public final static int PORT = 10101;
-	public static String LoginKey = "trance123";
+	public static String loginKey = "trance123";
 	public static PlayerDto player;
 	public final static List<PlayerDto> worldPlayers = new ArrayList<PlayerDto>();
 	private boolean islogin = false;
 	public static ProgressDialog progressDialog;
 
-	EditText text_level;
-	Button btn_send;
 	public static String userName;
 	private boolean init;
 	
@@ -86,7 +79,6 @@ public class MainActivity extends Activity {
 						Toast.LENGTH_LONG).show();
 				break;
 			}
-			
 		}
 	} 
 	
@@ -94,11 +86,11 @@ public class MainActivity extends Activity {
 	 * 注册请求响应处理器
 	 */
 	private void registerProcessor() {
-		socket = new SimpleSocketClient(IP, PORT, handler);// init socket
+		SimpleSocketClient socket = SimpleSocketClient.init(IP, PORT, handler);
 		new PlayerHandler(socket);
 		new WorldHandler(socket);
 		new MapDataHandler(socket);
-		}
+	}
 
 	
 	@Override
@@ -107,32 +99,14 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		this.setContentView(R.layout.main);
 		
+        tanceGame = new TranceGame();
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
+        config.useAccelerometer = false;  //禁用加速计
+        config.useCompass = false;		  //禁用罗盘
+        config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
+		initialize(tanceGame, config);
 		init();
-		
-		btn_send = (Button) this.findViewById(R.id.send);
-		btn_send.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				progressDialog = ProgressDialog.show(MainActivity.this,
-						"login", "loading...");
-				new Thread(new Runnable() {
-	
-						@Override
-						public void run() {
-							try {
-								loginOrRegister();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}).start();
-			}
-		});
-
-
 	}
 	
 	/**
@@ -177,12 +151,12 @@ public class MainActivity extends Activity {
 		return worldPlayers.get(index);
 	}
 	
-	private synchronized void loginOrRegister() throws Exception {
+	public synchronized  void loginOrRegister() throws Exception {
 		if (islogin) {
 			return;
 		}
 
-		String src = userName + LoginKey;
+		String src = userName + loginKey;
 		String LoginMD5 = CryptUtil.md5(src);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userName", userName);
@@ -193,7 +167,7 @@ public class MainActivity extends Activity {
 		params.put("adultStatus", 2);
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		socket.sendAsync(Request.valueOf(module, cmd, params));
+		SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
 	}
 	
 	
@@ -208,7 +182,7 @@ public class MainActivity extends Activity {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			Response response =	MainActivity.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
+			Response response =	SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
 			if(response != null){
 				continue;
 			}
@@ -221,7 +195,7 @@ public class MainActivity extends Activity {
 	 * @return
 	 */
 	public boolean offlineReconnect(){
-		String src = userName + LoginKey;
+		String src = userName + loginKey;
 		String LoginMD5 = null;
 		try {
 			LoginMD5 = CryptUtil.md5(src);
@@ -235,25 +209,30 @@ public class MainActivity extends Activity {
 		params.put("loginKey", LoginMD5);
 		params.put("server", "1");
 		params.put("loginWay", "0");
-		Response response = MainActivity.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
+		Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
 		if(response == null){
 			return false;
 		}
 		return true;
 	}
 
-	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		finish();
-		System.exit(0);
-		super.onActivityResult(requestCode, resultCode, data);
-	};
-	
-
 	protected void onDestroy() {
 		this.init = false;
 		super.onDestroy();
 	}
 	
+	private long time;
+	
+	@Override
+	public void onBackPressed() {
+		long now = System.currentTimeMillis();
+		if(time <= 0 || (now - time) > 2000){
+			this.time = now;
+			Toast.makeText(this, "再按一次退出游戏", Toast.LENGTH_SHORT)
+			.show();
+			return;
+		}
+		super.onBackPressed();
+	}
 	
 }

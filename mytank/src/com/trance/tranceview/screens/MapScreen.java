@@ -20,10 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
-import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
@@ -367,13 +367,11 @@ public class MapScreen implements Screen ,InputProcessor{
 	 * save map to server
 	 */
 	private void saveMaptoServer(int level ,String from ,String to){
-		if( MainActivity.socket != null && MainActivity.socket.isConnected() ){
-			HashMap<String,Object> parms = new HashMap<String,Object>();
-			parms.put("level", level);
-			parms.put("from", from);
-			parms.put("to", to);
-			MainActivity.socket.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
-		}
+		HashMap<String,Object> parms = new HashMap<String,Object>();
+		parms.put("level", level);
+		parms.put("from", from);
+		parms.put("to", to);
+		SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
 	}
 	
 	@Override

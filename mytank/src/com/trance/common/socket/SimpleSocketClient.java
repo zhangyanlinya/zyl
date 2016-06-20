@@ -36,6 +36,9 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.NamedThreadFactory;
+import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
+import com.trance.trancetank.modules.player.handler.PlayerHandler;
+import com.trance.trancetank.modules.world.handler.WorldHandler;
 
 /**
  * 简单的客户机实现
@@ -91,6 +94,12 @@ public class SimpleSocketClient {
 	 */
 	private static int sn = 0;
 	
+	public static SimpleSocketClient socket;
+	
+	public static SimpleSocketClient init(String ip, int port, Handler androidHandler){
+		socket = new SimpleSocketClient(ip, port, androidHandler);
+		return socket;
+	}
 
 	private synchronized static void initNioSocketConnector(int threadCount, Handler androidHandler) {
 		

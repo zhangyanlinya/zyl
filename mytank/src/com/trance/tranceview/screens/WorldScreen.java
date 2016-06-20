@@ -36,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -189,7 +190,7 @@ public class WorldScreen implements Screen, GestureListener {
 					int pointer, int button) {
 					PlayerDto target = MainActivity.getWorldPlayerDto(index);
 					if(target == null){
-						MainActivity.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
+						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
 						Music music = AssetsManager.assetManager.get("audio/get_barrett.mp3");
 						music.play();
 						return false;
@@ -198,7 +199,7 @@ public class WorldScreen implements Screen, GestureListener {
 					MapData.playerId = target.getId();
 					HashMap<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", target.getId());
-					Response response = MainActivity.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+					Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
 					if(response != null){
 						ResponseStatus status = response.getStatus();
 						if (status == ResponseStatus.SUCCESS) {
