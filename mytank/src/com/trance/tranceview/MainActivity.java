@@ -40,11 +40,10 @@ public class MainActivity extends AndroidApplication {
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
 	public final static List<PlayerDto> worldPlayers = new ArrayList<PlayerDto>();
-	private boolean islogin = false;
 	public static ProgressDialog progressDialog;
 
 	public static String userName;
-	private boolean init;
+	private boolean isInit;
 	
 	private Handler handler = new MyHandler(MainActivity.this);
 	
@@ -71,7 +70,7 @@ public class MainActivity extends AndroidApplication {
 						.show();
 				break;
 			case 0:
-				ResponseProcessor  processor =SimpleSocketClient.responseProcessors.getProcessor(module, cmd);
+				ResponseProcessor  processor = SimpleSocketClient.responseProcessors.getProcessor(module, cmd);
 				processor.handleMessage(msg, reference.get());
 				break;
 			default:
@@ -100,7 +99,8 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-        tanceGame = new TranceGame();
+//		System.out.println("call onCreate()...");
+		tanceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计
         config.useCompass = false;		  //禁用罗盘
@@ -110,13 +110,12 @@ public class MainActivity extends AndroidApplication {
 	}
 	
 	/**
-	 * 只初始化一次的111
+	 * 初始化
 	 */
 	private synchronized void init() {
-		 if(init){
-			 return;
-		 }
-
+		if(isInit){
+			return;
+		}
 		UpdateManager update = new UpdateManager(this);
 	    update.checkUpdate();
 	    
@@ -131,7 +130,7 @@ public class MainActivity extends AndroidApplication {
 			}
 			
 		}).start();
-		init = true;
+		isInit = true;
 	}
 
 	
@@ -150,26 +149,6 @@ public class MainActivity extends AndroidApplication {
 		
 		return worldPlayers.get(index);
 	}
-	
-	public synchronized  void loginOrRegister() throws Exception {
-		if (islogin) {
-			return;
-		}
-
-		String src = userName + loginKey;
-		String LoginMD5 = CryptUtil.md5(src);
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("userName", userName);
-		params.put("loginKey", LoginMD5);
-		params.put("server", "1");
-		params.put("loginWay", "0");
-		params.put("fcmStatus", 0);
-		params.put("adultStatus", 2);
-		int module = Module.PLAYER;
-		int cmd = PlayerCmd.LOGIN;
-		SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
-	}
-	
 	
 	/**
 	 * 心跳
@@ -215,11 +194,6 @@ public class MainActivity extends AndroidApplication {
 		}
 		return true;
 	}
-
-	protected void onDestroy() {
-		this.init = false;
-		super.onDestroy();
-	}
 	
 	private long time;
 	
@@ -235,4 +209,11 @@ public class MainActivity extends AndroidApplication {
 		super.onBackPressed();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		tanceGame.dispose();
+//		Gdx.app.exit();
+		System.exit(0);
+	}
 }

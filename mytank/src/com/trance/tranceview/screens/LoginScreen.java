@@ -35,6 +35,7 @@ public class LoginScreen implements Screen{
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
 	private Stage stage;
+	private boolean show;
 	
 	public LoginScreen(TranceGame tranceGame) {
 		
@@ -42,6 +43,7 @@ public class LoginScreen implements Screen{
 
 	@Override
 	public void show() {
+		show = true;
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
@@ -113,6 +115,8 @@ public class LoginScreen implements Screen{
 
 	@Override
 	public void hide() {
+		dispose();
+		show = false;
 	}
 
 	@Override
@@ -125,9 +129,12 @@ public class LoginScreen implements Screen{
 
 	@Override
 	public void dispose() {
+		if(!show){
+			return;
+		}
+		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();
-		stage.dispose();
 	}
 	
 }

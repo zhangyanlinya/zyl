@@ -34,21 +34,22 @@ public class TranceGame extends Game {
 		gameScreen = new GameScreen(this);
 	}
 	
+	
 	/**
 	 * 开启游戏
 	 */
 	public void startGame(){
 		this.setScreen(gameScreen);
 	}
-	
+
 	@Override
 	public void dispose() {
-		super.dispose();
 //		AudioUtils.dispose();
-		loginScreen.dispose();
-		worldScreen.dispose();
-		gameScreen.dispose();
-		mapScreen.dispose();
+//		loginScreen.dispose();
+//		worldScreen.dispose();
+//		mapScreen.dispose();
+//		gameScreen.dispose();
 		assetsManager.dispose();
+		super.dispose();
 	}
 }

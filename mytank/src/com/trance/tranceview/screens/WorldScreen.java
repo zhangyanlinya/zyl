@@ -66,6 +66,8 @@ public class WorldScreen implements Screen, GestureListener {
 	private BitmapFont font;
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
+	private Music music ;
+	private boolean show;
 
 	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -73,6 +75,7 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public void show() {
+		show = true;
 		stage = new Stage();
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
@@ -144,7 +147,7 @@ public class WorldScreen implements Screen, GestureListener {
 				MapData.map = MapData.myMap;
 				MapData.other = false;
 				tranceGame.setScreen(tranceGame.mapScreen);
-				dispose();
+//				hide();
 			}
 
 		});
@@ -191,7 +194,7 @@ public class WorldScreen implements Screen, GestureListener {
 					PlayerDto target = MainActivity.getWorldPlayerDto(index);
 					if(target == null){
 						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
-						Music music = AssetsManager.assetManager.get("audio/get_barrett.mp3");
+						music = AssetsManager.assetManager.get("audio/get_barrett.mp3");
 						music.play();
 						return false;
 					}
@@ -217,7 +220,7 @@ public class WorldScreen implements Screen, GestureListener {
 								}
 								MapData.other = true;
 								tranceGame.setScreen(tranceGame.mapScreen);
-								dispose();
+//								hide();
 							}
 						}
 					}
@@ -229,16 +232,6 @@ public class WorldScreen implements Screen, GestureListener {
 		locations.add(location);
 	}
 	
-	@Override
-	public void dispose() {
-		tilemap.dispose();
-		stage.dispose();
-		locations.clear();
-		spriteBatch.dispose();
-		font.dispose();
-		
-	}
-
 	@Override
 	public void pause() {
 
@@ -277,6 +270,27 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public void hide() {
+		dispose();
+		show = false;
+	}
+	
+	@Override
+	public void dispose() {
+		if(!show){
+			return;
+		}
+		if(tilemap != null)
+			tilemap.dispose();
+		if(stage !=  null)
+			stage.dispose();
+		locations.clear();
+		if(spriteBatch != null)
+			spriteBatch.dispose();
+		if(font != null)
+			font.dispose();
+		if(music != null){
+			music.dispose();
+		}
 	}
 
 	@Override

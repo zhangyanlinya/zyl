@@ -65,6 +65,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	public final static Pool<Block> blockPool = new BlockPool();
 	
+	private boolean show;
+	
 	public MapScreen(TranceGame game){
 		this.game = game;
 		
@@ -72,7 +74,7 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public void show() {
-		
+		show = true;
 		//适配处理----
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
@@ -142,12 +144,12 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private void attack(){
 		this.game.setScreen(game.gameScreen);
-		this.dispose();
+//		this.hide();
 	}
 	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
-		this.dispose();
+//		this.hide();
 	}
 
 	@Override
@@ -406,6 +408,8 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public void hide() {
+		dispose();
+		show = false;
 	}
 
 	@Override
@@ -418,6 +422,9 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public void dispose() {
+		if(!show){
+			return;
+		}
 		if (stage != null){
 			stage.dispose();
 		}

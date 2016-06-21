@@ -63,6 +63,7 @@ public class GameScreen implements Screen{
 	 */
 	private int currTime = TOTAL_TIME;
 	private Timer timer;
+	private boolean show;
 	
 	public GameScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -70,6 +71,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void show() {
+		show = true;
 		currTime = TOTAL_TIME;//初始化时间 
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
@@ -99,7 +101,6 @@ public class GameScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				tranceGame.setScreen(tranceGame.worldScreen);
-				dispose();
 			}
 		});
 		stage.addActor(toWorld);
@@ -168,85 +169,14 @@ public class GameScreen implements Screen{
 		
 	}
 	
-	/**
-	 * 碰撞检测
-	 */
-//	private void collisionDetection() {
-//		
-//		for(int i = 0; i < blocks.size ;i ++ ){//与墙相关的
-//			Block block = blocks.get(i);
-//			for(int j = 0 ; j < tanks.size ; j++){//车撞墙
-//				Block tank = tanks.get(j);
-//				if(block.type == BlockType.GRASS){
-//					continue;
-//				}
-//				if(block.rectangle.overlaps(tank.rectangle)){
-//					tank.stay();
-//				}
-//			}
-//			for(int k = 0 ; k < bullets.size ; k++){//子弹撞墙
-//				Bullet bullet = bullets.get(k);
-//				if(block.type == BlockType.WATER){
-//					continue;
-//				}
-//				if(block.type == BlockType.GRASS){
-//					continue;
-//				}
-//				if(block.rectangle.overlaps(bullet.rectangle)){
-//					if(block.type == BlockType.STEEL){
-//						bullet.removeFromStage();
-//						bullets.removeIndex(k);
-//						continue;
-//					}
-//					if(block.byAttack(bullet)){
-//						block.remove();
-//						blocks.removeIndex(i);
-//						MapScreen.blockPool.free(block);
-//					}
-//					bullet.removeFromStage();
-//					bullets.removeIndex(k);
-//				}
-//			}
-//		}
-//		
-//		for(int i = 0 ;i <tanks.size; i ++){//与车相关
-//			Block tank = tanks.get(i);
-//			for(int j = 0 ; j < bullets.size; j++){//被子弹击中
-//				Bullet bullet = bullets.get(j);
-//				if(tank.rectangle.overlaps(bullet.rectangle)){
-//					if(bullet.block.type != tank.type){
-//						if(tank.byAttack(bullet)){//over!
-//							tank.remove();
-//							tanks.removeIndex(i);
-//							MapScreen.blockPool.free(tank);
-//						}
-//						bullet.removeFromStage();
-//						bullets.removeIndex(j);
-//					}
-//				}
-//			}
-//			for(int j = 0 ; j < tanks.size ; j++){//车撞车
-//				Block t2 = tanks.get(j);
-//				if(tank == t2){
-//					continue;
-//				}
-//				if(tank.rectangle.overlaps(t2.rectangle)){
-//					tank.stay();
-//					t2.stay();
-//				}
-//			}
-//		}
-//	}
-
-
-	
-	
 	@Override
 	public void resize(int width, int height) {
 	}
 
 	@Override
 	public void hide() {
+		dispose();
+		show = false;
 	}
 
 	@Override
@@ -259,6 +189,9 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
+		if(!show){
+			return;
+		}
 
 		if (stage != null){
 			stage.dispose();
@@ -273,8 +206,8 @@ public class GameScreen implements Screen{
 			timer = null;
 		}
 		
-		if(beginMusic!= null && beginMusic.isPlaying()){
-			beginMusic.stop();
+		if(beginMusic!= null ){
+			beginMusic.dispose();
 		}
 		
 		if(font != null){

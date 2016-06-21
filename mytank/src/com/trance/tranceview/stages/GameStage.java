@@ -315,7 +315,6 @@ public class GameStage extends Stage implements ContactListener {
 	
 	@Override
 	public void dispose() {
-		super.dispose();
 		renderer.dispose();
 //		debugRenderer.dispose();
 		world.dispose();
@@ -323,7 +322,7 @@ public class GameStage extends Stage implements ContactListener {
 		tanks.clear();
 		Bullet.bulletPool.clear();
 		MapScreen.blockPool.clear();
-		
+		super.dispose();
 	}
 	
 }
