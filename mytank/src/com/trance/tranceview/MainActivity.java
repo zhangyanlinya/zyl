@@ -213,7 +213,6 @@ public class MainActivity extends AndroidApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		tanceGame.dispose();
-//		Gdx.app.exit();
 		System.exit(0);
 	}
 }

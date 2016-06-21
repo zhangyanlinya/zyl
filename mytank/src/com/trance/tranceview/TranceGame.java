@@ -45,10 +45,6 @@ public class TranceGame extends Game {
 	@Override
 	public void dispose() {
 //		AudioUtils.dispose();
-//		loginScreen.dispose();
-//		worldScreen.dispose();
-//		mapScreen.dispose();
-//		gameScreen.dispose();
 		assetsManager.dispose();
 		super.dispose();
 	}
