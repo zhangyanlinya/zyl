@@ -36,9 +36,6 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.NamedThreadFactory;
-import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
-import com.trance.trancetank.modules.player.handler.PlayerHandler;
-import com.trance.trancetank.modules.world.handler.WorldHandler;
 
 /**
  * 简单的客户机实现
