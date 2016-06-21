@@ -110,7 +110,7 @@ public class MainActivity extends AndroidApplication {
 	}
 	
 	/**
-	 * 只初始化一次的
+	 * 只初始化一次的111
 	 */
 	private synchronized void init() {
 		 if(init){
