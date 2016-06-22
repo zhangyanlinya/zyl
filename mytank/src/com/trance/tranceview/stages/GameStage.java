@@ -18,7 +18,6 @@ package com.trance.tranceview.stages;
 
 import android.util.Log;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -96,7 +95,7 @@ public class GameStage extends Stage implements ContactListener {
 //		debugRenderer = new Box2DDebugRenderer();
         setUpWorld();
         
-        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setInputProcessor(this);
         
     }
     

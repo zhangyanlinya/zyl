@@ -35,15 +35,13 @@ public class LoginScreen implements Screen{
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
 	private Stage stage;
-	private boolean show;
+	private boolean init;
 	
 	public LoginScreen(TranceGame tranceGame) {
-		
-	}
 
-	@Override
-	public void show() {
-		show = true;
+	}
+	
+	public void init(){
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
@@ -76,6 +74,14 @@ public class LoginScreen implements Screen{
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
+
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
+	}
 	
 	protected void login() {
 		String src = MainActivity.userName + MainActivity.loginKey;
@@ -106,7 +112,6 @@ public class LoginScreen implements Screen{
 		spriteBatch.begin();
 		font.draw(spriteBatch,"start game..",400,240);
 		spriteBatch.end();
-		
 	}
 	
 	@Override
@@ -115,23 +120,25 @@ public class LoginScreen implements Screen{
 
 	@Override
 	public void hide() {
-		dispose();
-		show = false;
+		
 	}
 
 	@Override
 	public void pause() {
+		
 	}
 
 	@Override
 	public void resume() {
+		
 	}
 
 	@Override
 	public void dispose() {
-		if(!show){
+		if(!init){
 			return;
 		}
+		init = false;
 		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();

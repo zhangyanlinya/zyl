@@ -2,7 +2,6 @@ package com.trance.trancetank.modules.player.handler;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -15,10 +14,8 @@ import com.badlogic.gdx.Gdx;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessorAdapter;
-import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
-import com.trance.common.util.CryptUtil;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
@@ -93,36 +90,10 @@ public class PlayerHandler extends HandlerSupport {
 				if (status == ResponseStatus.SUCCESS) {
 					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
 					if(result == null){
-//						byte[] bytes = JsonUtils.object2Bytes(response.getValue());
 						result = JSON.parseObject(response.getValueBytes(), HashMap.class);
-						
 					}
 					if(result == null){
 						return;
-					}
-					int code = (Integer) result.get("result");
-					if (code == -4) {
-						String src = MainActivity.userName + MainActivity.loginKey;
-						String LoginMD5 = null;
-						try {
-							LoginMD5 = CryptUtil.md5(src);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						Map<String, Object> params = new HashMap<String,Object>();
-						params.put("userName", MainActivity.userName);
-						params.put("playerName",MainActivity.userName);
-						params.put("country", "1");
-						params.put("server", "1");
-						params.put("loginKey", LoginMD5);
-						params.put("loginWay", "0");
-						params.put("adultStatus", 2);
-						response = SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER,
-								PlayerCmd.CREATE_PLAYER, params));
-						status = response.getStatus();
-						if (status == ResponseStatus.SUCCESS) {
-							result = (HashMap<?, ?>) response.getValue();
-						}
 					}
 					Object obj = result.get("content");
 					Object o = JSON.toJSON(obj);

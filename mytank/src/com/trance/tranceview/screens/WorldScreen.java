@@ -67,15 +67,9 @@ public class WorldScreen implements Screen, GestureListener {
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
 	private Music music ;
-	private boolean show;
-
-	public WorldScreen(TranceGame tranceGame) {
-		this.tranceGame = tranceGame;
-	}
-
-	@Override
-	public void show() {
-		show = true;
+	private boolean init;
+	
+	private void init(){
 		stage = new Stage();
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
@@ -147,19 +141,29 @@ public class WorldScreen implements Screen, GestureListener {
 				MapData.map = MapData.myMap;
 				MapData.other = false;
 				tranceGame.setScreen(tranceGame.mapScreen);
-//				hide();
 			}
 
 		});
 		image.setPosition(0, 0);
 		stage.addActor(image);
+	}
 	
+	public WorldScreen(final TranceGame tranceGame) {
+		this.tranceGame = tranceGame;
+		
+	}
+
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		GestureDetector gestureHandler = new GestureDetector(this);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-
 	}
 	
 	/**
@@ -270,15 +274,15 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public void hide() {
-		dispose();
-		show = false;
+		
 	}
 	
 	@Override
 	public void dispose() {
-		if(!show){
+		if(!init){
 			return;
 		}
+		init = false;
 		if(tilemap != null)
 			tilemap.dispose();
 		if(stage !=  null)

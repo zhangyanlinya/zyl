@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -38,18 +39,17 @@ import com.trance.tranceview.stages.GameStage;
 import com.trance.tranceview.utils.AssetsManager;
 
 public class GameScreen implements Screen{
-	TranceGame tranceGame;
+	
+	private TranceGame tranceGame;
 	public static int width;
 	public static int height;
-	
-	Stage stage;
-	Image toWorld;
-	
+	private Stage stage;
+	private Image toWorld;
 	private Window window;
 	private ImageButton btn_up;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-	private Music beginMusic;
+	private Music music;
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
 	
@@ -63,16 +63,13 @@ public class GameScreen implements Screen{
 	 */
 	private int currTime = TOTAL_TIME;
 	private Timer timer;
-	private boolean show;
+	private boolean init;
 	
 	public GameScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
-
-	@Override
-	public void show() {
-		show = true;
-		currTime = TOTAL_TIME;//初始化时间 
+	
+	private void init(){
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
 	               Gdx.files.internal("font/haibao.ttf"));
@@ -85,8 +82,8 @@ public class GameScreen implements Screen{
 		font.setColor(Color.RED);
 		generator.dispose();//别忘记释放
 		
-		beginMusic = AssetsManager.assetManager.get("audio/begin.mp3");
-		beginMusic.play();
+		music = AssetsManager.assetManager.get("audio/begin.mp3");
+		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		
@@ -131,10 +128,20 @@ public class GameScreen implements Screen{
 			}
 		});
 		window.addActor(btn_up);
-		
 		timer = new Timer();
+	}
+
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
+		currTime = TOTAL_TIME;//初始化时间 
 		timer.schedule(new MyTask() , 1000 ,1000);//表示多少时间后结束
-				
+		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
+		inputMultiplexer.addProcessor(stage);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
 	class MyTask extends TimerTask {
@@ -171,28 +178,30 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void resize(int width, int height) {
+		
 	}
 
 	@Override
 	public void hide() {
-		dispose();
-		show = false;
+		
 	}
 
 	@Override
 	public void pause() {
+		
 	}
 
 	@Override
 	public void resume() {
+		
 	}
 
 	@Override
 	public void dispose() {
-		if(!show){
+		if(!init){
 			return;
 		}
-
+		init = false;
 		if (stage != null){
 			stage.dispose();
 		}
@@ -206,8 +215,8 @@ public class GameScreen implements Screen{
 			timer = null;
 		}
 		
-		if(beginMusic!= null ){
-			beginMusic.dispose();
+		if(music != null){
+			music.dispose();
 		}
 		
 		if(font != null){

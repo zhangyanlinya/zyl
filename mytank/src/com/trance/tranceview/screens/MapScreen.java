@@ -34,8 +34,9 @@ import com.trance.tranceview.utils.AssetsManager;
 
 public class MapScreen implements Screen ,InputProcessor{
 
+	private TranceGame game;
 	public static float menu_width = 0;
-	/** 控制区域高度 */	TranceGame game;
+	/** 控制区域高度 */	
 	public static int width;
 	public static int height;
 	/** 数组宽数量 */
@@ -65,17 +66,12 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	public final static Pool<Block> blockPool = new BlockPool();
 	
-	private boolean show;
-	
+	private boolean init;
 	public MapScreen(TranceGame game){
 		this.game = game;
-		
 	}
-
-	@Override
-	public void show() {
-		show = true;
-		//适配处理----
+	
+	public void init(){
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
@@ -126,12 +122,18 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		stage.addActor(toWorld);
-		
+	}
+
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		
 	}
 	
 	/**
@@ -144,12 +146,10 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private void attack(){
 		this.game.setScreen(game.gameScreen);
-//		this.hide();
 	}
 	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
-//		this.hide();
 	}
 
 	@Override
@@ -408,8 +408,7 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public void hide() {
-		dispose();
-		show = false;
+		
 	}
 
 	@Override
@@ -422,9 +421,10 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public void dispose() {
-		if(!show){
+		if(!init){
 			return;
 		}
+		init = false;
 		if (stage != null){
 			stage.dispose();
 		}

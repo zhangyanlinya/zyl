@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,13 +34,11 @@ import com.trance.tranceview.version.UpdateManager;
 public class MainActivity extends AndroidApplication {
 	
 	public TranceGame tanceGame;
-	public final static String IP = "112.74.30.92";
+	public final static String IP = "192.168.0.4";
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
 	public final static List<PlayerDto> worldPlayers = new ArrayList<PlayerDto>();
-	public static ProgressDialog progressDialog;
-
 	public static String userName;
 	private boolean isInit;
 	
@@ -57,10 +54,6 @@ public class MainActivity extends AndroidApplication {
 		
 		@Override
 		public void handleMessage(Message msg) {
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
-			
 			int module = msg.arg1;
 			int cmd = msg.arg2;
 			String result = "连接超时";
@@ -99,7 +92,6 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-//		System.out.println("call onCreate()...");
 		tanceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计

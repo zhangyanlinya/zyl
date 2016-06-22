@@ -21,6 +21,10 @@ public class TranceGame extends Game {
 		try {
 //			AudioUtils.getInstance().init();
 			assetsManager.init(); //初始化资源
+			loginScreen = new LoginScreen(this);
+			worldScreen = new WorldScreen(this);
+			mapScreen = new MapScreen(this);
+			gameScreen = new GameScreen(this);
 			this.setScreen(loginScreen);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -28,10 +32,7 @@ public class TranceGame extends Game {
 	}
 	
 	public TranceGame() {
-		loginScreen = new LoginScreen(this);
-		worldScreen = new WorldScreen(this);
-		mapScreen = new MapScreen(this);
-		gameScreen = new GameScreen(this);
+		
 	}
 	
 	
@@ -45,6 +46,10 @@ public class TranceGame extends Game {
 	@Override
 	public void dispose() {
 //		AudioUtils.dispose();
+		loginScreen.dispose();
+		worldScreen.dispose();
+		mapScreen.dispose();
+		gameScreen.dispose();
 		assetsManager.dispose();
 		super.dispose();
 	}
