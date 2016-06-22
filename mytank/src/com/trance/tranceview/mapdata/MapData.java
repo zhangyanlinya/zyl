@@ -441,8 +441,8 @@ public class MapData extends Application {
 	// { 1, 1, 1, 0, 1, 4, 1, 1, 6, 1, 1, 1, 0, 1, 4, 1 } }
 	};
 
-	public static int[][] map = baseMap[0];
-	public static int[][] myMap = baseMap[0];
+	public static int[][] map = baseMap[0].clone();
+	public static int[][] myMap = baseMap[0].clone();
 
 	/**
 	 * 是否处于游戏编辑界面

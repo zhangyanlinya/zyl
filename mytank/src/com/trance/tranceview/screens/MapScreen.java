@@ -62,6 +62,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	private FreeTypeFontGenerator generator;
 	private FreeTypeBitmapFontData fontData;
 	
+	private Image attack;
+	private Image toWorld;
+	
 	public final static Array<Block> blocks = new Array<Block>();
 	
 	public final static Pool<Block> blockPool = new BlockPool();
@@ -100,7 +103,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		//攻击
-		Image attack = new Image(AssetsManager.getControlTextureRegion(ControlType.ATTACK));
+		attack = new Image(AssetsManager.getControlTextureRegion(ControlType.ATTACK));
 		attack.setPosition(width - attack.getWidth(), attack.getHeight());
 		attack.addListener(new ClickListener(){
 
@@ -112,7 +115,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.addActor(attack);
 		
 		//返回世界地图
-		Image toWorld = new Image(AssetsManager.getControlTextureRegion(ControlType.WORLD));
+		toWorld = new Image(AssetsManager.getControlTextureRegion(ControlType.WORLD));
 //		toWorld.setPosition(width - toWorld.getWidth()*2, toWorld.getHeight());
 		toWorld.addListener(new ClickListener(){
 			
@@ -130,6 +133,13 @@ public class MapScreen implements Screen ,InputProcessor{
 			init();
 			init = true;
 		}
+		stage.clear();
+		initMap();//初始化地图
+		if(isEdit()){
+			initPlayerBlock();
+		}
+		stage.addActor(attack);
+		stage.addActor(toWorld);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);

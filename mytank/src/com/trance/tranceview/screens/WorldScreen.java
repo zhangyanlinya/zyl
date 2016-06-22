@@ -138,7 +138,7 @@ public class WorldScreen implements Screen, GestureListener {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				MapData.map = MapData.myMap;
+				MapData.map = MapData.myMap.clone();
 				MapData.other = false;
 				tranceGame.setScreen(tranceGame.mapScreen);
 			}
@@ -220,7 +220,7 @@ public class WorldScreen implements Screen, GestureListener {
 									
 									
 								}else{
-									MapData.map = MapData.baseMap[0];//原始的
+									MapData.map = MapData.baseMap[0].clone();//原始的
 								}
 								MapData.other = true;
 								tranceGame.setScreen(tranceGame.mapScreen);
