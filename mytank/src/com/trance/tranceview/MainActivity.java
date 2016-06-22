@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -28,7 +29,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
-import com.trance.tranceview.screens.MapScreen;
+import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
 import com.trance.tranceview.version.UpdateManager;
 
@@ -195,8 +196,15 @@ public class MainActivity extends AndroidApplication {
 	public void onBackPressed() {
 		Screen screen = tranceGame.getScreen();
 		if(screen != null){
-			if(screen.getClass() == MapScreen.class){
-				//TODO
+			if(screen.getClass() != WorldScreen.class){
+				Gdx.app.postRunnable(new Runnable() {
+					
+					@Override
+					public void run() {
+						tranceGame.setScreen(tranceGame.worldScreen);
+					}
+				});
+				return;
 			}
 		}
 		long now = System.currentTimeMillis();
