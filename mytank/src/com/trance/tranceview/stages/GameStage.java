@@ -18,7 +18,6 @@ package com.trance.tranceview.stages;
 
 import android.util.Log;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -63,28 +62,29 @@ public class GameStage extends Stage implements ContactListener {
 	public static float control_height = 368;
 	
     private World world;
-    ShapeRenderer renderer;
+    private ShapeRenderer renderer;
     private final float TIME_STEP = 1 / 50f;;
     private float accumulator = 0f;
     private Block  mainTank;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
-    OrthographicCamera camera;
-//    Box2DDebugRenderer debugRenderer;
+//  private OrthographicCamera camera;
+//  Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
 	public final static Array<Block> tanks = new Array<Block>();
 	
+	private final Array<Body> bodies = new Array<Body>();
 	
 	public GameStage(float width,float height,boolean keepAspectRatio) {
         super(width, height,keepAspectRatio);
         
         
-        camera = new OrthographicCamera(); 
-        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+//      camera = new OrthographicCamera(); 
+//      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+//      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
         
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
@@ -93,13 +93,13 @@ public class GameStage extends Stage implements ContactListener {
 		control_height = height - game_height -length;//再减少一格
         
 //		debugRenderer = new Box2DDebugRenderer();
-        setUpWorld();
+		renderer = new ShapeRenderer();
+        init();
         
 //        Gdx.input.setInputProcessor(this);
         
     }
     
-    Array<Body> bodies = new Array<Body>();
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -130,12 +130,8 @@ public class GameStage extends Stage implements ContactListener {
 		}
 	}
 	
-
-    /**
-     * These menu buttons are only displayed when the game is over
-     */
     private void setUpWorld() {
-        world = WorldUtils.createWorld();
+    	world = WorldUtils.createWorld();
         world.setContactListener(this);
         world.setContactFilter( new ContactFilter() {
 			
@@ -179,15 +175,23 @@ public class GameStage extends Stage implements ContactListener {
 			}
 		});
         
-		renderer = new ShapeRenderer();
+        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, GameScreen.height - length);
+    }
+    
+    public void init(){
+    	bodies.clear();
+		this.clear();
+		setUpWorld();
 		mainTank = initMap();
 		if(mainTank == null){
 			Log.e(LogTag.TAG, "no main tank");
 			return;
 		}
-		
+		initControl();
+    }
+    
+    private void initControl(){
 		int side = GameScreen.width/8; 
-		
 		Control up = new Control(ControlType.UP,mainTank,       GameScreen.width/4 - side/2, control_height - side - side/2,side,side);
 		Control down = new Control(ControlType.DOWN,mainTank,   GameScreen.width/4 - side/2, side/2,side,side);
 		Control left = new Control(ControlType.LEFT,mainTank,   GameScreen.width/4 - side - side/2,  control_height/2  - side/2,side,side);
@@ -198,14 +202,12 @@ public class GameStage extends Stage implements ContactListener {
 		addActor(left.image);
 		addActor(right.image);
 		addActor(fire.image);
-		
-		WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, GameScreen.height - length);
-		
     }
-    
 	//
-	public Block initMap() {
+	private Block initMap() {
 		Block main = null;
+		blocks.clear();
+		tanks.clear();
 		
 		for (int i = 0; i < MapData.map.length; i++) {
 			float n = MapData.map.length - 1 - i;

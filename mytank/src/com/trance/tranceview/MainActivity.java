@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.trance.common.socket.SimpleSocketClient;
@@ -27,13 +28,15 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
+import com.trance.tranceview.screens.LoginScreen;
+import com.trance.tranceview.screens.MapScreen;
 import com.trance.tranceview.utils.GetDeviceId;
 import com.trance.tranceview.version.UpdateManager;
 
 
 public class MainActivity extends AndroidApplication {
 	
-	public TranceGame tanceGame;
+	public TranceGame tranceGame;
 	public final static String IP = "192.168.0.4";
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
@@ -92,12 +95,12 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		tanceGame = new TranceGame();
+		tranceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计
         config.useCompass = false;		  //禁用罗盘
         config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
-		initialize(tanceGame, config);
+		initialize(tranceGame, config);
 		init();
 	}
 	
@@ -191,6 +194,12 @@ public class MainActivity extends AndroidApplication {
 	
 	@Override
 	public void onBackPressed() {
+		Screen screen = tranceGame.getScreen();
+		if(screen != null){
+			if(screen.getClass() == MapScreen.class){
+				//TODO
+			}
+		}
 		long now = System.currentTimeMillis();
 		if(time <= 0 || (now - time) > 2000){
 			this.time = now;
@@ -204,7 +213,7 @@ public class MainActivity extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		tanceGame.dispose();
+		tranceGame.dispose();
 		System.exit(0);
 	}
 }

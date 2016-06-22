@@ -19,7 +19,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -43,7 +42,7 @@ public class GameScreen implements Screen{
 	private TranceGame tranceGame;
 	public static int width;
 	public static int height;
-	private Stage stage;
+	private GameStage stage;
 	private Image toWorld;
 	private Window window;
 	private ImageButton btn_up;
@@ -87,8 +86,6 @@ public class GameScreen implements Screen{
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		
-		MapData.win = false;
-		MapData.over = false;
 		stage = new GameStage(width, height, true);
 		
 		//返回家
@@ -128,7 +125,6 @@ public class GameScreen implements Screen{
 			}
 		});
 		window.addActor(btn_up);
-		timer = new Timer();
 	}
 
 	@Override
@@ -137,8 +133,13 @@ public class GameScreen implements Screen{
 			init();
 			init = true;
 		}
+		MapData.win = false;
+		MapData.over = false;
 		currTime = TOTAL_TIME;//初始化时间 
+		timer = new Timer();
 		timer.schedule(new MyTask() , 1000 ,1000);//表示多少时间后结束
+		stage.init();
+		stage.addActor(toWorld);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -153,8 +154,10 @@ public class GameScreen implements Screen{
 				MapData.win = true;
 				Music music = AssetsManager.assetManager.get("audio/game_over.mp3");
 				music.play();
-				timer.cancel();//取消定时器
-				timer = null;
+				if(timer != null){
+					timer.cancel();//取消定时器
+					timer = null;
+				}
 			}
 		}
 		
@@ -183,7 +186,11 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void hide() {
-		
+		MapData.over = true;
+		if(timer != null){
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	@Override

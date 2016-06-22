@@ -21,6 +21,7 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.screens.LoginScreen;
 
 
 /**
@@ -110,6 +111,8 @@ public class PlayerHandler extends HandlerSupport {
 					}
 					//分配一个
 //					MainActivity.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
+				}else{
+					LoginScreen.login = false;
 				}
 				
 			}
@@ -122,7 +125,7 @@ public class PlayerHandler extends HandlerSupport {
 					
 					@Override
 					public void run() {
-						activity.tanceGame.startGame();
+						activity.tranceGame.startGame();
 					}
 				});
 			}

@@ -38,6 +38,7 @@ public class LoginScreen implements Screen{
 	private FreeTypeBitmapFontData fontData;
 	private Stage stage;
 	private boolean init;
+	public static boolean login;
 	
 	public LoginScreen(TranceGame tranceGame) {
 
@@ -58,12 +59,16 @@ public class LoginScreen implements Screen{
 		
 		//GO
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.assetManager.get("ui/to_home.png", Texture.class),50,50,100,100));
+				AssetsManager.assetManager.get("ui/loginbg.png", Texture.class)));
 		start = new Image(startDrawable);
 		start.addListener(new ClickListener(){
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if(login){
+					return;
+				}
+				login = true;
 				new Thread(){
 					public void run(){
 						login();
@@ -71,6 +76,13 @@ public class LoginScreen implements Screen{
 				}.start();
 			}
 		});
+		
+		start.setWidth(start.getWidth() * 5);
+		start.setHeight(start.getHeight() * 5);
+		int x = (int) (Gdx.graphics.getWidth()/2 - start.getWidth()/2);
+		int y = (int) (Gdx.graphics.getHeight()/2 - start.getHeight()/2);
+		start.setX(x);
+		start.setY(y);
 		stage.addActor(start);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
@@ -86,7 +98,7 @@ public class LoginScreen implements Screen{
 		}
 	}
 	
-	protected void login() {
+	protected synchronized void login() {
 		String src = MainActivity.userName + MainActivity.loginKey;
 		String loginMD5 = null;
 		try {
@@ -99,8 +111,6 @@ public class LoginScreen implements Screen{
 		params.put("loginKey", loginMD5);
 		params.put("server", "1");
 		params.put("loginWay", "0");
-		params.put("fcmStatus", 0);
-		params.put("adultStatus", 2);
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
 		SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
@@ -111,13 +121,16 @@ public class LoginScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
+//		start.setX(200);
+//		start.setY(200);
 		spriteBatch.begin();
-		font.draw(spriteBatch,"start game..",400,240);
+		font.draw(spriteBatch,"start game..",350,240);
 		spriteBatch.end();
 	}
 	
 	@Override
 	public void resize(int width, int height) {
+		
 	}
 
 	@Override
@@ -144,6 +157,7 @@ public class LoginScreen implements Screen{
 		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();
+		login = false;
 	}
 	
 }
