@@ -45,6 +45,7 @@ public class AssetsManager{
     	assetManager.load("ui/up.png", Texture.class);
     	assetManager.load("ui/controls.png", Texture.class);
     	assetManager.load("ui/gotofight.png", Texture.class);
+//    	assetManager.load("ui/start.jpg", Texture.class);
     	
     	assetManager.load("world/me.png", Texture.class);
     	assetManager.load("world/enemy.png", Texture.class);
@@ -67,7 +68,7 @@ public class AssetsManager{
     	assetManager.load("audio/get_barrett.mp3",Music.class);
 		
 	}
-
+    
 	public static TextureRegion getBlockTextureRegion(int value) {
     	if(textureAtlas == null){
     		textureAtlas = assetManager.get("block/block.pack", TextureAtlas.class);

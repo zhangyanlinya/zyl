@@ -251,8 +251,8 @@ public class UpdateManager {
                     }
                     
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                	System.out.println("webserver connect fail ...");
+//                    e.printStackTrace();
                 }
                 
             }

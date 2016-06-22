@@ -9,14 +9,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.util.CryptUtil;
@@ -24,12 +27,11 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.utils.AssetsManager;
 
 public class LoginScreen implements Screen{
 	
-	private Image toWorld;
+	private Image start;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private FreeTypeFontGenerator generator;
@@ -47,8 +49,7 @@ public class LoginScreen implements Screen{
 		generator = new FreeTypeFontGenerator(
 	               Gdx.files.internal("font/haibao.ttf"));
 		//注意：里面的字符串一定不能重复 否则会报错
-		fontData = generator.generateData(35, FreeTypeFontGenerator.DEFAULT_CHARS
-	               + "点赞倒计时：", false);
+		fontData = generator.generateData(55, FreeTypeFontGenerator.DEFAULT_CHARS, false);
 		
 		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
 
@@ -56,8 +57,10 @@ public class LoginScreen implements Screen{
 		generator.dispose();//别忘记释放
 		
 		//GO
-		toWorld = new Image(AssetsManager.getControlTextureRegion(ControlType.WORLD));
-		toWorld.addListener(new ClickListener(){
+		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
+				AssetsManager.assetManager.get("ui/to_home.png", Texture.class),50,50,100,100));
+		start = new Image(startDrawable);
+		start.addListener(new ClickListener(){
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -68,7 +71,7 @@ public class LoginScreen implements Screen{
 				}.start();
 			}
 		});
-		stage.addActor(toWorld);
+		stage.addActor(start);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
@@ -108,7 +111,6 @@ public class LoginScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
-		stage.act(delta);
 		spriteBatch.begin();
 		font.draw(spriteBatch,"start game..",400,240);
 		spriteBatch.end();
