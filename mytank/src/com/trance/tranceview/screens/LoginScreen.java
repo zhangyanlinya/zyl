@@ -50,7 +50,7 @@ public class LoginScreen implements Screen{
 		generator = new FreeTypeFontGenerator(
 	               Gdx.files.internal("font/haibao.ttf"));
 		//注意：里面的字符串一定不能重复 否则会报错
-		fontData = generator.generateData(55, FreeTypeFontGenerator.DEFAULT_CHARS, false);
+		fontData = generator.generateData(45, FreeTypeFontGenerator.DEFAULT_CHARS + "点击图片开始游戏", false);
 		
 		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
 
@@ -124,7 +124,7 @@ public class LoginScreen implements Screen{
 //		start.setX(200);
 //		start.setY(200);
 		spriteBatch.begin();
-		font.draw(spriteBatch,"start game..",350,240);
+		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
 		spriteBatch.end();
 	}
 	
