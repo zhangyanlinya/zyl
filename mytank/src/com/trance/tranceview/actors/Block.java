@@ -43,6 +43,10 @@ public class Block extends GameActor implements Poolable{
   	public Dir dir = Dir.U;
 	// 速度
 	public float speed = 10;
+	
+	//攻击间隔时间
+	public long firespeed = 500;
+	
 	// 等级
 	public int level;
 	
@@ -77,6 +81,7 @@ public class Block extends GameActor implements Poolable{
 		}else if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.KING.getValue()){
 			good = 2;
 			this.atk = 20;
+			this.firespeed = 200;
 			if(RandomUtil.nextBoolean()){
 				this.speed += 10;
 			}
@@ -152,7 +157,9 @@ public class Block extends GameActor implements Poolable{
 		}
 		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
 	}
-
+	
+	private long time;
+	
 	/**
 	 * 111
 	 */
@@ -164,6 +171,13 @@ public class Block extends GameActor implements Poolable{
 		if (!alive) {
 			return;
 		}
+		
+		long now = System.currentTimeMillis();
+		if((now - time) < firespeed){
+			return;
+		}
+		time = now;
+		
 		if(good == 1){//自己的坦克才发出声音
 			Sound sound = AssetsManager.assetManager.get("audio/barrett.wav");
 			sound.play();
