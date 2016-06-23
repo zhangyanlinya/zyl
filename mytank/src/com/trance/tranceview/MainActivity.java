@@ -37,6 +37,7 @@ import com.trance.tranceview.version.UpdateManager;
 public class MainActivity extends AndroidApplication {
 	
 	public TranceGame tranceGame;
+//	public final static String IP = "192.168.0.4";
 	public final static String IP = "112.74.30.92";
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
