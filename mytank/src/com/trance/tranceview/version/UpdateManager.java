@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 
 import com.trance.trancetank.R;
 import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.constant.LogTag;
 
 public class UpdateManager {
 	 private Context mContext;
@@ -251,8 +252,7 @@ public class UpdateManager {
                     }
                     
                 } catch (Exception e) {
-                	System.out.println("webserver connect fail ...");
-//                    e.printStackTrace();
+                	Log.e(LogTag.TAG,"webserver connect fail ...");
                 }
                 
             }
