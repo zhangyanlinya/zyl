@@ -81,7 +81,7 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public Object getType() {
-				return Result.class;
+				return HashMap.class;
 			}
 
 			@Override
@@ -90,7 +90,7 @@ public class PlayerHandler extends HandlerSupport {
 					Object message) {
 				ResponseStatus status = response.getStatus();
 				if (status == ResponseStatus.SUCCESS) {
-					Result<PlayerDto> result =  (Result<PlayerDto>) response.getValue();
+					HashMap<String,Object> result =  (HashMap<String,Object>) response.getValue();
 					if(result == null){ 
 						return;
 					}
