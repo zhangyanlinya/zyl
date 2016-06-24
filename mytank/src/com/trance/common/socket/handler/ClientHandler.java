@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.trance.common.socket.ClientContext;
 import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Response;
+import com.trance.tranceview.constant.LogTag;
 
 
 /**
@@ -22,11 +24,6 @@ import com.trance.common.socket.model.Response;
  * @author zhangyl
  */
 public class ClientHandler extends IoHandlerAdapter {
-	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 	
 	private Handler handler;
 	
@@ -41,7 +38,7 @@ public class ClientHandler extends IoHandlerAdapter {
 		}
 		
 		if (!(message instanceof Response)) {
-			logger.error("未能识别的响应消息类型！");
+			Log.e(LogTag.TAG,"未能识别的响应消息类型！");
 		}
 		
 		Response response = (Response) message;
@@ -68,7 +65,7 @@ public class ClientHandler extends IoHandlerAdapter {
 				
 			} else {//异步回调
 				if (processor == null) {
-					logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
+					Log.e(LogTag.TAG, "没有对应的响应消息处理器[module: ["+ response.getModule() +"], cmd: ["+ response.getCmd() +"]");
 				} else {
 					//响应回调
 					processor.callback(session, response, ctx.getMessage());
@@ -82,7 +79,7 @@ public class ClientHandler extends IoHandlerAdapter {
 			}			
 		} else {//没有sn
 			if (processor == null) {
-				logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
+				Log.e(LogTag.TAG, "没有对应的响应消息处理器[module: ["+ response.getModule() +"], cmd: ["+ response.getCmd() +"]");
 			} else {
 				//响应回调
 				processor.callback(session, response, null);

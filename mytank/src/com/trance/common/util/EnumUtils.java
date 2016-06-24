@@ -3,15 +3,15 @@ package com.trance.common.util;
 
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
+
+import com.trance.tranceview.constant.LogTag;
 
 /**
  * 枚举工具类
  */
 public class EnumUtils {
 	
-	private static Logger logger = LoggerFactory.getLogger(EnumUtils.class);
 	
 	/**
 	 * 根据枚举类名和Key的名字获得枚举对象
@@ -46,7 +46,7 @@ public class EnumUtils {
 			}
 			return null;
 		} catch (Exception e) {
-			logger.error("构建枚举 [Class: {} - Value: {} ] 出现异常", new Object[] { enumClass, value, e});
+			Log.e(LogTag.TAG, "构建枚举 [Class: {"+enumClass+"} - Value: {"+value+"} ] 出现异常");
 			return null;
 		}
 	}

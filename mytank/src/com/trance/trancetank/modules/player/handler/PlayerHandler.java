@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.Message;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.badlogic.gdx.Gdx;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
@@ -18,6 +17,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
@@ -81,32 +81,30 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public Object getType() {
-				return HashMap.class;
+				return Result.class;
 			}
 
 			@Override
+			@SuppressWarnings("unchecked")
 			public void callback(IoSession session, Response response,
 					Object message) {
 				ResponseStatus status = response.getStatus();
 				if (status == ResponseStatus.SUCCESS) {
-					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-					if(result == null){
-						result = JSON.parseObject(response.getValueBytes(), HashMap.class);
-					}
-					if(result == null){
+					Result<PlayerDto> result =  (Result<PlayerDto>) response.getValue();
+					if(result == null){ 
 						return;
 					}
-					Object obj = result.get("content");
+					Object obj = result.getContent();
 					Object o = JSON.toJSON(obj);
 					MainActivity.player = JSON.parseObject(o.toString(), PlayerDto.class);
 					if (result.get("mapdata") != null) {
 						MapData.myMap = JsonUtils.jsonString2Object(result.get("mapdata")
 								.toString(), int[][].class);
 					}
-					if (result.get("worldPlayers") != null) {
-						Object json = JSON.toJSON(result.get("worldPlayers"));
-						TypeReference<List<PlayerDto>> typeReference = new TypeReference<List<PlayerDto>>(){};
-						List<PlayerDto> list = JSON.parseObject(json.toString(), typeReference);
+					Object json = result.get("worldPlayers");
+					if (json!= null) {
+						Object jsons = JSON.toJSON(json);
+						List<PlayerDto> list = JSON.parseArray(jsons.toString(), PlayerDto.class);
 						MainActivity.worldPlayers.addAll(list);
 					}
 					//分配一个

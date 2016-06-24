@@ -8,17 +8,16 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.util.Log;
+
+import com.trance.tranceview.constant.LogTag;
+
 /**
  * 响应消息处理器集合
  * 
  * @author zhangyl
  */
 public class ResponseProcessors {
-	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ResponseProcessors.class);
 	
 	/**
 	 * 响应消息处理器集合 {module： {cmd：ResponseProcessor}}
@@ -47,7 +46,7 @@ public class ResponseProcessors {
 		int cmd = processor.getCmd();
 		ResponseProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
-			logger.error("响应消息处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});//too many log so not display
+			Log.e(LogTag.TAG, "响应消息处理器[module: {"+ module +"}, cmd: {"+ cmd +"}]被覆盖！");
 		}		
 	}
 	

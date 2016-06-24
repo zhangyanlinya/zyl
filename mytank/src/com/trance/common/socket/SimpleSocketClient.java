@@ -215,6 +215,7 @@ public class SimpleSocketClient {
 
 		IoSession session = this.getSession();
 		if(session == null){
+			requestContext.remove(sn);
 			return false;
 		}
 		session.write(request);
@@ -291,7 +292,7 @@ public class SimpleSocketClient {
 			}
 
 			// 清除之前session的请求上下文信息
-			requestContext.clear();
+//			requestContext.clear();
 			ConnectFuture future = connector.connect(address);
 			boolean completed =	future.awaitUninterruptibly(10, TimeUnit.SECONDS);
 			if(!completed){

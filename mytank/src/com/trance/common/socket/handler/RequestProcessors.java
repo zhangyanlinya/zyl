@@ -3,8 +3,9 @@ package com.trance.common.socket.handler;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
+
+import com.trance.tranceview.constant.LogTag;
 
 
 /**
@@ -14,10 +15,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RequestProcessors {
 	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(RequestProcessors.class);
 	
 	/**
 	 * 请求处理器集合 {module： {cmd：RequestProcessor}}
@@ -51,7 +48,7 @@ public class RequestProcessors {
 		int cmd = processor.getCmd();
 		RequestProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
-			logger.error("请求处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});
+			Log.e(LogTag.TAG, "响应消息处理器[module: {"+ module +"}, cmd: {"+ cmd +"}]被覆盖！");
 		}		
 	}
 	
