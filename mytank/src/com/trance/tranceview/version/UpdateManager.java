@@ -7,14 +7,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -32,11 +31,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import com.trance.trancetank.R;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.constant.LogTag;
 
+@SuppressLint({ "HandlerLeak", "SdCardPath" })
 public class UpdateManager {
 	 private Context mContext;
 	    private final String updateMsg = "亲，有新版本，快下载吧！";            		//下载消息提示
