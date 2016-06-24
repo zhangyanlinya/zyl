@@ -5,8 +5,6 @@ import java.util.Map;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.os.Handler;
 import android.os.Message;
