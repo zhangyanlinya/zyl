@@ -94,7 +94,7 @@ public class PlayerHandler extends HandlerSupport {
 					if(result == null){ 
 						return;
 					}
-					Object obj = result.getContent();
+					Object obj = result.get("content");
 					Object o = JSON.toJSON(obj);
 					MainActivity.player = JSON.parseObject(o.toString(), PlayerDto.class);
 					if (result.get("mapdata") != null) {
