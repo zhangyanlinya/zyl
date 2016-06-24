@@ -82,7 +82,7 @@ public class GameScreen implements Screen{
 		generator.dispose();//别忘记释放
 		
 		music = AssetsManager.assetManager.get("audio/begin.mp3");
-		music.play();
+//		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		

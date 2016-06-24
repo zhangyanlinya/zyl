@@ -39,6 +39,7 @@ public class LoginScreen implements Screen{
 	private Stage stage;
 	private boolean init;
 	public static boolean login;
+	private boolean connect = true;
 	
 	public LoginScreen(TranceGame tranceGame) {
 
@@ -50,7 +51,7 @@ public class LoginScreen implements Screen{
 		generator = new FreeTypeFontGenerator(
 	               Gdx.files.internal("font/haibao.ttf"));
 		//注意：里面的字符串一定不能重复 否则会报错
-		fontData = generator.generateData(45, FreeTypeFontGenerator.DEFAULT_CHARS + "点击图片开始游戏", false);
+		fontData = generator.generateData(45, FreeTypeFontGenerator.DEFAULT_CHARS + "点击图片开始游戏网络连接失败", false);
 		
 		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
 
@@ -113,7 +114,10 @@ public class LoginScreen implements Screen{
 		params.put("loginWay", "0");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
+		connect = SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
+		if(!connect){
+			login = false;
+		}
 	}
 
 	@Override
@@ -121,10 +125,11 @@ public class LoginScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
-//		start.setX(200);
-//		start.setY(200);
 		spriteBatch.begin();
 		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
+		if(!connect){
+			font.draw(spriteBatch,"[网络连接失败]",350,200);
+		}
 		spriteBatch.end();
 	}
 	

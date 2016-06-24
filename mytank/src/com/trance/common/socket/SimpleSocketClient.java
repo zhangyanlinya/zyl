@@ -193,8 +193,8 @@ public class SimpleSocketClient {
 	 * @param request
 	 *            Request
 	 */
-	public void sendAsync(Request request) {
-		sendAsync(request, null);
+	public boolean sendAsync(Request request) {
+		return sendAsync(request, null);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class SimpleSocketClient {
 	 * @param message
 	 *            需要回调接口回传的对象
 	 */
-	public void sendAsync(Request request, Object message) {
+	public boolean sendAsync(Request request, Object message) {
 		int sn = this.getSn();
 
 		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), message,
@@ -215,11 +215,12 @@ public class SimpleSocketClient {
 
 		IoSession session = this.getSession();
 		if(session == null){
-			return;
+			return false;
 		}
 		session.write(request);
 
 		request.setSn(ctx.getOrignSn());
+		return true;
 	}
 
 	/**
@@ -290,7 +291,7 @@ public class SimpleSocketClient {
 			}
 
 			// 清除之前session的请求上下文信息
-//			requestContext.clear();
+			requestContext.clear();
 			ConnectFuture future = connector.connect(address);
 			boolean completed =	future.awaitUninterruptibly(10, TimeUnit.SECONDS);
 			if(!completed){

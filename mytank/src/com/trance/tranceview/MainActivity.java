@@ -29,6 +29,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
+import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
 import com.trance.tranceview.version.UpdateManager;
@@ -197,7 +198,7 @@ public class MainActivity extends AndroidApplication {
 	public void onBackPressed() {
 		Screen screen = tranceGame.getScreen();
 		if(screen != null){
-			if(screen.getClass() != WorldScreen.class){
+			if(screen.getClass() != WorldScreen.class && screen.getClass() != LoginScreen.class){
 				Gdx.app.postRunnable(new Runnable() {
 					
 					@Override
