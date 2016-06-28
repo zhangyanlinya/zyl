@@ -224,7 +224,6 @@ public class WorldScreen implements Screen, GestureListener {
 								}
 								MapData.other = true;
 								tranceGame.setScreen(tranceGame.mapScreen);
-//								hide();
 							}
 						}
 					}
