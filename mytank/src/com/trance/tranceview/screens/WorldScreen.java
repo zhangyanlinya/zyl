@@ -133,7 +133,7 @@ public class WorldScreen implements Screen, GestureListener {
 		
 		//Home
 		Image image = new Image(
-				AssetsManager.getControlTextureRegion(ControlType.HOME));
+				AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
 		image.addListener(new ClickListener() {
 
 			@Override
@@ -179,7 +179,7 @@ public class WorldScreen implements Screen, GestureListener {
 		
 		String fileName = "world/f-28.png";
 		
-		Image location = new Image(AssetsManager.assetManager.get(fileName, Texture.class));
+		Image location = new Image(AssetsManager.getInstance().get(fileName, Texture.class));
 		float x = rmo.getRectangle().x;
 		float y = rmo.getRectangle().y;
 		location.setPosition(x , y);
@@ -198,7 +198,7 @@ public class WorldScreen implements Screen, GestureListener {
 					PlayerDto target = MainActivity.getWorldPlayerDto(index);
 					if(target == null){
 						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
-						music = AssetsManager.assetManager.get("audio/get_barrett.mp3");
+						music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
 						music.play();
 						return false;
 					}

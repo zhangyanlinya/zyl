@@ -42,7 +42,7 @@ public class Bullet extends GameActor {
 		this.block = block;
 		this.dir = block.dir;
 		
-		textureRegion = AssetsManager.getBulletTextureRegion(type);
+		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
 		role = 1;
 		good = block.good;
 		float impulseX = 0;

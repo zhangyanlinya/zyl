@@ -52,7 +52,7 @@ public class Control extends Button{
 	 * @param height
 	 */
 	private void init(){
-		TextureRegion region = AssetsManager.getControlTextureRegion(type);
+		TextureRegion region = AssetsManager.getInstance().getControlTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(region.getRegionWidth());
 			this.setHeight(region.getRegionHeight());

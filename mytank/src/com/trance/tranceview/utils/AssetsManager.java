@@ -16,8 +16,6 @@
 
 package com.trance.tranceview.utils;
 
-import android.annotation.SuppressLint;
-
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -28,68 +26,74 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.ControlType;
 
-@SuppressLint("UseSparseArrays")
-public class AssetsManager{
-	public static AssetManager assetManager = new AssetManager();
-	public static TextureAtlas textureAtlas;
-
+public class AssetsManager extends AssetManager{
+	
+	public TextureAtlas textureAtlas;
+	private static AssetsManager assetsManager;
+	public static AssetsManager getInstance(){
+		if(assetsManager == null){
+			assetsManager = new AssetsManager();
+		}
+		return assetsManager;
+	}
+	
     public void init() {
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
-    	assetManager.load("block/block.pack", TextureAtlas.class);
-    	assetManager.load("ui/dir.png", Texture.class);
-    	assetManager.load("ui/bullet.png", Texture.class);
-//    	assetManager.load("ui/fire.png", Texture.class);
-    	assetManager.load("ui/attack.png", Texture.class);
-    	assetManager.load("ui/to_world.png", Texture.class);
-    	assetManager.load("ui/to_home.png", Texture.class);
-    	assetManager.load("ui/up.png", Texture.class);
-    	assetManager.load("ui/controls.png", Texture.class);
-    	assetManager.load("ui/gotofight.png", Texture.class);
-    	assetManager.load("ui/loginbg.png", Texture.class);
+    	load("block/block.pack", TextureAtlas.class);
+    	load("ui/dir.png", Texture.class);
+    	load("ui/bullet.png", Texture.class);
+//    	load("ui/fire.png", Texture.class);
+    	load("ui/attack.png", Texture.class);
+    	load("ui/to_world.png", Texture.class);
+    	load("ui/to_home.png", Texture.class);
+    	load("ui/up.png", Texture.class);
+    	load("ui/controls.png", Texture.class);
+    	load("ui/gotofight.png", Texture.class);
+    	load("ui/loginbg.png", Texture.class);
     	
-    	assetManager.load("world/me.png", Texture.class);
-    	assetManager.load("world/enemy.png", Texture.class);
-    	assetManager.load("world/tips.png", Texture.class);
-    	assetManager.load("world/f-28.png", Texture.class);
+    	load("world/me.png", Texture.class);
+    	load("world/enemy.png", Texture.class);
+    	load("world/tips.png", Texture.class);
+    	load("world/f-28.png", Texture.class);
     	
     	ininSound();
     	
-		assetManager.finishLoading();
+		finishLoading();
     }
     
     /**
      * 初始化声音资源
      */
     private void ininSound() {
-    	assetManager.load("audio/barrett.wav",Sound.class);
-    	assetManager.load("audio/begin.mp3",Music.class);
-    	assetManager.load("audio/game_over.mp3",Music.class);
-    	assetManager.load("audio/get_bomber.mp3",Music.class);
-    	assetManager.load("audio/get_barrett.mp3",Music.class);
+    	load("audio/barrett.wav",Sound.class);
+    	load("audio/begin.mp3",Music.class);
+    	load("audio/game_over.mp3",Music.class);
+    	load("audio/get_bomber.mp3",Music.class);
+    	load("audio/get_barrett.mp3",Music.class);
 		
 	}
     
-	public static TextureRegion getBlockTextureRegion(int value) {
+	public TextureRegion getBlockTextureRegion(int value) {
     	if(textureAtlas == null){
-    		textureAtlas = assetManager.get("block/block.pack", TextureAtlas.class);
+    		textureAtlas = this.get("block/block.pack", TextureAtlas.class);
     	}
     	AtlasRegion atlasRegion = textureAtlas.findRegion("b", value);
         return atlasRegion;
     }
     
-    public static TextureRegion getBulletTextureRegion(int value) {
+    public  TextureRegion getBulletTextureRegion(int value) {
     	String fileName ="ui/bullet.png";
     	if(value == BulletType.COMMON.getValue()){
     		fileName = "ui/bullet.png";
     	}
     	
-    	Texture texture = assetManager.get(fileName, Texture.class);
+    	Texture texture = get(fileName, Texture.class);
     	TextureRegion textureRegion = new TextureRegion(texture);
         return textureRegion;
     }
     
-    public static TextureRegion getControlTextureRegion(ControlType value) {
-    	Texture dirs = assetManager.get("ui/controls.png", Texture.class);
+    public  TextureRegion getControlTextureRegion(ControlType value) {
+    	Texture dirs = get("ui/controls.png", Texture.class);
     	TextureRegion[] regions = TextureRegion.split(dirs, 64 ,64 )[0];
     	
     	TextureRegion textureRegion = null;
@@ -97,19 +101,19 @@ public class AssetsManager{
     	switch(value){
     	case GOTOFIGHT:
     		fileName = "ui/gotofight.png";
-    		textureRegion = new TextureRegion(assetManager.get(fileName, Texture.class));
+    		textureRegion = new TextureRegion(get(fileName, Texture.class));
     		break;
     	case ATTACK:
     		fileName = "ui/attack.png";
-    		textureRegion = new TextureRegion(assetManager.get(fileName, Texture.class));
+    		textureRegion = new TextureRegion(get(fileName, Texture.class));
     		break;
     	case WORLD:
     		fileName = "ui/to_world.png";
-    		textureRegion = new TextureRegion(assetManager.get(fileName, Texture.class));
+    		textureRegion = new TextureRegion(get(fileName, Texture.class));
     		break;
     	case HOME:
     		fileName = "ui/to_home.png";
-    		textureRegion = new TextureRegion(assetManager.get(fileName, Texture.class));
+    		textureRegion = new TextureRegion(get(fileName, Texture.class));
     		break;
     	case LEFT:
     		textureRegion = regions[0];
@@ -128,15 +132,14 @@ public class AssetsManager{
     		break;
 		default:
 			fileName ="ui/dir.png"; 
-			textureRegion = new TextureRegion(assetManager.get(fileName, Texture.class));
+			textureRegion = new TextureRegion(get(fileName, Texture.class));
 			break;
     	}
-    	
         return textureRegion;
     }
 
     public void dispose() {
-    	assetManager.dispose();
+    	super.dispose();
     	if(textureAtlas != null)
     	textureAtlas.dispose();
     }

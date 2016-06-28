@@ -68,7 +68,7 @@ public class Block extends GameActor implements Poolable{
 		this.setHeight(height);
 		this.renderer = renderer;
 		this.alive = true;
-		textureRegion = AssetsManager.getBlockTextureRegion(type);
+		textureRegion = AssetsManager.getInstance().getBlockTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
@@ -123,9 +123,9 @@ public class Block extends GameActor implements Poolable{
 			if (RandomUtil.nextInt(30) > 28) {
 				this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
 			}
-			if (RandomUtil.nextInt(30) > 26) {
+//			if (RandomUtil.nextInt(30) > 26) {
 				fire();
-			}
+//			}
 		}
 		
 		switch (status) {
@@ -179,7 +179,7 @@ public class Block extends GameActor implements Poolable{
 		time = now;
 		
 		if(good == 1){//自己的坦克才发出声音
-			Sound sound = AssetsManager.assetManager.get("audio/barrett.wav");
+			Sound sound = AssetsManager.getInstance().get("audio/barrett.wav");
 			sound.play();
 		}
 		Bullet bullet = Bullet.bulletPool.obtain();
@@ -258,11 +258,11 @@ public class Block extends GameActor implements Poolable{
 		
 		if(this.type == BlockType.KING.getValue()){
 			MapData.win = true;
-			Music music = AssetsManager.assetManager.get("audio/game_over.mp3");
+			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 			music.play();
 		}else if(this.type == BlockType.TANK_MAIN.getValue()){
 			MapData.over = true;
-			Music music = AssetsManager.assetManager.get("audio/game_over.mp3");
+			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 			music.play();
 		}
 	}

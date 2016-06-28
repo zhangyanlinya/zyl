@@ -81,7 +81,7 @@ public class GameScreen implements Screen{
 		font.setColor(Color.RED);
 		generator.dispose();//别忘记释放
 		
-		music = AssetsManager.assetManager.get("audio/begin.mp3");
+		music = AssetsManager.getInstance().get("audio/begin.mp3");
 		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
@@ -89,7 +89,7 @@ public class GameScreen implements Screen{
 		stage = new GameStage(width, height, true);
 		
 		//返回家
-		toWorld = new Image(AssetsManager.getControlTextureRegion(ControlType.WORLD));
+		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.addListener(new ClickListener(){
 			
 			@Override
@@ -101,7 +101,7 @@ public class GameScreen implements Screen{
 		
 		//提示框
 		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.assetManager.get("world/tips.png",Texture.class)));
+				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
 		Drawable background = new TextureRegionDrawable(tips);
 		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
 		window = new Window("点赞",style);
@@ -109,7 +109,7 @@ public class GameScreen implements Screen{
 		
 		//点赞
 		TextureRegionDrawable up = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.assetManager.get("ui/up.png",Texture.class)));
+				AssetsManager.getInstance().get("ui/up.png",Texture.class)));
 		btn_up = new ImageButton(up);
 		btn_up.addListener(new ClickListener(){
 
@@ -119,7 +119,7 @@ public class GameScreen implements Screen{
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", MapData.playerId);
 					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
-					Music music = AssetsManager.assetManager.get("audio/get_bomber.mp3");
+					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
 					music.play();
 				}
 			}
@@ -152,7 +152,7 @@ public class GameScreen implements Screen{
 			currTime --;
 			if(currTime <= 0){//表示到时了
 				MapData.win = true;
-				Music music = AssetsManager.assetManager.get("audio/game_over.mp3");
+				Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 				music.play();
 				if(timer != null){
 					timer.cancel();//取消定时器

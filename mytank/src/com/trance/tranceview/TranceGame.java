@@ -14,13 +14,12 @@ public class TranceGame extends Game {
 	public Screen worldScreen;//
 	public Screen mapScreen;    //
 	public Screen gameScreen;  //
-	private  AssetsManager assetsManager = new AssetsManager();
 	@Override
 	public void create() {
 		
 		try {
 //			AudioUtils.getInstance().init();
-			assetsManager.init(); //初始化资源
+			AssetsManager.getInstance().init(); //初始化资源
 			loginScreen = new LoginScreen(this);
 			worldScreen = new WorldScreen(this);
 			mapScreen = new MapScreen(this);
@@ -50,7 +49,7 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
-		assetsManager.dispose();
+		AssetsManager.getInstance().dispose();
 		super.dispose();
 	}
 }

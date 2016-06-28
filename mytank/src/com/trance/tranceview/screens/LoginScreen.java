@@ -60,7 +60,7 @@ public class LoginScreen implements Screen{
 		
 		//GO
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.assetManager.get("ui/loginbg.png", Texture.class)));
+				AssetsManager.getInstance().get("ui/loginbg.png", Texture.class)));
 		start = new Image(startDrawable);
 		start.addListener(new ClickListener(){
 			

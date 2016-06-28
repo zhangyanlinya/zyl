@@ -103,7 +103,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		//攻击
-		attack = new Image(AssetsManager.getControlTextureRegion(ControlType.ATTACK));
+		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
 		attack.setPosition(width - attack.getWidth(), attack.getHeight());
 		attack.addListener(new ClickListener(){
 
@@ -115,7 +115,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.addActor(attack);
 		
 		//返回世界地图
-		toWorld = new Image(AssetsManager.getControlTextureRegion(ControlType.WORLD));
+		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 //		toWorld.setPosition(width - toWorld.getWidth()*2, toWorld.getHeight());
 		toWorld.addListener(new ClickListener(){
 			
