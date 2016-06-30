@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -79,7 +80,7 @@ public class WorldScreen implements Screen, GestureListener {
 		set.add("点");
 		set.add("赞");
 		if(!MainActivity.worldPlayers.isEmpty()){
-			for(PlayerDto dto : MainActivity.worldPlayers ){
+			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
 				String name = dto.getPlayerName();
 				for(int i = 0; i < name.length(); i++){
 					char c = name.charAt(i);
@@ -197,7 +198,10 @@ public class WorldScreen implements Screen, GestureListener {
 					int pointer, int button) {
 					PlayerDto target = MainActivity.getWorldPlayerDto(index);
 					if(target == null){
-						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
+						Map<String,Object> params = new HashMap<String,Object>();
+						params.put("x", x);
+						params.put("y", y);
+						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
 						music.play();
 						return false;
@@ -252,7 +256,7 @@ public class WorldScreen implements Screen, GestureListener {
 		spriteBatch.begin();
 		font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
 		if(!MainActivity.worldPlayers.isEmpty()){
-			for(PlayerDto dto : MainActivity.worldPlayers ){
+			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
 				int length = dto.getPlayerName().length();
 				String name = dto.getPlayerName().substring(0, length > 6 ? 6 : length);
 				font.draw(spriteBatch, name + ": " + dto.getUp(), dto.getX(), dto.getY());

@@ -1,7 +1,8 @@
 package com.trance.trancetank.modules.player.handler;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -18,6 +19,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.player.model.Point;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.LoginScreen;
@@ -102,9 +104,12 @@ public class PlayerHandler extends HandlerSupport {
 					}
 					Object json = result.get("worldPlayers");
 					if (json!= null) {
-						Object jsons = JSON.toJSON(json);
-						List<PlayerDto> list = JSON.parseArray(jsons.toString(), PlayerDto.class);
-						MainActivity.worldPlayers.addAll(list);
+						Map<String,Object> map = JSON.parseObject(json.toString());
+						for(Entry<String, Object> e :map.entrySet()){
+							Point key = JSON.parseObject(e.getKey(),Point.class);
+							PlayerDto value = JSON.parseObject(e.getValue().toString(),PlayerDto.class);
+							MainActivity.worldPlayers.put(key, value);
+						}
 					}
 					//分配一个
 //					MainActivity.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));

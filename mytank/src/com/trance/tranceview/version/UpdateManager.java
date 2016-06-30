@@ -46,7 +46,7 @@ public class UpdateManager {
 	    private Thread downloadApkThread = null;                            //下载线程
 	    private Thread checkVersionThread = null;                            //下载线程
 	    private final String checkUrl = "http://"+MainActivity.IP+":8080/trance_admin/version";    				    //apk的版本信息
-	    private final String apkUrl = "http://"+MainActivity.IP+":8080/trance_admin/download/TranceTank.apk";       //apk的URL地址
+	    private final String apkUrl = "http://"+MainActivity.IP+":8080/trance_admin/download/mytank.apk";      		//apk的URL地址
 	    private final String savePath = "/sdcard/updateApk";              	//下载的apk存放的路径
 	    private final String saveFileName = savePath + "TranceTank.apk";    //下载的apk文件
 	    private int progress = 0;                                           //下载进度

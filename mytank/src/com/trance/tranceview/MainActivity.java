@@ -1,9 +1,7 @@
 package com.trance.tranceview;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -28,6 +26,7 @@ import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.player.model.Point;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
@@ -43,7 +42,7 @@ public class MainActivity extends AndroidApplication {
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
-	public final static List<PlayerDto> worldPlayers = new ArrayList<PlayerDto>();
+	public final static Map<Point,PlayerDto> worldPlayers = new HashMap<Point,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
 	

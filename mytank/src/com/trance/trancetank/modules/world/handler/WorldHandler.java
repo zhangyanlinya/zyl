@@ -12,6 +12,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.player.model.Point;
 import com.trance.tranceview.MainActivity;
 
 /**
@@ -83,7 +84,10 @@ public class WorldHandler extends HandlerSupport {
 							Object o = JSON.toJSON(obj);
 							PlayerDto playerDto = JSON.parseObject(o.toString(), PlayerDto.class);
 							if(playerDto != null){
-								MainActivity.worldPlayers.add(playerDto);
+								int x = (Integer) result.get("x");
+								int y = (Integer) result.get("y");
+								Point key = Point.valueOf(x, y);
+								MainActivity.worldPlayers.put(key,playerDto);
 							}
 						}
 					}
