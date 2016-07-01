@@ -52,6 +52,12 @@ public class Block extends GameActor implements Poolable{
 	
 	public boolean move;
 	
+	//追踪
+	public boolean track;
+	
+	public float trackX;
+	
+	public float trackY;
 	/**
 	 * 初始化
 	 * @param type
@@ -115,47 +121,90 @@ public class Block extends GameActor implements Poolable{
 
 		float x = body.getPosition().x;
 		float y = body.getPosition().y;
-		
-		float impulseX = 0;
-		float impulseY = 0;
-		
-		if (type == BlockType.TANK_ENEMY.getValue()) {
-			if (RandomUtil.nextInt(30) > 28) {
-				this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
-			}
-//			if (RandomUtil.nextInt(30) > 26) {
-				fire();
-//			}
-		}
-		
+
+		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
+	}
+	
+	private void listenStatus(){
 		switch (status) {
 		case L:
-			setRotation(90);
-			impulseX = -speed;
-			body.setLinearVelocity(impulseX, impulseY);
+			left();
 			break;
 		case R:
-			setRotation(-90);
-			impulseX = speed;
-			body.setLinearVelocity(impulseX, impulseY);
+			right();
 			break;
 		case U:
-			setRotation(0);
-			impulseY = speed;
-			body.setLinearVelocity(impulseX, impulseY);
+			up();
 			break;
 		case D:
-			setRotation(180);
-			impulseY = -speed;
-			body.setLinearVelocity(impulseX, impulseY);
+			down();
 			break;
 		case S:
-			body.setLinearVelocity(0, 0);
+			stop();
 			break;
 		default:
 			break;
 		}
-		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
+	}
+	
+	private void left(){
+		setRotation(90);
+		body.setLinearVelocity(-speed, 0);
+	}
+	
+	private void right(){
+		setRotation(-90);
+		body.setLinearVelocity(speed, 0);
+	}
+	
+	private void up(){
+		setRotation(0);
+		body.setLinearVelocity(0, speed);
+	}
+	
+	private void down(){
+		setRotation(180);
+		body.setLinearVelocity(0, -speed);
+	}
+	
+	private void stop(){
+		body.setLinearVelocity(0, 0);
+	}
+	
+	private void track(float destX, float destY){
+		float x = this.getX();
+		float y = this.getY();
+		float disX = Math.abs(destX - x);
+		float disY = Math.abs(destY - y);
+		if(destX > x){
+			if(y > destY){// 右上角
+				if(disX > disY){
+					right();
+				}else{
+					up();
+				}
+			}else{//右下角
+				if(disX > disY){
+					right();
+				}else{
+					down();
+				}
+			}
+		}else{
+			if(y > destY){//左上角
+				if(disX > disY){
+					left();
+				}else{
+					up();
+				}
+			}else{//左下角
+				if(disX > disY){
+					left();
+				}else{
+					down();
+				}
+			}
+		}
 	}
 	
 	private long time;
@@ -227,10 +276,20 @@ public class Block extends GameActor implements Poolable{
 			renderer.end();
 			batch.begin();
 		}
+		
+		listenStatus();
 		if(move){
 			move();
 		}
-		
+		if (type == BlockType.TANK_ENEMY.getValue()) {
+			if (RandomUtil.nextInt(30) > 28) {
+				this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
+			}
+			fire();
+		}
+		if(track){
+			track(trackX, trackY);
+		}
 	}
 	
 	public Dir getStatus() {
