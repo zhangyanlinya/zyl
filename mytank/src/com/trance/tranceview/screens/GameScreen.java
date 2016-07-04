@@ -55,7 +55,7 @@ public class GameScreen implements Screen{
 	/**
 	 * 一局所用总时间
 	 */
-	private final static int TOTAL_TIME = 1 * 60;
+	private final static int TOTAL_TIME = 2 * 60;
 	
 	/**
 	 * 当前时间
