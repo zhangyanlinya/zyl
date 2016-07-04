@@ -45,19 +45,17 @@ public class Block extends GameActor implements Poolable{
 	public float speed = 10;
 	
 	//攻击间隔时间
-	public long firespeed = 500;
+	public long fireDelay = 500;
+	
+	//攻击间隔时间
+	public long dirDelay = 1000;
 	
 	// 等级
 	public int level;
 	
 	public boolean move;
 	
-	//追踪
-	public boolean track;
-	
-	public float trackX;
-	
-	public float trackY;
+	public Block trackBlock;
 	/**
 	 * 初始化
 	 * @param type
@@ -84,13 +82,13 @@ public class Block extends GameActor implements Poolable{
 		if(type == BlockType.TANK_MAIN.getValue()){
 			this.setColor(Color.RED);
 			good = 1;
+			hp = 1000;
+			maxhp = 1000;
+			this.setStatus(Dir.D);
 		}else if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.KING.getValue()){
 			good = 2;
 			this.atk = 20;
-			this.firespeed = 200;
-			if(RandomUtil.nextBoolean()){
-				this.speed += 10;
-			}
+			this.fireDelay = 200;
 			this.setColor(Color.WHITE);
 		}
 //		else{//npc为敌方
@@ -107,6 +105,7 @@ public class Block extends GameActor implements Poolable{
 		}
 		body = WorldUtils.createBlock(world,type,x, y, width, height);
 		body.setUserData(this);
+		
 	}
 	
 	public void setIndex(int i,int j){
@@ -114,6 +113,8 @@ public class Block extends GameActor implements Poolable{
 		this.j = j;
 	}
 	
+	private float vx;
+	private float vy;
 	public void move() {
 		if(MapData.win || MapData.over){
 			return;
@@ -121,8 +122,10 @@ public class Block extends GameActor implements Poolable{
 
 		float x = body.getPosition().x;
 		float y = body.getPosition().y;
+		body.setLinearVelocity(vx, vy);
 
 		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
+//		setRotation(body.getAngle());
 	}
 	
 	private void listenStatus(){
@@ -149,26 +152,31 @@ public class Block extends GameActor implements Poolable{
 	
 	private void left(){
 		setRotation(90);
-		body.setLinearVelocity(-speed, 0);
+		this.vx = -speed;
+		this.vy = 0;
 	}
 	
 	private void right(){
 		setRotation(-90);
-		body.setLinearVelocity(speed, 0);
+		this.vx = speed;
+		this.vy = 0;
 	}
 	
 	private void up(){
 		setRotation(0);
-		body.setLinearVelocity(0, speed);
+		this.vx = 0;
+		this.vy = speed;
 	}
 	
 	private void down(){
 		setRotation(180);
-		body.setLinearVelocity(0, -speed);
+		this.vx = 0;
+		this.vy = -speed;
 	}
 	
 	private void stop(){
-		body.setLinearVelocity(0, 0);
+		this.vx = 0;
+		this.vy = 0;
 	}
 	
 	private void track(float destX, float destY){
@@ -176,35 +184,53 @@ public class Block extends GameActor implements Poolable{
 		float y = this.getY();
 		float disX = Math.abs(destX - x);
 		float disY = Math.abs(destY - y);
-		if(destX > x){
+		if(destX < x){
 			if(y > destY){// 右上角
 				if(disX > disY){
-					right();
+					status = Dir.L;
 				}else{
-					up();
+					status = Dir.D;
 				}
 			}else{//右下角
 				if(disX > disY){
-					right();
+					status = Dir.L;
 				}else{
-					down();
+					status = Dir.U;
 				}
 			}
 		}else{
 			if(y > destY){//左上角
 				if(disX > disY){
-					left();
+					status = Dir.R;
 				}else{
-					up();
+					status = Dir.D;
 				}
 			}else{//左下角
 				if(disX > disY){
-					left();
+					status = Dir.R;
 				}else{
-					down();
+					status = Dir.U;
 				}
 			}
 		}
+	}
+	
+	private long dirTime;
+	
+	private void randomSatus(){
+		long now = System.currentTimeMillis();
+		if((now - dirTime) < dirDelay){
+			return;
+		}
+		dirTime = now + RandomUtil.nextInt(1000);
+		if(collision){
+			this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
+		}else{
+			if(trackBlock != null){
+				track(trackBlock.getX(),trackBlock.getY());
+			}
+		}
+			
 	}
 	
 	private long time;
@@ -213,7 +239,7 @@ public class Block extends GameActor implements Poolable{
 	 * 111
 	 */
 	public void fire() {
-		if(MapData.win){
+		if(MapData.win || MapData.over){
 			return;
 		}
 		
@@ -222,7 +248,7 @@ public class Block extends GameActor implements Poolable{
 		}
 		
 		long now = System.currentTimeMillis();
-		if((now - time) < firespeed){
+		if((now - time) < fireDelay){
 			return;
 		}
 		time = now;
@@ -258,7 +284,6 @@ public class Block extends GameActor implements Poolable{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		
 		batch.draw(textureRegion, getX(), getY(), getWidth() / 2,
 				getHeight() / 2, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
@@ -269,12 +294,27 @@ public class Block extends GameActor implements Poolable{
 			renderer.begin(ShapeType.Line);
 			renderer.rect(getX(), getY() + getHeight(), getWidth(), 5);
 			renderer.end();
-			renderer.setColor(Color.GREEN);
+			float percent = hp / maxhp;
+			if(percent < 0.2){
+				renderer.setColor(Color.RED);
+			}else if(percent < 0.5){
+				renderer.setColor(Color.YELLOW);
+			}else{
+				renderer.setColor(Color.GREEN);
+			}
 			renderer.begin(ShapeType.Filled);
-			renderer.rect(getX() + 1, getY() + getHeight() + 1, hp / maxhp
+			
+			renderer.rect(getX() + 1, getY() + getHeight() + 1, percent
 					* (getWidth() - 2), 4);
 			renderer.end();
 			batch.begin();
+		}
+		
+		if(MapData.win || MapData.over){
+			return;
+		}
+		if (!alive) {
+			return;
 		}
 		
 		listenStatus();
@@ -282,14 +322,13 @@ public class Block extends GameActor implements Poolable{
 			move();
 		}
 		if (type == BlockType.TANK_ENEMY.getValue()) {
-			if (RandomUtil.nextInt(30) > 28) {
-				this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
-			}
 			fire();
+			randomSatus();
 		}
-		if(track){
-			track(trackX, trackY);
-		}
+	}
+	
+	public void setTrackBlock(Block block){
+		this.trackBlock = block;
 	}
 	
 	public Dir getStatus() {

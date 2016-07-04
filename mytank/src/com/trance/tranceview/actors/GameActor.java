@@ -18,21 +18,23 @@ public abstract class GameActor extends Actor{
 	// 生命上限
 	public float maxhp = 10;
 	// 攻击力
-	public int atk = 5 ;
+	public int atk = 10 ;
 	
 	public boolean alive = true;
+	
+	//
+	public boolean collision;
 	
 	/**
 	 * 受到攻击
 	 * @param a
 	 * @return
 	 */
-	public boolean byAttack(GameActor a) {
+	public void byAttack(GameActor a) {
 		hp -= a.atk;
 		if (hp <= 0) {
-			return true;
+			dead();
 		}
-		return false;
 	}
 
 	public abstract void dead();

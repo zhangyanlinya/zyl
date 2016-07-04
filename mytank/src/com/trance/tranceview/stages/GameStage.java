@@ -65,7 +65,7 @@ public class GameStage extends Stage implements ContactListener {
     private ShapeRenderer renderer;
     private final float TIME_STEP = 1 / 50f;;
     private float accumulator = 0f;
-    private Block  mainTank;
+    private Block mainTank;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -233,17 +233,22 @@ public class GameStage extends Stage implements ContactListener {
 		}
 		//目的为了图层顺序
 		for(int i = 0 ; i <tanks.size ;i++){
-			addActor(tanks.get(i));
+			Block block = tanks.get(i);
+			addActor(block);
+			//track
+			if(block.type == BlockType.TANK_ENEMY.getValue()){
+				block.setTrackBlock(mainTank);//tracking to mainTank;
+			}
 		}
 		for(int i = 0 ; i <blocks.size ;i++){
 			addActor(blocks.get(i));
 		}
+		
 		return main;
 	}
 
 	@Override
     public void beginContact(Contact contact) {
-    	
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
         Body bodyA = fa.getBody();
@@ -269,39 +274,43 @@ public class GameStage extends Stage implements ContactListener {
         if(a.role != b.role){//角色不一样
 			if (a.good != b.good) {//敌对的
 				if (a.role == 1) {
-					if (b.byAttack(a)) {
-						b.dead();
-					}
-					a.dead();
+					b.byAttack(a);
 				} else {
-					if (a.byAttack(b)) {
-						a.dead();
-					}
-					b.dead();
-				}
-			}else{
-				if(a.role == 1){
-					a.dead();
-				}
-				if(b.role == 1){
-					b.dead();
+					a.byAttack(b);
 				}
 			}
-        }else{
-        	if(a.role == 1){
-        		a.dead();
-        	}
-        	if(b.role == 1){
-        		b.dead();
-        	}
         }
-
+        if(a.role == 1){
+     	   a.dead();
+        }
+        if(b.role == 1){
+    		b.dead();
+    	}
+        a.collision = true;
+        b.collision = true;
     }
 	
 	
     @Override
     public void endContact(Contact contact) {
-    	
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
+        if(fa != null){
+        	 Body bodyA = fa.getBody();
+        	 GameActor a =(GameActor) bodyA.getUserData();
+             if(a != null){
+             	a.collision = false;
+             }
+        }
+        if(fb != null){
+        	 Body bodyB = fb.getBody();
+        	 GameActor b =(GameActor) bodyB.getUserData();
+        	 if(b != null){
+             	b.collision = false;
+             }
+        }
+       
+       
     }
 
     @Override

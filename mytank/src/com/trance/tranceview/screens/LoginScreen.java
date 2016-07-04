@@ -40,9 +40,10 @@ public class LoginScreen implements Screen{
 	private boolean init;
 	public static boolean login;
 	private boolean connect = true;
+	private TranceGame tranceGame;
 	
 	public LoginScreen(TranceGame tranceGame) {
-
+		this.tranceGame = tranceGame;
 	}
 	
 	public void init(){
@@ -70,11 +71,12 @@ public class LoginScreen implements Screen{
 					return;
 				}
 				login = true;
-				new Thread(){
-					public void run(){
-						login();
-					}
-				}.start();
+//				new Thread(){
+//					public void run(){
+//						login();
+//					}
+//				}.start();
+				tranceGame.startGame();
 			}
 		});
 		
