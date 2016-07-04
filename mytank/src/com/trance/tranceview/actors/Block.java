@@ -179,9 +179,18 @@ public class Block extends GameActor implements Poolable{
 		this.vy = 0;
 	}
 	
-	private void track(float destX, float destY){
+	public long trackTime;
+	
+	public void track(Block  block){
+		long now = System.currentTimeMillis();
+		if((now - trackTime) < 1000){
+			return;
+		}
+		trackTime = now;
 		float x = this.getX();
 		float y = this.getY();
+		float destX = block.getX();
+		float destY = block.getY();
 		float disX = Math.abs(destX - x);
 		float disY = Math.abs(destY - y);
 		if(destX < x){
@@ -223,14 +232,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
-		if(collision){
-			this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
-		}else{
-			if(trackBlock != null){
-				track(trackBlock.getX(),trackBlock.getY());
-			}
-		}
-			
+		this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
 	}
 	
 	private long time;

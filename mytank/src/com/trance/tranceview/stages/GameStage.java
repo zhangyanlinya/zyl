@@ -246,6 +246,20 @@ public class GameStage extends Stage implements ContactListener {
 		
 		return main;
 	}
+	
+	
+
+	@Override
+	public void draw() {
+		for(int i = 0 ; i <tanks.size ;i++){
+			Block block = tanks.get(i);
+			//track
+			if(block.type == BlockType.TANK_ENEMY.getValue()){
+				block.track(mainTank);
+			}
+		}
+		super.draw();
+	}
 
 	@Override
     public void beginContact(Contact contact) {
@@ -322,7 +336,7 @@ public class GameStage extends Stage implements ContactListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
     }
-	
+    
 	@Override
 	public void dispose() {
 		renderer.dispose();
