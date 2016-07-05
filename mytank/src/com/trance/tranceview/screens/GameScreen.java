@@ -82,7 +82,7 @@ public class GameScreen implements Screen{
 		generator.dispose();//别忘记释放
 		
 		music = AssetsManager.getInstance().get("audio/begin.mp3");
-		music.play();
+//		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		
@@ -119,8 +119,8 @@ public class GameScreen implements Screen{
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", MapData.playerId);
 					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
-					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
-					music.play();
+//					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
+//					music.play();
 				}
 			}
 		});
@@ -152,8 +152,8 @@ public class GameScreen implements Screen{
 			currTime --;
 			if(currTime <= 0){//表示到时了
 				MapData.win = true;
-				Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-				music.play();
+//				Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
+//				music.play();
 				if(timer != null){
 					timer.cancel();//取消定时器
 					timer = null;

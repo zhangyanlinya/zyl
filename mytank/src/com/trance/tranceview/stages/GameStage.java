@@ -18,8 +18,10 @@ package com.trance.tranceview.stages;
 
 import android.util.Log;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -69,8 +71,8 @@ public class GameStage extends Stage implements ContactListener {
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
-//  private OrthographicCamera camera;
-//  Box2DDebugRenderer debugRenderer;
+    private OrthographicCamera camera;
+    Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
@@ -82,9 +84,9 @@ public class GameStage extends Stage implements ContactListener {
         super(width, height,keepAspectRatio);
         
         
-//      camera = new OrthographicCamera(); 
-//      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-//      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+        camera = new OrthographicCamera(); 
+        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
         
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
@@ -92,7 +94,7 @@ public class GameStage extends Stage implements ContactListener {
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length;//再减少一格
         
-//		debugRenderer = new Box2DDebugRenderer();
+		debugRenderer = new Box2DDebugRenderer();
 		renderer = new ShapeRenderer();
         init();
         
@@ -115,7 +117,7 @@ public class GameStage extends Stage implements ContactListener {
         	destoryBody(bodies.get(i));
         }
         
-//      debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
     }
     
     
@@ -300,31 +302,12 @@ public class GameStage extends Stage implements ContactListener {
         if(b.role == 1){
     		b.dead();
     	}
-        a.collision = true;
-        b.collision = true;
     }
 	
 	
     @Override
     public void endContact(Contact contact) {
-        Fixture fa = contact.getFixtureA();
-        Fixture fb = contact.getFixtureB();
-        if(fa != null){
-        	 Body bodyA = fa.getBody();
-        	 GameActor a =(GameActor) bodyA.getUserData();
-             if(a != null){
-             	a.collision = false;
-             }
-        }
-        if(fb != null){
-        	 Body bodyB = fb.getBody();
-        	 GameActor b =(GameActor) bodyB.getUserData();
-        	 if(b != null){
-             	b.collision = false;
-             }
-        }
-       
-       
+    	
     }
 
     @Override
@@ -340,7 +323,7 @@ public class GameStage extends Stage implements ContactListener {
 	@Override
 	public void dispose() {
 		renderer.dispose();
-//		debugRenderer.dispose();
+		debugRenderer.dispose();
 		world.dispose();
 		blocks.clear();
 		tanks.clear();

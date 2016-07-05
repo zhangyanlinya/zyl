@@ -62,13 +62,13 @@ public class WorldUtils {
     public static Body createBlock(World world, int type,float x, float y, float width, float height) {
     	
     	BodyDef bodyDef = new BodyDef();
-    	if(type < BlockType.TANK_MAIN.getValue()){
-    		bodyDef.type = BodyType.StaticBody;
-    	}else{
+//    	if(type < BlockType.TANK_MAIN.getValue()){
     		bodyDef.type = BodyType.DynamicBody;
-    		bodyDef.fixedRotation = true;
+//    	}else{
+//    		bodyDef.type = BodyType.DynamicBody;
+//    		bodyDef.fixedRotation = false;
 //    		bodyDef.linearDamping = 0.1f;
-    	}
+//    	}
     	bodyDef.position.set((x + width/2) * GameStage.WORLD_TO_BOX, (y + height/ 2) * GameStage.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
     	shape.setAsBox((width/ 2 - 2) * GameStage.WORLD_TO_BOX, (height / 2 - 2) * GameStage.WORLD_TO_BOX);

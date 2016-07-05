@@ -202,8 +202,8 @@ public class WorldScreen implements Screen, GestureListener {
 						params.put("x", x);
 						params.put("y", y);
 						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
-						music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
-						music.play();
+//						music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
+//						music.play();
 						return false;
 					}
 					
@@ -254,7 +254,9 @@ public class WorldScreen implements Screen, GestureListener {
 		tiledMapRenderer.render();
 		stage.draw();
 		spriteBatch.begin();
-		font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
+		if(MainActivity.player != null){
+			font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
+		}
 		if(!MainActivity.worldPlayers.isEmpty()){
 			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
 				int length = dto.getPlayerName().length();

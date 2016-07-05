@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -120,12 +121,11 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 
-		float x = body.getPosition().x;
-		float y = body.getPosition().y;
+//		float x = body.getPosition().x;
+//		float y = body.getPosition().y;
 		body.setLinearVelocity(vx, vy);
 
-		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
-//		setRotation(body.getAngle());
+//		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
 	}
 	
 	private void listenStatus(){
@@ -256,8 +256,8 @@ public class Block extends GameActor implements Poolable{
 		time = now;
 		
 		if(good == 1){//自己的坦克才发出声音
-			Sound sound = AssetsManager.getInstance().get("audio/barrett.wav");
-			sound.play();
+//			Sound sound = AssetsManager.getInstance().get("audio/barrett.wav");
+//			sound.play();
 		}
 		Bullet bullet = Bullet.bulletPool.obtain();
 		bullet.init(body.getWorld(),BulletType.COMMON.getValue(), this, getX(), getY(), 0,
@@ -286,9 +286,18 @@ public class Block extends GameActor implements Poolable{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		batch.draw(textureRegion, getX(), getY(), getWidth() / 2,
+		float rotation = getRotation();
+		if(type < 6){
+			rotation = MathUtils.radiansToDegrees * body.getAngle();
+		}
+		
+		float x = body.getPosition().x * GameStage.BOX_TO_WORLD - getWidth()/2;
+		float y = body.getPosition().y * GameStage.BOX_TO_WORLD - getHeight()/2;
+		setPosition(x,y);
+		
+		batch.draw(textureRegion, x, y, getWidth() / 2,
 				getHeight() / 2, getWidth(), getHeight(), getScaleX(),
-				getScaleY(), getRotation());
+				getScaleY(), rotation);
 		
 		if(renderer != null){
 			batch.end();
@@ -358,12 +367,12 @@ public class Block extends GameActor implements Poolable{
 		
 		if(this.type == BlockType.KING.getValue()){
 			MapData.win = true;
-			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-			music.play();
+//			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
+//			music.play();
 		}else if(this.type == BlockType.TANK_MAIN.getValue()){
 			MapData.over = true;
-			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-			music.play();
+//			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
+//			music.play();
 		}
 	}
 

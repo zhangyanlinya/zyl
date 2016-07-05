@@ -22,9 +22,6 @@ public abstract class GameActor extends Actor{
 	
 	public boolean alive = true;
 	
-	//
-	public boolean collision;
-	
 	/**
 	 * 受到攻击
 	 * @param a
