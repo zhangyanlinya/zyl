@@ -1,7 +1,5 @@
 package com.trance.tranceview.actors;
 
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,7 +54,9 @@ public class Block extends GameActor implements Poolable{
 	
 	public boolean move;
 	
-	public Block trackBlock;
+	private float hw;
+	private float hh;
+	
 	/**
 	 * 初始化
 	 * @param type
@@ -71,6 +71,8 @@ public class Block extends GameActor implements Poolable{
 		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
+		this.hw = width/2;
+		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion(type);
@@ -83,22 +85,20 @@ public class Block extends GameActor implements Poolable{
 		if(type == BlockType.TANK_MAIN.getValue()){
 			this.setColor(Color.RED);
 			good = 1;
-			hp = 1000;
-			maxhp = 1000;
+			hp = 500;
+			maxhp = 500;
 			this.setStatus(Dir.D);
 		}else if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.KING.getValue()){
 			good = 2;
-			this.atk = 20;
-			this.fireDelay = 200;
 			this.setColor(Color.WHITE);
 		}
-//		else{//npc为敌方
-//			good = 2;
-//		}
+		else{//npc为敌方
+			good = 2;
+		}
 		
 		if(type == BlockType.STEEL.getValue()){
-			this.maxhp = 10000;
-			this.hp = 10000;
+			this.maxhp = 1000;
+			this.hp = 1000;
 		}
 		
 		if(world == null){
@@ -121,11 +121,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 
-//		float x = body.getPosition().x;
-//		float y = body.getPosition().y;
 		body.setLinearVelocity(vx, vy);
-
-//		setPosition(x * GameStage.BOX_TO_WORLD - getWidth()/2, y * GameStage.BOX_TO_WORLD - getHeight()/2);
 	}
 	
 	private void listenStatus(){
@@ -291,12 +287,12 @@ public class Block extends GameActor implements Poolable{
 			rotation = MathUtils.radiansToDegrees * body.getAngle();
 		}
 		
-		float x = body.getPosition().x * GameStage.BOX_TO_WORLD - getWidth()/2;
-		float y = body.getPosition().y * GameStage.BOX_TO_WORLD - getHeight()/2;
+		float x = body.getPosition().x * GameStage.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y * GameStage.BOX_TO_WORLD - hh;
 		setPosition(x,y);
 		
-		batch.draw(textureRegion, x, y, getWidth() / 2,
-				getHeight() / 2, getWidth(), getHeight(), getScaleX(),
+		batch.draw(textureRegion, x, y, hw,
+				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), rotation);
 		
 		if(renderer != null){
@@ -336,10 +332,6 @@ public class Block extends GameActor implements Poolable{
 			fire();
 			randomSatus();
 		}
-	}
-	
-	public void setTrackBlock(Block block){
-		this.trackBlock = block;
 	}
 	
 	public Dir getStatus() {

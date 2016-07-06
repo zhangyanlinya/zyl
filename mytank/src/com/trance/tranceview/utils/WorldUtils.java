@@ -34,7 +34,6 @@ public class WorldUtils {
     }
 
     public static Body createBorder(World world,float x, float y, float width, float height) {
-    	
     	// Create ball body and shape
     	x = x  * GameStage.WORLD_TO_BOX;
     	y = y * GameStage.WORLD_TO_BOX;
@@ -60,15 +59,15 @@ public class WorldUtils {
         
     }
     public static Body createBlock(World world, int type,float x, float y, float width, float height) {
-    	
     	BodyDef bodyDef = new BodyDef();
-//    	if(type < BlockType.TANK_MAIN.getValue()){
-    		bodyDef.type = BodyType.DynamicBody;
-//    	}else{
-//    		bodyDef.type = BodyType.DynamicBody;
-//    		bodyDef.fixedRotation = false;
-//    		bodyDef.linearDamping = 0.1f;
-//    	}
+    	bodyDef.type = BodyType.DynamicBody;
+    	if(type == BlockType.KING.getValue() || type == BlockType.WATER.getValue() || type == BlockType.STEEL.getValue()){
+    		bodyDef.type = BodyType.StaticBody;
+    	}
+    	if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.TANK_MAIN.getValue()){
+    		bodyDef.fixedRotation = true;
+    	}
+//    	bodyDef.linearDamping = 0.1f;
     	bodyDef.position.set((x + width/2) * GameStage.WORLD_TO_BOX, (y + height/ 2) * GameStage.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
     	shape.setAsBox((width/ 2 - 2) * GameStage.WORLD_TO_BOX, (height / 2 - 2) * GameStage.WORLD_TO_BOX);
@@ -76,8 +75,8 @@ public class WorldUtils {
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
     	f.density = 2f;//夹具的密度
-    	f.friction = 0f;//夹具的摩擦力
-    	f.restitution = 0.1f; 
+    	f.friction = 0.9f;//夹具的摩擦力
+    	f.restitution = 0.1f; //弹力
     	if(type < BlockType.TANK_MAIN.getValue()){
     		f.filter.categoryBits = 2;
         	f.filter.maskBits = 4;
@@ -92,7 +91,6 @@ public class WorldUtils {
     }
     
     public static Body createBullet(World world, float x, float y,float width,float height,float rotation) {
-    	
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation  = true;
@@ -101,11 +99,11 @@ public class WorldUtils {
     	float hx = 0;
     	float hy = 0;
     	if(rotation == 0 ||rotation == 180){
-    		hx = width/2* GameStage.WORLD_TO_BOX;
-    		hy = height/2* GameStage.WORLD_TO_BOX;
+    		hx = width/2 * GameStage.WORLD_TO_BOX;
+    		hy = height/2 * GameStage.WORLD_TO_BOX;
     	}else{
-    		hx = height/2* GameStage.WORLD_TO_BOX;
-        	hy = width/2* GameStage.WORLD_TO_BOX;
+    		hx = height/2 * GameStage.WORLD_TO_BOX;
+        	hy = width/2 * GameStage.WORLD_TO_BOX;
     	}
     	shape.setAsBox(hx,hy);
     	bodyDef.position.set(x * GameStage.WORLD_TO_BOX, y * GameStage.WORLD_TO_BOX);

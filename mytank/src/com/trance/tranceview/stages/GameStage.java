@@ -71,8 +71,8 @@ public class GameStage extends Stage implements ContactListener {
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
-    private OrthographicCamera camera;
-    Box2DDebugRenderer debugRenderer;
+//    private OrthographicCamera camera;
+//    Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
@@ -84,9 +84,9 @@ public class GameStage extends Stage implements ContactListener {
         super(width, height,keepAspectRatio);
         
         
-        camera = new OrthographicCamera(); 
-        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+//        camera = new OrthographicCamera(); 
+//        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+//        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
         
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
@@ -94,7 +94,7 @@ public class GameStage extends Stage implements ContactListener {
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length;//再减少一格
         
-		debugRenderer = new Box2DDebugRenderer();
+//		debugRenderer = new Box2DDebugRenderer();
 		renderer = new ShapeRenderer();
         init();
         
@@ -117,7 +117,7 @@ public class GameStage extends Stage implements ContactListener {
         	destoryBody(bodies.get(i));
         }
         
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
     }
     
     
@@ -237,10 +237,6 @@ public class GameStage extends Stage implements ContactListener {
 		for(int i = 0 ; i <tanks.size ;i++){
 			Block block = tanks.get(i);
 			addActor(block);
-			//track
-			if(block.type == BlockType.TANK_ENEMY.getValue()){
-				block.setTrackBlock(mainTank);//tracking to mainTank;
-			}
 		}
 		for(int i = 0 ; i <blocks.size ;i++){
 			addActor(blocks.get(i));
@@ -253,13 +249,13 @@ public class GameStage extends Stage implements ContactListener {
 
 	@Override
 	public void draw() {
-		for(int i = 0 ; i <tanks.size ;i++){
-			Block block = tanks.get(i);
+//		for(int i = 0 ; i <tanks.size ;i++){
+//			Block block = tanks.get(i);
 			//track
-			if(block.type == BlockType.TANK_ENEMY.getValue()){
-				block.track(mainTank);
-			}
-		}
+//			if(block.type == BlockType.TANK_ENEMY.getValue()){
+//				block.track(mainTank);
+//			}
+//		}
 		super.draw();
 	}
 
@@ -323,7 +319,7 @@ public class GameStage extends Stage implements ContactListener {
 	@Override
 	public void dispose() {
 		renderer.dispose();
-		debugRenderer.dispose();
+//		debugRenderer.dispose();
 		world.dispose();
 		blocks.clear();
 		tanks.clear();
@@ -331,7 +327,6 @@ public class GameStage extends Stage implements ContactListener {
 		MapScreen.blockPool.clear();
 		super.dispose();
 	}
-	
 }
 
 

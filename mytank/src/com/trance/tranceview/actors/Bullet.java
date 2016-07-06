@@ -26,6 +26,8 @@ public class Bullet extends GameActor {
 	public float speed = 3;//
 	private Dir dir;
 	public float rotation;
+	private float hw;
+	private float hh;
 	//纹理区域
 	private TextureRegion textureRegion;
 	
@@ -86,6 +88,8 @@ public class Bullet extends GameActor {
 		this.setRotation(rotation);
 		this.setWidth(width);
 		this.setHeight(height);
+		this.hw = width/2;
+		this.hh = height/2;
 		
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,rotation);
 		body.applyLinearImpulse(impulseX, impulseY, x, y, true);
@@ -95,13 +99,11 @@ public class Bullet extends GameActor {
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		
-		float x = body.getPosition().x  * GameStage.BOX_TO_WORLD - getWidth()/2;
-		float y = body.getPosition().y  * GameStage.BOX_TO_WORLD - getHeight()/2;
+		float x = body.getPosition().x  * GameStage.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y  * GameStage.BOX_TO_WORLD - hh;
 		this.setRotation(rotation + MathUtils.radiansToDegrees * body.getAngle());
-		
-		batch.draw(textureRegion, x, y, getWidth() / 2,
-				getHeight() / 2, getWidth(), getHeight(), getScaleX(),
+		batch.draw(textureRegion, x, y, hw,
+				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
 		if(outOfScreen(x, y)){
 			dead();
@@ -124,7 +126,7 @@ public class Bullet extends GameActor {
 		}
 		return false;
 	}
-
+	
 	
 	@Override
 	public void dead() {
@@ -132,7 +134,6 @@ public class Bullet extends GameActor {
 		this.remove();
 		bulletPool.free(this);
 	}
-
 }
 	
 	
