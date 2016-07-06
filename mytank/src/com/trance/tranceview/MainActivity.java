@@ -37,8 +37,8 @@ import com.trance.tranceview.version.UpdateManager;
 public class MainActivity extends AndroidApplication {
 	
 	public TranceGame tranceGame;
-//	public final static String IP = "192.168.0.4";
-	public final static String IP = "112.74.30.92";
+	public final static String IP = "192.168.0.4";
+//	public final static String IP = "112.74.30.92";
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
@@ -130,20 +130,9 @@ public class MainActivity extends AndroidApplication {
 	}
 
 	
-	public static PlayerDto getWorldPlayerDto(int index) {
-		if(index < 0 ){
-			return null;
-		}
-		
-		if(worldPlayers == null && worldPlayers.isEmpty()){
-			return null;
-		}
-		
-		if(index >= worldPlayers.size()){
-			return null;
-		}
-		
-		return worldPlayers.get(index);
+	public static PlayerDto getWorldPlayerDto(int x, int y) {
+		Point point = Point.valueOf(x, y);
+		return worldPlayers.get(point);
 	}
 	
 	/**

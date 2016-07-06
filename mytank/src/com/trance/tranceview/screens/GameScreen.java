@@ -62,6 +62,7 @@ public class GameScreen implements Screen{
 	 */
 	private int currTime = TOTAL_TIME;
 	private Timer timer;
+	private TimerTask timeTask;
 	private boolean init;
 	
 	public GameScreen(TranceGame tranceGame) {
@@ -125,6 +126,7 @@ public class GameScreen implements Screen{
 			}
 		});
 		window.addActor(btn_up);
+		timer = new Timer();
 	}
 
 	@Override
@@ -136,8 +138,8 @@ public class GameScreen implements Screen{
 		MapData.win = false;
 		MapData.over = false;
 		currTime = TOTAL_TIME;//初始化时间 
-		timer = new Timer();
-		timer.schedule(new MyTask() , 1000 ,1000);//表示多少时间后结束
+		timeTask = new MyTask();
+		timer.schedule(timeTask , 1000 ,1000);//表示多少时间后结束
 		stage.init();
 		stage.addActor(toWorld);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
@@ -154,10 +156,7 @@ public class GameScreen implements Screen{
 				MapData.win = true;
 //				Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //				music.play();
-				if(timer != null){
-					timer.cancel();//取消定时器
-					timer = null;
-				}
+				cancel();
 			}
 		}
 		
@@ -187,9 +186,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void hide() {
 		MapData.over = true;
-		if(timer != null){
-			timer.cancel();
-			timer = null;
+		if(timeTask != null){
+			timeTask.cancel();
 		}
 	}
 
@@ -215,6 +213,11 @@ public class GameScreen implements Screen{
 		
 		if(spriteBatch != null){
 			spriteBatch.dispose();
+		}
+		
+		if(timeTask != null){
+			timeTask.cancel();
+			timeTask = null;
 		}
 		
 		if(timer != null){

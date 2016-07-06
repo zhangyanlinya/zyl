@@ -71,12 +71,12 @@ public class LoginScreen implements Screen{
 					return;
 				}
 				login = true;
-//				new Thread(){
-//					public void run(){
-//						login();
-//					}
-//				}.start();
-				tranceGame.startGame();
+				new Thread(){
+					public void run(){
+						login();
+					}
+				}.start();
+//				tranceGame.startGame();
 			}
 		});
 		

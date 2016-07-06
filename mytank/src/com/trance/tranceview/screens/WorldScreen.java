@@ -1,10 +1,9 @@
 package com.trance.tranceview.screens;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -21,19 +20,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -44,6 +34,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.player.model.Point;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
@@ -56,11 +47,8 @@ public class WorldScreen implements Screen, GestureListener {
 
 	private TranceGame tranceGame;
 	private OrthographicCamera camera;
-	private TiledMapRenderer tiledMapRenderer;
-
 	private Stage stage;
 	private TiledMap tilemap;
-	private List<Image> locations = new ArrayList<Image>();
 	private float WIDTH;
 	private float HEIGHT;
 	private SpriteBatch spriteBatch;
@@ -71,7 +59,6 @@ public class WorldScreen implements Screen, GestureListener {
 	private boolean init;
 	
 	private void init(){
-		stage = new Stage();
 		spriteBatch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(
 	               Gdx.files.internal("font/haibao.ttf"));
@@ -103,34 +90,53 @@ public class WorldScreen implements Screen, GestureListener {
 		font.setColor(Color.RED);
 		generator.dispose();//别忘记释放
 		
-		TmxMapLoader loader = new TmxMapLoader();
-		try {
-			tilemap = loader.load("world/world.tmx");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
-	
-		MapLayers layers = tilemap.getLayers();
 		
-		for (MapLayer layer : layers) {
-			if (layer.getName().equals("actors")) {
-				MapObjects objs = layer.getObjects();
-				int index = 0;
-				for(MapObject obj : objs){
-					initMapObject(obj, index);
-					index ++;
-				}
-			}
-		}
-
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		camera.setToOrtho(false, WIDTH/2, HEIGHT/2);
-
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tilemap);
+		stage = new Stage();
+		stage.setViewport(WIDTH, HEIGHT);
+		
+		
+		for(Entry<Point, PlayerDto> e : MainActivity.worldPlayers.entrySet()){
+			Point point = e.getKey();
+			final PlayerDto dto = e.getValue();
+			Image location = new Image(AssetsManager.getInstance().get("world/f-28.png", Texture.class));
+			location.setPosition(point.x, point.y);
+			location.setName(dto.getPlayerName());
+			location.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					MapData.playerId = dto.getId();
+					HashMap<String,Object> params = new HashMap<String,Object>();
+					params.put("targetId", dto.getId());
+					Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+					if(response != null){
+						ResponseStatus status = response.getStatus();
+						if (status == ResponseStatus.SUCCESS) {
+							HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
+							int code = (Integer) result.get("result");
+							if (code == 0) {
+								if (result.get("mapJson") != null) {
+									MapData.map = JsonUtils.jsonString2Object(
+											result.get("mapJson").toString(),
+											int[][].class);
+									
+									
+								}else{
+									MapData.map = MapData.baseMap[0].clone();//原始的
+								}
+								MapData.other = true;
+								tranceGame.setScreen(tranceGame.mapScreen);
+							}
+						}
+					}
+				}
+			});
+			stage.addActor(location);
+		}
 		
 		//Home
 		Image image = new Image(
@@ -167,78 +173,6 @@ public class WorldScreen implements Screen, GestureListener {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
-	/**
-	 * 初始化世界地图界面数据
-	 * @param mo
-	 */
-	private void initMapObject(MapObject mo, final int index){
-		if(mo == null){
-			return;
-		}
-		
-		RectangleMapObject rmo = (RectangleMapObject) mo;
-		
-		String fileName = "world/f-28.png";
-		
-		Image location = new Image(AssetsManager.getInstance().get(fileName, Texture.class));
-		float x = rmo.getRectangle().x;
-		float y = rmo.getRectangle().y;
-		location.setPosition(x , y);
-		//设置坐标
-		PlayerDto target = MainActivity.getWorldPlayerDto(index);
-		if(target != null){
-			target.setX(x);
-			target.setY(y);
-		}
-		
-		location.addListener(new InputListener() {
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-					PlayerDto target = MainActivity.getWorldPlayerDto(index);
-					if(target == null){
-						Map<String,Object> params = new HashMap<String,Object>();
-						params.put("x", x);
-						params.put("y", y);
-						SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
-//						music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
-//						music.play();
-						return false;
-					}
-					
-					MapData.playerId = target.getId();
-					HashMap<String,Object> params = new HashMap<String,Object>();
-					params.put("targetId", target.getId());
-					Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
-					if(response != null){
-						ResponseStatus status = response.getStatus();
-						if (status == ResponseStatus.SUCCESS) {
-							HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-							int code = (Integer) result.get("result");
-							if (code == 0) {
-								if (result.get("mapJson") != null) {
-									MapData.map = JsonUtils.jsonString2Object(
-											result.get("mapJson").toString(),
-											int[][].class);
-									
-									
-								}else{
-									MapData.map = MapData.baseMap[0].clone();//原始的
-								}
-								MapData.other = true;
-								tranceGame.setScreen(tranceGame.mapScreen);
-							}
-						}
-					}
-				return true;
-			}
-		});
-		
-		stage.addActor(location);
-		locations.add(location);
-	}
-	
 	@Override
 	public void pause() {
 
@@ -250,8 +184,6 @@ public class WorldScreen implements Screen, GestureListener {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 
 		camera.update();
-		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
 		stage.draw();
 		spriteBatch.begin();
 		if(MainActivity.player != null){
@@ -292,7 +224,6 @@ public class WorldScreen implements Screen, GestureListener {
 			tilemap.dispose();
 		if(stage !=  null)
 			stage.dispose();
-		locations.clear();
 		if(spriteBatch != null)
 			spriteBatch.dispose();
 		if(font != null)
@@ -305,6 +236,26 @@ public class WorldScreen implements Screen, GestureListener {
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 //		initialScale = zoom;
+		System.out.println("x:  ---> "+x);
+		System.out.println("y:  ---> "+y);
+		System.out.println("pointer:  ---> "+pointer);
+		System.out.println("button:  ---> "+button);
+		System.out.println();
+		
+		int ox = (int) (x/10);
+		int oy = (int) (y/10);
+		System.out.println("ox:  ---> "+ox);
+		System.out.println("oy:  ---> "+oy);
+		PlayerDto dto = MainActivity.getWorldPlayerDto(ox,oy);
+		if(dto == null){
+			return false;
+		}
+		
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("x", ox);
+		params.put("y", ox);
+		SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
+//		music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
 		return false;
 	}
 
@@ -325,17 +276,17 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		float xx = camera.position.x - deltaX;
+		float xx = camera.position.x + deltaX;
 		float yy = camera.position.y + deltaY;
 //		if (xx < WIDTH/2 || xx > WIDTH + 200 || yy < HEIGHT/2 - 60  || yy > HEIGHT/2+60) { //超过边界不再移动
 //			 return false;
 //		}
 		camera.position.set(xx, yy, 0);
-		for(Image location : locations){
-			float newX = location.getX() + deltaX;
-			float newY = location.getY() - deltaY;
-			location.setPosition(newX, newY);
-		}
+//		for(Image location : locations){
+//			float newX = location.getX() + deltaX;
+//			float newY = location.getY() - deltaY;
+//			location.setPosition(newX, newY);
+//		}
 		
 		return true;
 	}
@@ -358,9 +309,6 @@ public class WorldScreen implements Screen, GestureListener {
 		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 1.0f);
 		camera.zoom = zoom;
 		
-		for(Image location : locations){
-			location.setScale(zoom);
-		}
 		return false;
 	}
 
