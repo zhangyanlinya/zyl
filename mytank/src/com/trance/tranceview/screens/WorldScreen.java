@@ -246,26 +246,6 @@ public class WorldScreen implements Screen, GestureListener {
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 //		initialScale = zoom;
-		System.out.println("x:  ---> "+x);
-		System.out.println("y:  ---> "+y);
-		System.out.println("pointer:  ---> "+pointer);
-		System.out.println("button:  ---> "+button);
-		System.out.println();
-		
-		int ox = (int) (x/10);
-		int oy = (int) (y/10);
-		System.out.println("ox:  ---> "+ox);
-		System.out.println("oy:  ---> "+oy);
-		PlayerDto dto = MainActivity.getWorldPlayerDto(ox,oy);
-		if(dto == null){
-			return false;
-		}
-		
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("x", ox);
-		params.put("y", ox);
-		SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
-//		music = AssetsManager.getInstance().get("audio/get_barrett.mp3");
 		return false;
 	}
 
