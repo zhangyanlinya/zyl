@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -41,7 +42,7 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.CharUtil;
 
-public class WorldScreen implements Screen, GestureListener {
+public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	private TranceGame tranceGame;
 	private OrthographicCamera camera;
@@ -55,8 +56,7 @@ public class WorldScreen implements Screen, GestureListener {
 	private FreeTypeBitmapFontData fontData;
 	private Music music ;
 	private boolean init;
-	private final static int STAGE_BETWEEN = 400;
-	private final static int STAGE_LENGHT = STAGE_BETWEEN * 10;
+	private Image home;
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
@@ -95,13 +95,15 @@ public class WorldScreen implements Screen, GestureListener {
 		HEIGHT = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		camera.setToOrtho(false, STAGE_LENGHT/2, STAGE_LENGHT/2);
-		stage = new Stage(STAGE_LENGHT,STAGE_LENGHT);
+		int sw = 480 * 100;
+		int sh = 800 * 100;
+		stage = new Stage(sw, sh);
+		camera.setToOrtho(false, WIDTH * 2, HEIGHT * 2);
 		stage.setCamera(camera);
 		
-		for(int x = 0; x < STAGE_LENGHT; x += STAGE_BETWEEN ){
-			for(int y = 0 ; y < STAGE_LENGHT; y += STAGE_BETWEEN){
-				Image location = new Image(AssetsManager.getInstance().get("world/f-28.png", Texture.class));
+		for(int x = 0; x < sw; x += 480 ){
+			for(int y = 0 ; y < sh; y += 800){
+				Image location = new Image(AssetsManager.getInstance().get("world/me.png", Texture.class));
 				location.setPosition(x , y);
 				stage.addActor(location);
 				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
@@ -145,16 +147,13 @@ public class WorldScreen implements Screen, GestureListener {
 						}
 					}
 				});
-				
 			}
-
 
 		}
 		
 		//Home
-		Image image = new Image(
-				AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
-		image.addListener(new ClickListener() {
+		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
+		home.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -164,8 +163,8 @@ public class WorldScreen implements Screen, GestureListener {
 			}
 
 		});
-		image.setPosition(0, 0);
-		stage.addActor(image);
+		home.setPosition(0, 0);
+		stage.addActor(home);
 	}
 	
 	public WorldScreen(final TranceGame tranceGame) {
@@ -181,6 +180,7 @@ public class WorldScreen implements Screen, GestureListener {
 		}
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		GestureDetector gestureHandler = new GestureDetector(this);
+//		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -196,7 +196,6 @@ public class WorldScreen implements Screen, GestureListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 
-//		camera.update();
 		stage.draw();
 		spriteBatch.begin();
 		if(MainActivity.player != null){
@@ -209,6 +208,7 @@ public class WorldScreen implements Screen, GestureListener {
 				font.draw(spriteBatch, name + ": " + dto.getUp(), dto.getX(), dto.getY());
 			}
 		}
+//		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 	}
 
@@ -248,7 +248,7 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-//		initialScale = zoom;
+		initialScale = zoom;
 		return false;
 	}
 
@@ -289,7 +289,7 @@ public class WorldScreen implements Screen, GestureListener {
 		float ratio = initialDistance / distance;
 
 		// Clamp range and set zoom
-		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 1.0f);
+		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 2.0f);
 		camera.zoom = zoom;
 		
 		return false;
@@ -298,6 +298,54 @@ public class WorldScreen implements Screen, GestureListener {
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
 			Vector2 pointer1, Vector2 pointer2) {
+		return false;
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
