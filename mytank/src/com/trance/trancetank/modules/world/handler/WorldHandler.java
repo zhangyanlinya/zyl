@@ -12,7 +12,6 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.trancetank.modules.player.model.Point;
 import com.trance.tranceview.MainActivity;
 
 /**
@@ -86,7 +85,7 @@ public class WorldHandler extends HandlerSupport {
 							if(playerDto != null){
 								int x = (Integer) result.get("x");
 								int y = (Integer) result.get("y");
-								Point key = Point.valueOf(x, y);
+								String key = new StringBuilder().append(x).append("_").append(y).toString();
 								MainActivity.worldPlayers.put(key,playerDto);
 							}
 						}

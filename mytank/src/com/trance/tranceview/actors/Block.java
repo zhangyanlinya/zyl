@@ -282,18 +282,19 @@ public class Block extends GameActor implements Poolable{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		float rotation = getRotation();
-		if(type < 6){
-			rotation = MathUtils.radiansToDegrees * body.getAngle();
+		if(body != null){
+			if(type < BlockType.TANK_MAIN.getValue()){
+				float degrees = MathUtils.radiansToDegrees * body.getAngle();
+				setRotation(degrees);
+			}
+			float x = body.getPosition().x * GameStage.BOX_TO_WORLD - hw;
+			float y = body.getPosition().y * GameStage.BOX_TO_WORLD - hh;
+			setPosition(x,y);
 		}
 		
-		float x = body.getPosition().x * GameStage.BOX_TO_WORLD - hw;
-		float y = body.getPosition().y * GameStage.BOX_TO_WORLD - hh;
-		setPosition(x,y);
-		
-		batch.draw(textureRegion, x, y, hw,
+		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
-				getScaleY(), rotation);
+				getScaleY(), getRotation());
 		
 		if(renderer != null){
 			batch.end();

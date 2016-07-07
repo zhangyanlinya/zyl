@@ -19,7 +19,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.trancetank.modules.player.model.Point;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.LoginScreen;
@@ -96,27 +95,25 @@ public class PlayerHandler extends HandlerSupport {
 						return;
 					}
 					Object obj = result.get("content");
-					Object o = JSON.toJSON(obj);
-					MainActivity.player = JSON.parseObject(o.toString(), PlayerDto.class);
+					String str = JSON.toJSONString(obj);
+					MainActivity.player = JSON.parseObject(str, PlayerDto.class);
 					if (result.get("mapdata") != null) {
 						MapData.myMap = JsonUtils.jsonString2Object(result.get("mapdata")
 								.toString(), int[][].class);
 					}
 					Object json = result.get("worldPlayers");
 					if (json!= null) {
-						Map<String,Object> map = JSON.parseObject(json.toString());
+						Map<String,Object> map = (Map<String,Object>)json;
 						for(Entry<String, Object> e :map.entrySet()){
-							Point key = JSON.parseObject(e.getKey(),Point.class);
-							PlayerDto value = JSON.parseObject(e.getValue().toString(),PlayerDto.class);
-							MainActivity.worldPlayers.put(key, value);
+							String dto = JSON.toJSONString(e.getValue());
+							PlayerDto value = JSON.parseObject(dto,PlayerDto.class);
+							MainActivity.worldPlayers.put(e.getKey(),value);
 						}
 					}
 					//分配一个
-//					MainActivity.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
-				}else{
-					LoginScreen.login = false;
+//					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
 				}
-				
+				LoginScreen.login = false;
 			}
 
 			@Override

@@ -16,6 +16,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.common.socket.model.Request;
@@ -26,7 +27,6 @@ import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.trancetank.modules.player.model.Point;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
@@ -42,7 +42,7 @@ public class MainActivity extends AndroidApplication {
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
-	public final static Map<Point,PlayerDto> worldPlayers = new HashMap<Point,PlayerDto>();
+	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
 	
@@ -131,8 +131,8 @@ public class MainActivity extends AndroidApplication {
 
 	
 	public static PlayerDto getWorldPlayerDto(int x, int y) {
-		Point point = Point.valueOf(x, y);
-		return worldPlayers.get(point);
+		String key = new StringBuilder().append(x).append("_").append(y).toString();
+		return worldPlayers.get(key);
 	}
 	
 	/**

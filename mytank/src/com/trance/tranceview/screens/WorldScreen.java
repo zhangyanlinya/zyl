@@ -3,7 +3,6 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -34,7 +33,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.trancetank.modules.player.model.Point;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
@@ -97,45 +95,57 @@ public class WorldScreen implements Screen, GestureListener {
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		camera.setToOrtho(false, WIDTH/2, HEIGHT/2);
 		stage = new Stage();
-		stage.setViewport(WIDTH, HEIGHT);
 		
-		
-		for(Entry<Point, PlayerDto> e : MainActivity.worldPlayers.entrySet()){
-			Point point = e.getKey();
-			final PlayerDto dto = e.getValue();
-			Image location = new Image(AssetsManager.getInstance().get("world/f-28.png", Texture.class));
-			location.setPosition(point.x, point.y);
-			location.setName(dto.getPlayerName());
-			location.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					MapData.playerId = dto.getId();
-					HashMap<String,Object> params = new HashMap<String,Object>();
-					params.put("targetId", dto.getId());
-					Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
-					if(response != null){
-						ResponseStatus status = response.getStatus();
-						if (status == ResponseStatus.SUCCESS) {
-							HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-							int code = (Integer) result.get("result");
-							if (code == 0) {
-								if (result.get("mapJson") != null) {
-									MapData.map = JsonUtils.jsonString2Object(
-											result.get("mapJson").toString(),
-											int[][].class);
-									
-									
-								}else{
-									MapData.map = MapData.baseMap[0].clone();//原始的
+		for(int x = 0; x < 1000; x += 200 ){
+			for(int y = 0 ; y < 1000; y += 200){
+				Image location = new Image(AssetsManager.getInstance().get("world/f-28.png", Texture.class));
+				location.setPosition(x , y);
+				stage.addActor(location);
+				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
+				final int ox = x;
+				final int oy = y;
+				location.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						if(dto != null){
+							dto.setX(ox);
+							dto.setY(oy);
+							MapData.playerId = dto.getId();
+							HashMap<String,Object> params = new HashMap<String,Object>();
+							params.put("targetId", dto.getId());
+							Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+							if(response != null){
+								ResponseStatus status = response.getStatus();
+								if (status == ResponseStatus.SUCCESS) {
+									HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
+									int code = (Integer) result.get("result");
+									if (code == 0) {
+										if (result.get("mapJson") != null) {
+											MapData.map = JsonUtils.jsonString2Object(
+													result.get("mapJson").toString(),
+													int[][].class);
+											
+											
+										}else{
+											MapData.map = MapData.baseMap[0].clone();//原始的
+										}
+										MapData.other = true;
+										tranceGame.setScreen(tranceGame.mapScreen);
+									}
 								}
-								MapData.other = true;
-								tranceGame.setScreen(tranceGame.mapScreen);
 							}
+						}else{
+							Map<String,Object> params = new HashMap<String,Object>();
+							params.put("x", ox);
+							params.put("y", oy);
+							SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						}
 					}
-				}
-			});
-			stage.addActor(location);
+				});
+				
+			}
+
+
 		}
 		
 		//Home
@@ -282,12 +292,6 @@ public class WorldScreen implements Screen, GestureListener {
 //			 return false;
 //		}
 		camera.position.set(xx, yy, 0);
-//		for(Image location : locations){
-//			float newX = location.getX() + deltaX;
-//			float newY = location.getY() - deltaY;
-//			location.setPosition(newX, newY);
-//		}
-		
 		return true;
 	}
 

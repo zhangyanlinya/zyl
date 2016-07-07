@@ -64,9 +64,7 @@ public class WorldUtils {
     	if(type == BlockType.KING.getValue() || type == BlockType.WATER.getValue() || type == BlockType.STEEL.getValue()){
     		bodyDef.type = BodyType.StaticBody;
     	}
-    	if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.TANK_MAIN.getValue()){
-    		bodyDef.fixedRotation = true;
-    	}
+    	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 0.1f;
     	bodyDef.position.set((x + width/2) * GameStage.WORLD_TO_BOX, (y + height/ 2) * GameStage.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
@@ -75,8 +73,8 @@ public class WorldUtils {
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
     	f.density = 2f;//夹具的密度
-    	f.friction = 0.9f;//夹具的摩擦力
-    	f.restitution = 0.1f; //弹力
+    	f.friction = 1f;//夹具的摩擦力
+    	f.restitution = 0f; //弹力
     	if(type < BlockType.TANK_MAIN.getValue()){
     		f.filter.categoryBits = 2;
         	f.filter.maskBits = 4;
