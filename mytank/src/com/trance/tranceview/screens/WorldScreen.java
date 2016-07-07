@@ -55,6 +55,8 @@ public class WorldScreen implements Screen, GestureListener {
 	private FreeTypeBitmapFontData fontData;
 	private Music music ;
 	private boolean init;
+	private final static int STAGE_BETWEEN = 400;
+	private final static int STAGE_LENGHT = STAGE_BETWEEN * 10;
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
@@ -93,11 +95,12 @@ public class WorldScreen implements Screen, GestureListener {
 		HEIGHT = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		camera.setToOrtho(false, WIDTH/2, HEIGHT/2);
-		stage = new Stage();
+		camera.setToOrtho(false, STAGE_LENGHT/2, STAGE_LENGHT/2);
+		stage = new Stage(STAGE_LENGHT,STAGE_LENGHT);
+		stage.setCamera(camera);
 		
-		for(int x = 0; x < 1000; x += 200 ){
-			for(int y = 0 ; y < 1000; y += 200){
+		for(int x = 0; x < STAGE_LENGHT; x += STAGE_BETWEEN ){
+			for(int y = 0 ; y < STAGE_LENGHT; y += STAGE_BETWEEN){
 				Image location = new Image(AssetsManager.getInstance().get("world/f-28.png", Texture.class));
 				location.setPosition(x , y);
 				stage.addActor(location);
@@ -193,7 +196,7 @@ public class WorldScreen implements Screen, GestureListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 
-		camera.update();
+//		camera.update();
 		stage.draw();
 		spriteBatch.begin();
 		if(MainActivity.player != null){
@@ -266,12 +269,8 @@ public class WorldScreen implements Screen, GestureListener {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		float xx = camera.position.x + deltaX;
-		float yy = camera.position.y + deltaY;
-//		if (xx < WIDTH/2 || xx > WIDTH + 200 || yy < HEIGHT/2 - 60  || yy > HEIGHT/2+60) { //超过边界不再移动
-//			 return false;
-//		}
-		camera.position.set(xx, yy, 0);
+		camera.translate(-deltaX, deltaY);
+	    camera.update();
 		return true;
 	}
 
