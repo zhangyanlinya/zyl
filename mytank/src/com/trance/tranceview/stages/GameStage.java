@@ -249,13 +249,13 @@ public class GameStage extends Stage implements ContactListener {
 
 	@Override
 	public void draw() {
-//		for(int i = 0 ; i <tanks.size ;i++){
-//			Block block = tanks.get(i);
+		for(int i = 0 ; i <tanks.size ;i++){
+			Block block = tanks.get(i);
 			//track
-//			if(block.type == BlockType.TANK_ENEMY.getValue()){
-//				block.track(mainTank);
-//			}
-//		}
+			if(block.type == BlockType.TANK_ENEMY.getValue()){
+				block.track(mainTank);
+			}
+		}
 		super.draw();
 	}
 

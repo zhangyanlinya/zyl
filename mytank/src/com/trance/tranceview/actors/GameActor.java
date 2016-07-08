@@ -14,9 +14,9 @@ public abstract class GameActor extends Actor{
 	public int good;
 
 	// 当前生命值
-	public float hp = 10;
+	public float hp = 20;
 	// 生命上限
-	public float maxhp = 10;
+	public float maxhp = 20;
 	// 攻击力
 	public int atk = 10 ;
 	
