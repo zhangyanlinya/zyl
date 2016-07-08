@@ -1,9 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -16,8 +14,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -41,7 +37,6 @@ import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
-import com.trance.tranceview.utils.CharUtil;
 import com.trance.tranceview.utils.FontUtil;
 
 public class WorldScreen implements Screen, GestureListener, InputProcessor {
@@ -134,18 +129,17 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	
 		//Home
 		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
-		home.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				MapData.map = MapData.myMap.clone();
-				MapData.other = false;
-				tranceGame.setScreen(tranceGame.mapScreen);
-			}
-
-		});
-		home.setPosition(0, 0);
-//		stage.addActor(home);
+//		home.addListener(new ClickListener() {
+//
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				MapData.map = MapData.myMap.clone();
+//				MapData.other = false;
+//				tranceGame.setScreen(tranceGame.mapScreen);
+//			}
+//
+//		});
+		home.setPosition(10, 10);
 	}
 	
 	public WorldScreen(final TranceGame tranceGame) {
@@ -161,7 +155,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		}
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		GestureDetector gestureHandler = new GestureDetector(this);
-//		inputMultiplexer.addProcessor(this);
+		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -244,7 +238,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
 		camera.translate(-deltaX , deltaY);
-//	    camera.update();
 		return true;
 	}
 
@@ -295,7 +288,11 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		if(screenX < 100 && screenY > HEIGHT - 100 ){
+			MapData.map = MapData.myMap.clone();
+			MapData.other = false;
+			tranceGame.setScreen(tranceGame.mapScreen);
+		}
 		return false;
 	}
 
