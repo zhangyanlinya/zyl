@@ -37,10 +37,12 @@ import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.CharUtil;
+import com.trance.tranceview.utils.FontUtil;
 
 public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
@@ -52,69 +54,48 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private float HEIGHT;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-	private FreeTypeFontGenerator generator;
-	private FreeTypeBitmapFontData fontData;
 	private Music music ;
 	private boolean init;
 	private Image home;
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
-		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/haibao.ttf"));
 		
-		Set<String> set = new HashSet<String>();
-		set.add("点");
-		set.add("赞");
+		StringBuilder sb = new StringBuilder("点赞");
 		if(!MainActivity.worldPlayers.isEmpty()){
 			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
 				String name = dto.getPlayerName();
-				for(int i = 0; i < name.length(); i++){
-					char c = name.charAt(i);
-					if(CharUtil.isChinese(c)){
-						set.add(String.valueOf(c));
-					}
-				}
+				sb.append(name);
 			}
 		}
-		
-		StringBuilder sb = new StringBuilder();
-		for(String s : set){
-			sb.append(s);
-		}
-		
-		fontData = generator.generateData(35, FreeTypeFontGenerator.DEFAULT_CHARS
-	               + sb.toString(), false);
-		
-		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
-		font.setColor(Color.RED);
-		generator.dispose();//别忘记释放
-		
+		font = FontUtil.getInstance().getFont(35, sb.toString(), Color.WHITE);;
 		
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		int sw = 480 * 100;
-		int sh = 800 * 100;
+		int sw = 480 * 20;
+		int sh = 800 * 20;
 		stage = new Stage(sw, sh);
 		camera.setToOrtho(false, WIDTH * 2, HEIGHT * 2);
 		stage.setCamera(camera);
 		
-		for(int x = 0; x < sw; x += 480 ){
-			for(int y = 0 ; y < sh; y += 800){
-				Image location = new Image(AssetsManager.getInstance().get("world/me.png", Texture.class));
-				location.setPosition(x , y);
+		for(int x = 0; x < 20; x ++){
+			for(int y = 0 ; y < 20; y ++){
+				WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font);
+				location.setPosition(x * 480 , y * 800);
+//				location.setColor(x, y, x, 1);
 				stage.addActor(location);
 				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
+				if(dto != null){
+					location.setName(dto.getPlayerName());
+				}
 				final int ox = x;
 				final int oy = y;
 				location.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						if(dto != null){
-							dto.setX(ox);
-							dto.setY(oy);
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
 							params.put("targetId", dto.getId());
@@ -150,7 +131,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			}
 
 		}
-		
+	
 		//Home
 		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
 		home.addListener(new ClickListener() {
@@ -164,7 +145,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 		});
 		home.setPosition(0, 0);
-		stage.addActor(home);
+//		stage.addActor(home);
 	}
 	
 	public WorldScreen(final TranceGame tranceGame) {
@@ -201,14 +182,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		if(MainActivity.player != null){
 			font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
 		}
-		if(!MainActivity.worldPlayers.isEmpty()){
-			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
-				int length = dto.getPlayerName().length();
-				String name = dto.getPlayerName().substring(0, length > 6 ? 6 : length);
-				font.draw(spriteBatch, name + ": " + dto.getUp(), dto.getX(), dto.getY());
-			}
-		}
-//		home.draw(spriteBatch, 1);
+		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 	}
 
@@ -269,8 +243,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		camera.translate(-deltaX, deltaY);
-	    camera.update();
+		camera.translate(-deltaX , deltaY);
+//	    camera.update();
 		return true;
 	}
 

@@ -11,8 +11,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,6 +29,7 @@ import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.FontUtil;
 
 public class MapScreen implements Screen ,InputProcessor{
 
@@ -59,8 +58,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private BitmapFont font;
 	private SpriteBatch spriteBatch;
-	private FreeTypeFontGenerator generator;
-	private FreeTypeBitmapFontData fontData;
 	
 	private Image attack;
 	private Image toWorld;
@@ -87,15 +84,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		//文字 
 		spriteBatch = new SpriteBatch();
-		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/haibao.ttf"));
 		
-		fontData = generator.generateData(35, FreeTypeFontGenerator.DEFAULT_CHARS
-	               + "可拖动砖块编辑攻击", false);
-		
-		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
-		font.setColor(Color.RED);
-		generator.dispose();//别忘记释放
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击", Color.RED);
 		
 		initMap();//初始化地图
 		if(isEdit()){

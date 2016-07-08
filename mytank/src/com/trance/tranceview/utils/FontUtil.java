@@ -1,74 +1,54 @@
 package com.trance.tranceview.utils;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import java.util.HashSet;
+import java.util.Set;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 
 public class FontUtil {
 	
-	public static Bitmap bitmap;
-	public static Paint paint = new Paint();
-	public static int[] imgColor;
+	private static FontUtil fontUtil;
+	private FreeTypeFontGenerator generator;
+	private Set<String> set = new HashSet<String>();
 	
-	public static void drawImgString(SpriteBatch g, String txt, int x, int y) {
-
-		int txtX = 0;
-		for (int i = 0; i < txt.length(); i++) {
-
-			int fontW = 24; // 字体大小
-			int fontH = 24;
-			int fontC = fontW / 2; // 英文字符
-
-			String cc = txt.substring(i, i + 1);
-
-			char tc = cc.charAt(0);
-			if (tc < 256) {
-				fontW = fontC;
-			}
-
-			getFontColor(cc, fontW, fontH);
-
-			Pixmap pimg = new Pixmap(fontW, fontH, Format.RGBA4444);
-
-			int tx = x;
-			int ty = y;
-			int num = 0;
-			pimg.setColor(0xffffffff);
-			for (int m = 0; m < fontH; m++) {
-				for (int n = 0; n < fontW; n++) {
-					if (imgColor[num] != 0) {
-						pimg.drawPixel(n, m);
-					}
-					num++;
-				}
-			}
-			Texture timg = new Texture(pimg);
-
-			g.draw(timg, tx + txtX, ty);
-
-			txtX += fontW;
+	public static FontUtil getInstance(){
+		if(fontUtil == null){
+			fontUtil = new FontUtil();
 		}
-
+		return fontUtil;
 	}
 	
-	public static int[] getFontColor(String txt, int w, int h) {
-		bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
-		Canvas canvas = new Canvas(bitmap);
-
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(h - 2);
-		canvas.drawText(txt, 0, h - 2, paint);
-
-		imgColor = new int[w * h];
-
-		bitmap.getPixels(imgColor, 0, w, 0, 0, w, h);
-
-		return imgColor;
+	/**
+	 * get BitmapFont from config
+	 * 
+	 * @param size    font size
+	 * @param append  追加String 
+	 * @param color   font color
+	 * @return
+	 */
+	public BitmapFont getFont(int size, String append, Color color){
+		set.clear();
+		for(int i = 0; i < append.length(); i++){
+			char c = append.charAt(i);
+			if(CharUtil.isChinese(c)){
+				set.add(String.valueOf(c));
+			}
+		}
+		StringBuilder sb = new StringBuilder(FreeTypeFontGenerator.DEFAULT_CHARS);
+		for(String s : set){
+			sb.append(s);
+		}
+		generator = new FreeTypeFontGenerator(
+	               Gdx.files.internal("font/haibao.ttf"));
+		FreeTypeBitmapFontData fontData = generator.generateData(size,
+	              sb.toString(), false);
+		generator.dispose();
+		BitmapFont font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
+		font.setColor(color);
+		return font;
 	}
 }

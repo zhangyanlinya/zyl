@@ -16,8 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -36,6 +34,7 @@ import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.stages.GameStage;
 import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.FontUtil;
 
 public class GameScreen implements Screen{
 	
@@ -49,9 +48,6 @@ public class GameScreen implements Screen{
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Music music;
-	private FreeTypeFontGenerator generator;
-	private FreeTypeBitmapFontData fontData;
-	
 	/**
 	 * 一局所用总时间
 	 */
@@ -71,22 +67,11 @@ public class GameScreen implements Screen{
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
-		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/haibao.ttf"));
-		//注意：里面的字符串一定不能重复 否则会报错
-		fontData = generator.generateData(35, FreeTypeFontGenerator.DEFAULT_CHARS
-	               + "点赞倒计时：", false);
-		
-		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
-
-		font.setColor(Color.RED);
-		generator.dispose();//别忘记释放
-		
+		font = FontUtil.getInstance().getFont(35, "点赞倒计时：", Color.RED);
 		music = AssetsManager.getInstance().get("audio/begin.mp3");
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
-		
 		stage = new GameStage(width, height, true);
 		
 		//返回家
