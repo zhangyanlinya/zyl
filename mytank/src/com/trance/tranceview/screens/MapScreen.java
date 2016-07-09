@@ -87,11 +87,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击", Color.RED);
 		
-		initMap();//初始化地图
-		if(isEdit()){
-			initPlayerBlock();
-		}
-		
 		//攻击
 		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
 		attack.setPosition(width - attack.getWidth(), attack.getHeight());
@@ -102,7 +97,6 @@ public class MapScreen implements Screen ,InputProcessor{
 				attack();
 			}
 		});
-		stage.addActor(attack);
 		
 		//返回世界地图
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
@@ -114,7 +108,6 @@ public class MapScreen implements Screen ,InputProcessor{
 				toWorld();
 			}
 		});
-		stage.addActor(toWorld);
 	}
 
 	@Override
@@ -123,7 +116,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			init();
 			init = true;
 		}
-		stage.clear();
 		initMap();//初始化地图
 		if(isEdit()){
 			initPlayerBlock();
