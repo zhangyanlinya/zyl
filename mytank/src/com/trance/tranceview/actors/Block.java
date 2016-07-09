@@ -191,6 +191,9 @@ public class Block extends GameActor implements Poolable{
 		float destY = block.getY();
 		float disX = Math.abs(destX - x);
 		float disY = Math.abs(destY - y);
+		if(disX < 200 && disY < 200){
+			return;
+		}
 		if(destX < x){
 			if(y > destY){// 右上角
 				if(disX > disY){

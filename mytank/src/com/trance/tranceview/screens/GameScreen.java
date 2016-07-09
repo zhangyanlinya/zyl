@@ -111,7 +111,6 @@ public class GameScreen implements Screen{
 			}
 		});
 		window.addActor(btn_up);
-		timer = new Timer();
 	}
 
 	@Override
@@ -123,28 +122,11 @@ public class GameScreen implements Screen{
 		MapData.win = false;
 		MapData.over = false;
 		currTime = TOTAL_TIME;//初始化时间 
-		timeTask = new MyTask();
-		timer.schedule(timeTask , 1000 ,1000);//表示多少时间后结束
 		stage.init();
 		stage.addActor(toWorld);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
-	
-	class MyTask extends TimerTask {
-
-		@Override
-		public void run() {
-			currTime --;
-			if(currTime <= 0){//表示到时了
-				MapData.win = true;
-//				Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-//				music.play();
-				cancel();
-			}
-		}
-		
 	}
 
 	@Override
@@ -152,6 +134,7 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		
+		clock();
 		if(MapData.win || MapData.over){
 			stage.addActor(window);
 		}
@@ -160,7 +143,18 @@ public class GameScreen implements Screen{
 		spriteBatch.end();
 		stage.act(delta);
 		stage.draw();
-		
+	}
+	
+	private long time = 0;
+	private void clock(){
+		long now = System.currentTimeMillis();
+		if( (now - time) > 1000){
+			time = now;
+			currTime--;
+			if(currTime <= 0){
+				MapData.over = true;
+			}
+		}
 	}
 	
 	@Override
