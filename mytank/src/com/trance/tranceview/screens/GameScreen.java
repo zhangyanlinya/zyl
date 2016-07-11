@@ -16,7 +16,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -52,7 +54,7 @@ public class GameScreen implements Screen{
 	 * 一局所用总时间
 	 */
 	private final static int TOTAL_TIME = 2 * 60;
-	
+	private Action[] sAction;
 	/**
 	 * 当前时间
 	 */
@@ -111,8 +113,31 @@ public class GameScreen implements Screen{
 			}
 		});
 		window.addActor(btn_up);
+//		sAction = new Action[TOTAL_TIME];// 一共执行120次
+		initClock();
 	}
+	
+	private void initClock() {
+		sAction = new Action[TOTAL_TIME];// 一共执行120次
+		// 使用action实现定时器
+		for (int i = 0; i < sAction.length; i++) {
+			Action delayedAction = Actions.run(new Runnable() {
 
+				@Override
+				public void run() {
+					System.out.println(" 执行了点时任务： " + currTime);
+					currTime--;
+					if(currTime <= 0){
+						MapData.over = true;
+					}
+				}
+			});
+			// 延迟1s后执行delayedAction
+			Action action = Actions.delay(1f, delayedAction);
+			sAction[i] = action;
+		}
+	}
+	
 	@Override
 	public void show() {
 		if(!init){
@@ -124,6 +149,8 @@ public class GameScreen implements Screen{
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.init();
 		stage.addActor(toWorld);
+		// 将Action加到Stage中进行执行
+		stage.addAction(Actions.sequence(sAction));
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -134,7 +161,7 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		
-		clock();
+//		clock();
 		if(MapData.win || MapData.over){
 			stage.addActor(window);
 		}
