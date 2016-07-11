@@ -495,7 +495,9 @@ public class GameScreen implements Screen , ContactListener{
 		
 		renderer.dispose();
 //		debugRenderer.dispose();
-		world.dispose();
+		if(world != null){
+			world.dispose();
+		}
 		blocks.clear();
 		tanks.clear();
 		Bullet.bulletPool.clear();
