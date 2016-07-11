@@ -80,7 +80,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		menu_width  = (width - game_width)/2;
 		control_height = height - game_height-length;//再减一格
 		
-//		stage = new Stage(width, height, true);
+		stage = new Stage(width, height, true);
 		
 		//文字 
 		spriteBatch = new SpriteBatch();
@@ -116,7 +116,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			init();
 			init = true;
 		}
-		stage = new Stage(width, height, true);
 		initMap();//初始化地图
 		if(isEdit()){
 			initPlayerBlock();

@@ -110,9 +110,7 @@ public class PlayerHandler extends HandlerSupport {
 							MainActivity.worldPlayers.put(e.getKey(),value);
 						}
 					}
-					//分配一个
-//					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
-					MainActivity.heartBeat();
+//					MainActivity.heartBeat();
 				}
 				LoginScreen.login = false;
 			}
