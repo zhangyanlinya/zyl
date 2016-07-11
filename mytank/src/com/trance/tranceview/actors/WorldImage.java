@@ -18,7 +18,9 @@ public class WorldImage extends Image{
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(this.getName() != null){
-			font.draw(batch, this.getName() ,this.getX(),this.getY());
+			int len = this.getName().length();
+			String name = len > 6 ? this.getName().substring(0,6) : this.getName();
+			font.draw(batch, name ,this.getX(),this.getY());
 		}
 	}
 }
