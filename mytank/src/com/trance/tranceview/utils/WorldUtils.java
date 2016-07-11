@@ -25,7 +25,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.trance.tranceview.constant.BlockType;
-import com.trance.tranceview.stages.GameStage;
+import com.trance.tranceview.screens.GameScreen;
 
 public class WorldUtils {
 
@@ -35,10 +35,10 @@ public class WorldUtils {
 
     public static Body createBorder(World world,float x, float y, float width, float height) {
     	// Create ball body and shape
-    	x = x  * GameStage.WORLD_TO_BOX;
-    	y = y * GameStage.WORLD_TO_BOX;
-        width=width* GameStage.WORLD_TO_BOX;
-        height=height* GameStage.WORLD_TO_BOX;
+    	x = x  * GameScreen.WORLD_TO_BOX;
+    	y = y * GameScreen.WORLD_TO_BOX;
+        width=width* GameScreen.WORLD_TO_BOX;
+        height=height* GameScreen.WORLD_TO_BOX;
     	
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.StaticBody;
@@ -66,9 +66,9 @@ public class WorldUtils {
     	}
     	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 0.1f;
-    	bodyDef.position.set((x + width/2) * GameStage.WORLD_TO_BOX, (y + height/ 2) * GameStage.WORLD_TO_BOX);
+    	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
-    	shape.setAsBox((width/ 2 - 2) * GameStage.WORLD_TO_BOX, (height / 2 - 2) * GameStage.WORLD_TO_BOX);
+    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2 - 2) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -97,14 +97,14 @@ public class WorldUtils {
     	float hx = 0;
     	float hy = 0;
     	if(rotation == 0 ||rotation == 180){
-    		hx = width/2 * GameStage.WORLD_TO_BOX;
-    		hy = height/2 * GameStage.WORLD_TO_BOX;
+    		hx = width/2 * GameScreen.WORLD_TO_BOX;
+    		hy = height/2 * GameScreen.WORLD_TO_BOX;
     	}else{
-    		hx = height/2 * GameStage.WORLD_TO_BOX;
-        	hy = width/2 * GameStage.WORLD_TO_BOX;
+    		hx = height/2 * GameScreen.WORLD_TO_BOX;
+        	hy = width/2 * GameScreen.WORLD_TO_BOX;
     	}
     	shape.setAsBox(hx,hy);
-    	bodyDef.position.set(x * GameStage.WORLD_TO_BOX, y * GameStage.WORLD_TO_BOX);
+    	bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状

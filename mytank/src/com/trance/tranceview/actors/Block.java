@@ -14,8 +14,8 @@ import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.Dir;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.MapScreen;
-import com.trance.tranceview.stages.GameStage;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.WorldUtils;
@@ -293,8 +293,8 @@ public class Block extends GameActor implements Poolable{
 				float degrees = MathUtils.radiansToDegrees * body.getAngle();
 				setRotation(degrees);
 			}
-			float x = body.getPosition().x * GameStage.BOX_TO_WORLD - hw;
-			float y = body.getPosition().y * GameStage.BOX_TO_WORLD - hh;
+			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
+			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 			setPosition(x,y);
 		}
 		

@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Pool;
 import com.trance.tranceview.constant.Dir;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.stages.GameStage;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.WorldUtils;
 
@@ -99,8 +98,8 @@ public class Bullet extends GameActor {
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		float x = body.getPosition().x  * GameStage.BOX_TO_WORLD - hw;
-		float y = body.getPosition().y  * GameStage.BOX_TO_WORLD - hh;
+		float x = body.getPosition().x  * GameScreen.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y  * GameScreen.BOX_TO_WORLD - hh;
 		this.setRotation(rotation + MathUtils.radiansToDegrees * body.getAngle());
 		batch.draw(textureRegion, x, y, hw,
 				hh, getWidth(), getHeight(), getScaleX(),
@@ -118,7 +117,7 @@ public class Bullet extends GameActor {
 		if(x> GameScreen.width){
 			return true;
 		}
-		if(y < GameStage.control_height ){
+		if(y < GameScreen.control_height ){
 			return true;
 		}
 		if(y > GameScreen.height){
