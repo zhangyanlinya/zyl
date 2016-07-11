@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.trance.tranceview.config.Config;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.Dir;
@@ -191,7 +192,7 @@ public class Block extends GameActor implements Poolable{
 		float destY = block.getY();
 		float disX = Math.abs(destX - x);
 		float disY = Math.abs(destY - y);
-		if(disX < 200 && disY < 200){
+		if(disX < Config.trackDistance && disY < Config.trackDistance){
 			return;
 		}
 		if(destX < x){
