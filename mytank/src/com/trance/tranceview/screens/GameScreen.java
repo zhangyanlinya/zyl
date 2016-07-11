@@ -264,6 +264,7 @@ public class GameScreen implements Screen , ContactListener{
 			Action action = Actions.delay(1f, delayedAction);
 			sAction[i] = action;
 		}
+		stage.addAction(Actions.sequence(sAction));
 	}
 	
 	//
@@ -355,6 +356,7 @@ public class GameScreen implements Screen , ContactListener{
 		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
 		spriteBatch.end();
 		stage.draw();
+		stage.act(delta);
 		
 		//box2d
         accumulator += delta;
