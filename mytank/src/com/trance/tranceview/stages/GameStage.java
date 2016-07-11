@@ -93,12 +93,9 @@ public class GameStage extends Stage implements ContactListener {
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length;//再减少一格
-        
+		world = WorldUtils.createWorld();
 //		debugRenderer = new Box2DDebugRenderer();
 		renderer = new ShapeRenderer();
-//        init();
-        
-//        Gdx.input.setInputProcessor(this);
         
     }
     
@@ -133,7 +130,6 @@ public class GameStage extends Stage implements ContactListener {
 	}
 	
     private void setUpWorld() {
-    	world = WorldUtils.createWorld();
         world.setContactListener(this);
         world.setContactFilter( new ContactFilter() {
 			
@@ -210,7 +206,6 @@ public class GameStage extends Stage implements ContactListener {
 		Block main = null;
 		blocks.clear();
 		tanks.clear();
-		bodies.clear();
 		
 		for (int i = 0; i < MapData.map.length; i++) {
 			float n = MapData.map.length - 1 - i;
