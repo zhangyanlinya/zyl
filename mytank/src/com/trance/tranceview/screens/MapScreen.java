@@ -149,12 +149,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
-		stage.act(delta);
 		spriteBatch.begin();
-		
 		font.draw(spriteBatch,"可拖动砖块编辑",0,height);
 		font.draw(spriteBatch,"攻击",width-200,100);
-		
 		spriteBatch.end();
 	}
 	
