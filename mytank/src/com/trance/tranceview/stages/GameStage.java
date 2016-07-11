@@ -96,7 +96,7 @@ public class GameStage extends Stage implements ContactListener {
         
 //		debugRenderer = new Box2DDebugRenderer();
 		renderer = new ShapeRenderer();
-        init();
+//        init();
         
 //        Gdx.input.setInputProcessor(this);
         
@@ -210,6 +210,7 @@ public class GameStage extends Stage implements ContactListener {
 		Block main = null;
 		blocks.clear();
 		tanks.clear();
+		bodies.clear();
 		
 		for (int i = 0; i < MapData.map.length; i++) {
 			float n = MapData.map.length - 1 - i;

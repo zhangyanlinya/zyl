@@ -112,6 +112,7 @@ public class PlayerHandler extends HandlerSupport {
 					}
 					//分配一个
 //					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, null));
+					MainActivity.heartBeat();
 				}
 				LoginScreen.login = false;
 			}

@@ -38,8 +38,8 @@ public class MainActivity extends AndroidApplication {
 	
 	public TranceGame tranceGame;
 //	public final static String IP = "192.168.0.4";
-	public final static String IP = "192.168.0.103";
-//	public final static String IP = "112.74.30.92";
+//	public final static String IP = "192.168.0.103";
+	public final static String IP = "112.74.30.92";
 	public final static int PORT = 10101;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
@@ -136,30 +136,39 @@ public class MainActivity extends AndroidApplication {
 		return worldPlayers.get(key);
 	}
 	
+	
 	/**
 	 * 心跳
 	 */
-	@SuppressWarnings("unused")
-	private void heartBeat(){
-		while(true){
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	public static  void heartBeat(){
+		Thread thead =new Thread (){
+			public void run(){
+				while(true){
+					try {
+						Thread.sleep(20000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					long idleTime = SimpleSocketClient.socket.getSendIdleTime();
+					if(idleTime < 20000){
+						continue;
+					}
+					if( !SimpleSocketClient.socket.isConnected()){
+						offlineReconnect();
+					}
+				}
 			}
-			Response response =	SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
-			if(response != null){
-				continue;
-			}
-			offlineReconnect();
-		}
+		};
+		thead.setName("心跳线程");
+		thead.setDaemon(true);
+		thead.start();
 	}
 	
 	/**
 	 * 断线重连
 	 * @return
 	 */
-	public boolean offlineReconnect(){
+	public static boolean offlineReconnect(){
 		String src = userName + loginKey;
 		String LoginMD5 = null;
 		try {

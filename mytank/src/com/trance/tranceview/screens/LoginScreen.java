@@ -13,8 +13,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -28,14 +26,13 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.FontUtil;
 
 public class LoginScreen implements Screen{
 	
 	private Image start;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-	private FreeTypeFontGenerator generator;
-	private FreeTypeBitmapFontData fontData;
 	private Stage stage;
 	private boolean init;
 	public static boolean login;
@@ -49,16 +46,7 @@ public class LoginScreen implements Screen{
 	public void init(){
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
-		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/haibao.ttf"));
-		//注意：里面的字符串一定不能重复 否则会报错
-		fontData = generator.generateData(45, FreeTypeFontGenerator.DEFAULT_CHARS + "点击图片开始游戏网络连接失败", false);
-		
-		font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
-
-		font.setColor(Color.RED);
-		generator.dispose();//别忘记释放
-		
+		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏网络连接失败", Color.RED);
 		//GO
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
 				AssetsManager.getInstance().get("ui/loginbg.png", Texture.class)));
