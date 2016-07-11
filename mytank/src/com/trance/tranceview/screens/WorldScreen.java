@@ -289,7 +289,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if(screenX < 100 && screenY > HEIGHT - 100 ){
-			MapData.map = MapData.myMap.clone();
+			MapData.map = MapData.myMap;
 			MapData.other = false;
 			tranceGame.setScreen(tranceGame.mapScreen);
 		}
