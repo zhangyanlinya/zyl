@@ -100,8 +100,8 @@ public class Block extends GameActor implements Poolable{
 //		}
 		
 		if(type == BlockType.STEEL.getValue()){
-			this.maxhp = 1000;
-			this.hp = 1000;
+			this.maxhp = 500;
+			this.hp = 500;
 		}
 		
 		if(world == null){
@@ -261,22 +261,15 @@ public class Block extends GameActor implements Poolable{
 //			Sound sound = AssetsManager.getInstance().get("audio/barrett.wav");
 //			sound.play();
 		}
+		if( body == null){
+			return;
+		}
 		Bullet bullet = Bullet.bulletPool.obtain();
 		bullet.init(body.getWorld(),BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 	}
 
-	public boolean byAttack(Bullet bullet) {
-		hp -= bullet.atk;
-		if (hp <= 0) {
-			alive = false;
-			return true;
-		}
-		return false;
-	}
-	
-	
 	/** @param x The x-component of the other vector
 	 * @param y The y-component of the other vector
 	 * @return the distance between this and the other vector */

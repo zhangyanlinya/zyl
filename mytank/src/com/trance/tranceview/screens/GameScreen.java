@@ -185,11 +185,11 @@ public class GameScreen implements Screen , ContactListener{
 		window.addActor(btn_up);
     	world = WorldUtils.createWorld();
     	int side = width/8; 
-    	up = new Control(ControlType.UP,mainTank,       width/4 - side/2, control_height - side - side/2,side,side);
-		down = new Control(ControlType.DOWN,mainTank,   width/4 - side/2, side/2,side,side);
-		left = new Control(ControlType.LEFT,mainTank,   width/4 - side - side/2,  control_height/2  - side/2,side,side);
-		right = new Control(ControlType.RIGHT,mainTank, width/4 + side/2, control_height/2 - side/2,side,side);
-		fire = new Control(ControlType.FIRE,mainTank,   width/2 + side , control_height/2 - side/2,side,side);
+    	up = new Control(ControlType.UP,       width/4 - side/2, control_height - side - side/2,side,side);
+		down = new Control(ControlType.DOWN,   width/4 - side/2, side/2,side,side);
+		left = new Control(ControlType.LEFT,   width/4 - side - side/2,  control_height/2  - side/2,side,side);
+		right = new Control(ControlType.RIGHT, width/4 + side/2, control_height/2 - side/2,side,side);
+		fire = new Control(ControlType.FIRE,   width/2 + side , control_height/2 - side/2,side,side);
 	}
 	
     //DestoryBody

@@ -14,31 +14,23 @@ public class Control extends Button{
 	
 	private ControlType type;
   	public Image image;
-  	//
-  	private Block tank;
   	
-  	public Control(ControlType type, Block tank) {
+  	public Control(ControlType type) {
   		this.type = type;
-  		this.tank = tank;
-		init();
 	}
 	
-	public Control(ControlType type, Block tank,float x , float y) {
+	public Control(ControlType type,float x , float y) {
 		this.type = type;	
-		this.tank = tank;
 		this.setX(x);
 		this.setY(y);
-		init();
 	}
 	
-	public Control(ControlType type, Block tank, float x , float y,float width,float height) {
+	public Control(ControlType type, float x , float y,float width,float height) {
 		this.type = type;
-		this.tank = tank;
 		this.setX(x);
 		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
-		init();
 	}
 	
 
@@ -51,7 +43,7 @@ public class Control extends Button{
 	 * @param width
 	 * @param height
 	 */
-	private void init(){
+	public void init(final Block tank){
 		TextureRegion region = AssetsManager.getInstance().getControlTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(region.getRegionWidth());
