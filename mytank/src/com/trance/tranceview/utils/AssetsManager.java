@@ -141,7 +141,8 @@ public class AssetsManager extends AssetManager{
 
     public void dispose() {
     	super.dispose();
-    	if(textureAtlas != null)
-    	textureAtlas.dispose();
+    	if(textureAtlas != null){
+    		textureAtlas.dispose();
+    	}
     }
 }

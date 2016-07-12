@@ -2,8 +2,6 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -99,7 +97,7 @@ public class GameScreen implements Screen , ContactListener{
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
 //    private OrthographicCamera camera;
-//    Box2DDebugRenderer debugRenderer;
+//    private Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
@@ -107,7 +105,11 @@ public class GameScreen implements Screen , ContactListener{
 	
 	private final Array<Body> bodies = new Array<Body>();
 	
-	
+	private Control up;
+	private Control down;
+	private Control left;
+	private Control right;
+	private Control fire;
 	/**
 	 * 一局所用总时间
 	 */
@@ -117,8 +119,6 @@ public class GameScreen implements Screen , ContactListener{
 	 * 当前时间
 	 */
 	private int currTime = TOTAL_TIME;
-	private Timer timer;
-	private TimerTask timeTask;
 	private boolean init;
 	
 	public GameScreen(TranceGame tranceGame) {
@@ -137,13 +137,13 @@ public class GameScreen implements Screen , ContactListener{
 //      camera = new OrthographicCamera(); 
 //      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
 //      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
-      
+//		debugRenderer = new Box2DDebugRenderer();   
+		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length;//再减少一格
-//		debugRenderer = new Box2DDebugRenderer();
 		renderer = new ShapeRenderer();
 		
 		//返回家
@@ -166,9 +166,9 @@ public class GameScreen implements Screen , ContactListener{
 		window.setPosition(width/2 - window.getWidth()/2, height/2 - window.getHeight()/2);
 		
 		//点赞
-		TextureRegionDrawable up = new TextureRegionDrawable( new TextureRegion(
+		TextureRegionDrawable drawable = new TextureRegionDrawable( new TextureRegion(
 				AssetsManager.getInstance().get("ui/up.png",Texture.class)));
-		btn_up = new ImageButton(up);
+		btn_up = new ImageButton(drawable);
 		btn_up.addListener(new ClickListener(){
 
 			@Override
@@ -184,6 +184,12 @@ public class GameScreen implements Screen , ContactListener{
 		});
 		window.addActor(btn_up);
     	world = WorldUtils.createWorld();
+    	int side = width/8; 
+    	up = new Control(ControlType.UP,mainTank,       width/4 - side/2, control_height - side - side/2,side,side);
+		down = new Control(ControlType.DOWN,mainTank,   width/4 - side/2, side/2,side,side);
+		left = new Control(ControlType.LEFT,mainTank,   width/4 - side - side/2,  control_height/2  - side/2,side,side);
+		right = new Control(ControlType.RIGHT,mainTank, width/4 + side/2, control_height/2 - side/2,side,side);
+		fire = new Control(ControlType.FIRE,mainTank,   width/2 + side , control_height/2 - side/2,side,side);
 	}
 	
     //DestoryBody
@@ -248,7 +254,7 @@ public class GameScreen implements Screen , ContactListener{
 			}
 		});
         
-        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, GameScreen.height - length);
+        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
     }
 	
 	private void initClock() {
@@ -334,12 +340,6 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
     private void initControl(){
-		int side = GameScreen.width/8; 
-		Control up = new Control(ControlType.UP,mainTank,       GameScreen.width/4 - side/2, control_height - side - side/2,side,side);
-		Control down = new Control(ControlType.DOWN,mainTank,   GameScreen.width/4 - side/2, side/2,side,side);
-		Control left = new Control(ControlType.LEFT,mainTank,   GameScreen.width/4 - side - side/2,  control_height/2  - side/2,side,side);
-		Control right = new Control(ControlType.RIGHT,mainTank, GameScreen.width/4 + side/2, control_height/2 - side/2,side,side);
-		Control fire = new Control(ControlType.FIRE,mainTank,   GameScreen.width/2 + side , control_height/2 - side/2,side,side);
 		stage.addActor(up.image);
 		stage.addActor(down.image);
 		stage.addActor(left.image);
@@ -352,7 +352,6 @@ public class GameScreen implements Screen , ContactListener{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		
-//		clock();
 		if(MapData.win || MapData.over){
 			stage.addActor(window);
 		}
@@ -374,18 +373,6 @@ public class GameScreen implements Screen , ContactListener{
         	destoryBody(bodies.get(i));
         }
 	}
-	
-//	private long time = 0;
-//	private void clock(){
-//		long now = System.currentTimeMillis();
-//		if( (now - time) > 1000){
-//			time = now;
-//			currTime--;
-//			if(currTime <= 0){
-//				MapData.over = true;
-//			}
-//		}
-//	}
 	
 	@Override
     public void beginContact(Contact contact) {
@@ -451,10 +438,7 @@ public class GameScreen implements Screen , ContactListener{
 
 	@Override
 	public void hide() {
-		MapData.over = true;
-		if(timeTask != null){
-			timeTask.cancel();
-		}
+		
 	}
 
 	@Override
@@ -479,16 +463,6 @@ public class GameScreen implements Screen , ContactListener{
 		
 		if(spriteBatch != null){
 			spriteBatch.dispose();
-		}
-		
-		if(timeTask != null){
-			timeTask.cancel();
-			timeTask = null;
-		}
-		
-		if(timer != null){
-			timer.cancel();
-			timer = null;
 		}
 		
 		if(music != null){

@@ -64,7 +64,6 @@ public class Control extends Button{
 		if(type == ControlType.DOWN){
 			image.setRotation(90);
 		}
-		
 		image.addListener(new InputListener(){
 
 			@Override
