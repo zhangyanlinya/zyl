@@ -340,10 +340,15 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
     private void initControl(){
+    	up.init(mainTank);
 		stage.addActor(up.image);
+		down.init(mainTank);
 		stage.addActor(down.image);
+		left.init(mainTank);
 		stage.addActor(left.image);
+		right.init(mainTank);
 		stage.addActor(right.image);
+		fire.init(mainTank);
 		stage.addActor(fire.image);
     }
 
