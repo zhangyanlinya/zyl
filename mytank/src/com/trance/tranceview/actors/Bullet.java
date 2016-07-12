@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.trance.tranceview.constant.Dir;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
@@ -17,7 +18,7 @@ import com.trance.tranceview.utils.WorldUtils;
  * @author zyl
  *
  */
-public class Bullet extends GameActor {
+public class Bullet extends GameActor implements Poolable {
 	
 	public Body body;
 	public int type;
@@ -132,6 +133,11 @@ public class Bullet extends GameActor {
 		this.alive = false;
 		this.remove();
 		bulletPool.free(this);
+	}
+
+	@Override
+	public void reset() {
+		body.resetMassData();
 	}
 }
 	
