@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -104,6 +105,8 @@ public class MainActivity extends AndroidApplication {
         config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
 		initialize(tranceGame, config);
 		init();
+//		Preferences pf=  Gdx.app.getPreferences("config");
+//		pf.put
 	}
 	
 	/**

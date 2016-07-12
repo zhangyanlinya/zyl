@@ -183,7 +183,7 @@ public class GameScreen implements Screen , ContactListener{
 			}
 		});
 		window.addActor(btn_up);
-//		sAction = new Action[TOTAL_TIME];// 一共执行120次
+    	world = WorldUtils.createWorld();
 	}
 	
     //DestoryBody
@@ -198,7 +198,13 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
     private void setUpWorld() {
-    	world = WorldUtils.createWorld();
+    	world.clearForces();
+        world.getBodies(bodies);
+        for(int i = 0 ; i < bodies.size ; i++){
+        	world.destroyBody(bodies.get(i));
+        }
+        bodies.clear();
+        
         world.setContactListener(this);
         world.setContactFilter( new ContactFilter() {
 			
@@ -314,7 +320,6 @@ public class GameScreen implements Screen , ContactListener{
 		stage.clear();
 		stage.addActor(toWorld);
 		// 将Action加到Stage中进行执行
-		bodies.clear();
 		setUpWorld();
 		initMap();
 		initClock();
