@@ -1,6 +1,7 @@
 package com.trance.tranceview.config;
 
-public interface Config {
+public interface GameConfig {
+	
 	
 	int trackDistance = 200;
 	
