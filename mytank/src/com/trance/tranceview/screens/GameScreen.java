@@ -438,7 +438,7 @@ public class GameScreen implements Screen , ContactListener{
 
 	@Override
 	public void hide() {
-		
+		MapData.over = true;
 	}
 
 	@Override
