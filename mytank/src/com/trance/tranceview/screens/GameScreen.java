@@ -12,8 +12,10 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -31,6 +33,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -45,7 +50,6 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.Bullet;
-import com.trance.tranceview.actors.Control;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
@@ -105,11 +109,22 @@ public class GameScreen implements Screen , ContactListener{
 	
 	private final Array<Body> bodies = new Array<Body>();
 	
-	private Control up;
-	private Control down;
-	private Control left;
-	private Control right;
-	private Control fire;
+//	private Control up;
+//	private Control down;
+//	private Control left;
+//	private Control right;
+//	private Control fire;
+	
+	private OrthographicCamera camera;
+	private Touchpad touchpad;
+	private TouchpadStyle touchpadStyle;
+	private Skin touchpadSkin;
+	private Drawable touchBackground;
+	private Drawable touchKnob;
+	private Texture blockTexture;
+	private Sprite blockSprite;
+	private float blockSpeed;
+	
 	/**
 	 * 一局所用总时间
 	 */
@@ -132,12 +147,16 @@ public class GameScreen implements Screen , ContactListener{
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
-		stage = new Stage(width, height, true);
+		stage = new Stage(width, height, true,spriteBatch);
 		
 //      camera = new OrthographicCamera(); 
 //      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
 //      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
-//		debugRenderer = new Box2DDebugRenderer();   
+//		debugRenderer = new Box2DDebugRenderer(); 
+		
+    	float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 10f * aspectRatio, 10f);
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
@@ -184,15 +203,49 @@ public class GameScreen implements Screen , ContactListener{
 		});
 		window.addActor(btn_up);
     	world = WorldUtils.createWorld();
-    	int side = width/8; 
-    	up = new Control(ControlType.UP,       width/4 - side/2, control_height - side - side/2,side,side);
-		down = new Control(ControlType.DOWN,   width/4 - side/2, side/2,side,side);
-		left = new Control(ControlType.LEFT,   width/4 - side - side/2,  control_height/2  - side/2,side,side);
-		right = new Control(ControlType.RIGHT, width/4 + side/2, control_height/2 - side/2,side,side);
-		fire = new Control(ControlType.FIRE,   width/2 + side , control_height/2 - side/2,side,side);
+//    	int side = width/8; 
+//    	up = new Control(ControlType.UP,       width/4 - side/2, control_height - side - side/2,side,side);
+//		down = new Control(ControlType.DOWN,   width/4 - side/2, side/2,side,side);
+//		left = new Control(ControlType.LEFT,   width/4 - side - side/2,  control_height/2  - side/2,side,side);
+//		right = new Control(ControlType.RIGHT, width/4 + side/2, control_height/2 - side/2,side,side);
+//		fire = new Control(ControlType.FIRE,   width/2 + side , control_height/2 - side/2,side,side);
+		
+		initTouchPad();
 	}
 	
-    //DestoryBody
+    private void initTouchPad() {
+    	float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 10f*aspectRatio, 10f);
+		
+		//Create a touchpad skin	
+		touchpadSkin = new Skin();
+		//Set background image
+		touchpadSkin.add("touchBackground", new Texture("game/touchBackground.png"));
+		//Set knob image
+		touchpadSkin.add("touchKnob", new Texture("game/touchKnob.png"));
+		//Create TouchPad Style
+		touchpadStyle = new TouchpadStyle();
+		//Create Drawable's from TouchPad skin
+		touchBackground = touchpadSkin.getDrawable("touchBackground");
+		touchKnob = touchpadSkin.getDrawable("touchKnob");
+		//Apply the Drawables to the TouchPad Style
+		touchpadStyle.background = touchBackground;
+		touchpadStyle.knob = touchKnob;
+		//Create new TouchPad with the created style
+		touchpad = new Touchpad(10, touchpadStyle);
+		//setBounds(x,y,width,height)
+		touchpad.setBounds(15, 15, 200, 200);
+		
+		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
+		blockSprite = new Sprite(blockTexture);
+		//Set position to centre of the screen
+		blockSprite.setPosition(Gdx.graphics.getWidth()/2-blockSprite.getWidth()/2, Gdx.graphics.getHeight()/2-blockSprite.getHeight()/2);
+
+		blockSpeed = 5;
+	}
+
+	//DestoryBody
 	private void destoryBody(Body body) {
 		GameActor ga = (GameActor) body.getUserData();
 		if(ga == null){
@@ -333,36 +386,44 @@ public class GameScreen implements Screen , ContactListener{
 			Log.e(LogTag.TAG, "no main tank");
 			return;
 		}
-		initControl();
+//		initControl();
+		stage.addActor(touchpad);			
+		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
-    private void initControl(){
-    	up.init(mainTank);
-		stage.addActor(up.image);
-		down.init(mainTank);
-		stage.addActor(down.image);
-		left.init(mainTank);
-		stage.addActor(left.image);
-		right.init(mainTank);
-		stage.addActor(right.image);
-		fire.init(mainTank);
-		stage.addActor(fire.image);
-    }
+//    private void initControl(){
+//    	up.init(mainTank);
+//		stage.addActor(up.image);
+//		down.init(mainTank);
+//		stage.addActor(down.image);
+//		left.init(mainTank);
+//		stage.addActor(left.image);
+//		right.init(mainTank);
+//		stage.addActor(right.image);
+//		fire.init(mainTank);
+//		stage.addActor(fire.image);
+//    }
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
+		camera.update();
 		
 		if(MapData.win || MapData.over){
 			stage.addActor(window);
 		}
+		
+		blockSprite.setX(blockSprite.getX() + touchpad.getKnobPercentX()*blockSpeed);
+        blockSprite.setY(blockSprite.getY() + touchpad.getKnobPercentY()*blockSpeed);
 		spriteBatch.begin();
 		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
+		blockSprite.draw(spriteBatch);
 		spriteBatch.end();
+		
 		stage.draw();
 		stage.act(delta);
 		
@@ -487,6 +548,8 @@ public class GameScreen implements Screen , ContactListener{
 		tanks.clear();
 		Bullet.bulletPool.clear();
 		MapScreen.blockPool.clear();
+		
+		blockTexture.dispose();
 	}
 	
 }
