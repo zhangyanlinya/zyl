@@ -105,6 +105,7 @@ public class Block extends GameActor implements Poolable{
 		}
 		
 		if(world == null){
+			body = null;
 			return;
 		}
 		body = WorldUtils.createBlock(world,type,x, y, width, height);
