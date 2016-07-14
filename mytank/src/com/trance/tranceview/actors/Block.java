@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.trance.tranceview.config.GameConfig;
 import com.trance.tranceview.constant.BlockType;
@@ -32,6 +33,8 @@ public class Block extends GameActor implements Poolable{
 	public int type;
 	public int i;
 	public int j;
+	public float vx;
+	public float vy;
 	//纹理区域
 	private TextureRegion textureRegion;
 	
@@ -118,8 +121,6 @@ public class Block extends GameActor implements Poolable{
 		this.j = j;
 	}
 	
-	private float vx;
-	private float vy;
 	public void move() {
 		if(MapData.win || MapData.over){
 			return;
@@ -227,6 +228,27 @@ public class Block extends GameActor implements Poolable{
 		}
 	}
 	
+	public void changeDir(Touchpad touchpad){
+		if(!touchpad.isTouched()){
+			setStatus(Dir.S);
+			return;
+		}
+		float x = touchpad.getKnobPercentX();
+		float y = touchpad.getKnobPercentY();
+		double agl = MathUtils.atan2(y, x) * 180/ Math.PI;
+		if(agl < -45 && agl > -135){
+			setStatus(Dir.D);
+		}else if(agl >= 45 && agl < 135){
+			setStatus(Dir.U);
+		}else if(agl >= 135 || agl <= -135){
+			setStatus(Dir.L);
+		}else if(agl >= -45 && agl <= 45){
+			setStatus(Dir.R);
+		}else{
+			setStatus(Dir.S);
+		}
+	}
+	
 	private long dirTime;
 	
 	private void randomSatus(){
@@ -235,7 +257,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
-		this.setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
+		setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
 	}
 	
 	private long time;
