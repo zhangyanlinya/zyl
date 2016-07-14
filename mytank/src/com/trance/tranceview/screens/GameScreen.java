@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -109,12 +108,6 @@ public class GameScreen implements Screen , ContactListener{
 	
 	private final Array<Body> bodies = new Array<Body>();
 	
-//	private Control up;
-//	private Control down;
-//	private Control left;
-//	private Control right;
-//	private Control fire;
-	
 	private OrthographicCamera camera;
 	private Touchpad touchpad;
 	private TouchpadStyle touchpadStyle;
@@ -122,8 +115,7 @@ public class GameScreen implements Screen , ContactListener{
 	private Drawable touchBackground;
 	private Drawable touchKnob;
 	private Texture blockTexture;
-	private Sprite blockSprite;
-	private float blockSpeed;
+	private Image fireImage;
 	
 	/**
 	 * 一局所用总时间
@@ -140,6 +132,41 @@ public class GameScreen implements Screen , ContactListener{
 		this.tranceGame = tranceGame;
 	}
 	
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
+		MapData.win = false;
+		MapData.over = false;
+		currTime = TOTAL_TIME;//初始化时间 
+		stage.clear();
+		stage.addActor(toWorld);
+		initWorld();
+		initMap();
+		initClock();
+		if(mainTank == null){
+			Log.e(LogTag.TAG, "no main tank");
+			return;
+		}
+		
+		fireImage.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				mainTank.fire();
+			}
+			
+		});
+		stage.addActor(fireImage);
+		stage.addActor(touchpad);
+		
+		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
+		inputMultiplexer.addProcessor(stage);
+		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
+	
 	private void init(){
 		spriteBatch = new SpriteBatch();
 		font = FontUtil.getInstance().getFont(35, "点赞倒计时：", Color.RED);
@@ -154,9 +181,6 @@ public class GameScreen implements Screen , ContactListener{
 //      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
 //		debugRenderer = new Box2DDebugRenderer(); 
 		
-    	float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 10f * aspectRatio, 10f);
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
@@ -214,7 +238,7 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
     private void initTouchPad() {
-    	float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+    	float aspectRatio = (float) width / (float) height;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 10f*aspectRatio, 10f);
 		
@@ -238,11 +262,11 @@ public class GameScreen implements Screen , ContactListener{
 		touchpad.setBounds(15, 15, 200, 200);
 		
 		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
-		blockSprite = new Sprite(blockTexture);
+//		fireSprite = new Sprite(blockTexture);
+		fireImage = new Image(blockTexture);
 		//Set position to centre of the screen
-		blockSprite.setPosition(Gdx.graphics.getWidth()/2-blockSprite.getWidth()/2, Gdx.graphics.getHeight()/2-blockSprite.getHeight()/2);
-
-		blockSpeed = 5;
+		int side = width / 8;
+		fireImage.setPosition(width/2 + side , control_height/2 - side/2);
 	}
 
 	//DestoryBody
@@ -256,7 +280,7 @@ public class GameScreen implements Screen , ContactListener{
 		}
 	}
 	
-    private void setUpWorld() {
+    private void initWorld() {
     	world.clearForces();
         world.getBodies(bodies);
         for(int i = 0 ; i < bodies.size ; i++){
@@ -366,46 +390,6 @@ public class GameScreen implements Screen , ContactListener{
 			stage.addActor(blocks.get(i));
 		}
 	}
-	
-	@Override
-	public void show() {
-		if(!init){
-			init();
-			init = true;
-		}
-		MapData.win = false;
-		MapData.over = false;
-		currTime = TOTAL_TIME;//初始化时间 
-		stage.clear();
-		stage.addActor(toWorld);
-		// 将Action加到Stage中进行执行
-		setUpWorld();
-		initMap();
-		initClock();
-		if(mainTank == null){
-			Log.e(LogTag.TAG, "no main tank");
-			return;
-		}
-//		initControl();
-		stage.addActor(touchpad);			
-		
-		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
-		inputMultiplexer.addProcessor(stage);
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
-	
-//    private void initControl(){
-//    	up.init(mainTank);
-//		stage.addActor(up.image);
-//		down.init(mainTank);
-//		stage.addActor(down.image);
-//		left.init(mainTank);
-//		stage.addActor(left.image);
-//		right.init(mainTank);
-//		stage.addActor(right.image);
-//		fire.init(mainTank);
-//		stage.addActor(fire.image);
-//    }
 
 	@Override
 	public void render(float delta) {
@@ -417,13 +401,11 @@ public class GameScreen implements Screen , ContactListener{
 			stage.addActor(window);
 		}
 		
-		blockSprite.setX(blockSprite.getX() + touchpad.getKnobPercentX()*blockSpeed);
-        blockSprite.setY(blockSprite.getY() + touchpad.getKnobPercentY()*blockSpeed);
+		controldir();
+		
 		spriteBatch.begin();
 		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
-		blockSprite.draw(spriteBatch);
 		spriteBatch.end();
-		
 		stage.draw();
 		stage.act(delta);
 		
@@ -435,11 +417,18 @@ public class GameScreen implements Screen , ContactListener{
         }
         
         world.getBodies(bodies);
-        for(int i = 0 ; i< bodies.size ; i++){
+        for(int i = 0 ; i < bodies.size ; i++){
         	destoryBody(bodies.get(i));
         }
 	}
 	
+	private void controldir() {
+		if(mainTank == null){
+			return;
+		}
+		mainTank.changeDir(touchpad);
+	}
+
 	@Override
     public void beginContact(Contact contact) {
         Fixture fa = contact.getFixtureA();
@@ -550,6 +539,7 @@ public class GameScreen implements Screen , ContactListener{
 		MapScreen.blockPool.clear();
 		
 		blockTexture.dispose();
+		touchpadSkin.dispose();
 	}
 	
 }
