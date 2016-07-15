@@ -92,11 +92,15 @@ public class Block extends GameActor implements Poolable{
 			hp = 100;
 			maxhp = 100;
 			this.setStatus(Dir.D);
-		}else if(type == BlockType.TANK_ENEMY.getValue() || type == BlockType.KING.getValue()){
+		}else if(type == BlockType.TANK_ENEMY.getValue()){
 			good = 2;
 			hp = 40;
+			atk = 20;
 			maxhp = 40;
 			this.setColor(Color.WHITE);
+		}else if(type == BlockType.KING.getValue()){
+			hp = 60;
+			maxhp = 60;
 		}
 //		else{//npc为敌方
 //			good = 2;

@@ -260,7 +260,7 @@ public class GameScreen implements Screen , ContactListener{
 		fireImage = new Image(blockTexture);
 		//Set position to centre of the screen
 		int side = width / 8;
-		fireImage.setPosition(width/2 + side * 2 , control_height/2 - side/2);
+		fireImage.setBounds(width/2 + side * 2 , control_height/2 - side/2, side, side);
 	}
 
 	//DestoryBody
