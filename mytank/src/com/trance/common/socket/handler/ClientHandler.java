@@ -71,7 +71,7 @@ public class ClientHandler extends IoHandlerAdapter {
 					msg.what = response.getStatus().getValue();
 					msg.arg1 = response.getModule();
 					msg.arg2 = response.getCmd();
-					msg.obj = ctx.getMessage();
+					msg.obj = response.getValue();
 					handler.sendMessage(msg);
 				}
 			}			

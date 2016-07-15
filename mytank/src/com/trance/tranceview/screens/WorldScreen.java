@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -52,6 +53,26 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
+	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
+	
+	public WorldScreen(final TranceGame tranceGame) {
+		this.tranceGame = tranceGame;
+		
+	}
+
+	@Override
+	public void show() {
+		if(!init){
+			init();
+			init = true;
+		}
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		GestureDetector gestureHandler = new GestureDetector(this);
+		inputMultiplexer.addProcessor(this);
+		inputMultiplexer.addProcessor(gestureHandler);
+		inputMultiplexer.addProcessor(stage);
+		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
@@ -80,6 +101,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font);
 				location.setPosition(x * 480 , y * 800);
 //				location.setColor(x, y, x, 1);
+				String key = new StringBuilder().append(x).append("_").append(y).toString();
+				worldImages.put(key, location);
 				stage.addActor(location);
 				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
 				if(dto != null){
@@ -142,24 +165,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		home.setPosition(10, 10);
 	}
 	
-	public WorldScreen(final TranceGame tranceGame) {
-		this.tranceGame = tranceGame;
-		
-	}
-
-	@Override
-	public void show() {
-		if(!init){
-			init();
-			init = true;
-		}
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		GestureDetector gestureHandler = new GestureDetector(this);
-		inputMultiplexer.addProcessor(this);
-		inputMultiplexer.addProcessor(gestureHandler);
-		inputMultiplexer.addProcessor(stage);
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
 	
 	@Override
 	public void pause() {
@@ -212,6 +217,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		if(music != null){
 			music.dispose();
 		}
+		worldImages.clear();
 	}
 
 	@Override

@@ -110,7 +110,7 @@ public class PlayerHandler extends HandlerSupport {
 							MainActivity.worldPlayers.put(e.getKey(),value);
 						}
 					}
-//					MainActivity.heartBeat();
+					MainActivity.heartBeat();
 				}
 				LoginScreen.login = false;
 			}

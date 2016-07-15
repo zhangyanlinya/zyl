@@ -253,14 +253,14 @@ public class GameScreen implements Screen , ContactListener{
 		//Create new TouchPad with the created style
 		touchpad = new Touchpad(10, touchpadStyle);
 		//setBounds(x,y,width,height)
-		touchpad.setBounds(100, 100, 400, 400);
+		touchpad.setBounds(100, 100, 360, 360);
 		
 		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
 //		fireSprite = new Sprite(blockTexture);
 		fireImage = new Image(blockTexture);
 		//Set position to centre of the screen
 		int side = width / 8;
-		fireImage.setPosition(width/2 + side , control_height/2 - side/2);
+		fireImage.setPosition(width/2 + side * 2 , control_height/2 - side/2);
 	}
 
 	//DestoryBody
@@ -396,6 +396,7 @@ public class GameScreen implements Screen , ContactListener{
 		}
 		
 		controldir();
+		track();
 		
 		spriteBatch.begin();
 		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
@@ -421,6 +422,14 @@ public class GameScreen implements Screen , ContactListener{
 			return;
 		}
 		mainTank.changeDir(touchpad);
+	}
+	
+	private void track(){
+		for(Block block :tanks){
+			if(block.type == BlockType.TANK_ENEMY.getValue()){
+				block.track(mainTank);
+			}
+		}
 	}
 
 	@Override
