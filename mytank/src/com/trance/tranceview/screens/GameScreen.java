@@ -253,7 +253,7 @@ public class GameScreen implements Screen , ContactListener{
 		//Create new TouchPad with the created style
 		touchpad = new Touchpad(10, touchpadStyle);
 		//setBounds(x,y,width,height)
-		touchpad.setBounds(15, 15, 200, 200);
+		touchpad.setBounds(100, 100, 400, 400);
 		
 		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
 //		fireSprite = new Sprite(blockTexture);
