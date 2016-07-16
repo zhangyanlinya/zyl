@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,13 +21,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
-import com.trance.common.socket.model.Request;
-import com.trance.common.socket.model.Response;
-import com.trance.common.socket.model.ResponseStatus;
-import com.trance.common.util.CryptUtil;
-import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
-import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldHandler;
@@ -47,6 +43,7 @@ public class MainActivity extends AndroidApplication {
 	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
+	private ConnectionChangeReceiver receiver;
 	
 	private Handler handler = new MyHandler(MainActivity.this);
 	
@@ -98,6 +95,12 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
+		receiver =  new ConnectionChangeReceiver();
+		IntentFilter filter = new IntentFilter();  
+		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION); 
+		registerReceiver(receiver, filter); 
+		
+		
 		tranceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计
@@ -137,65 +140,6 @@ public class MainActivity extends AndroidApplication {
 		return worldPlayers.get(key);
 	}
 	
-	/**
-	 * 心跳
-	 */
-	public static  void heartBeat(){
-		Thread thead =new Thread (){
-			public void run(){
-				while(true){
-					try {
-						Thread.sleep(10000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					long idleTime = SimpleSocketClient.socket.getSendIdleTime();
-					if(idleTime < 10000){
-						continue;
-					}
-					if(SimpleSocketClient.socket.isConnected()){
-						continue;
-					}
-					
-					Response response =	SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
-					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-						continue;
-					}
-					offlineReconnect();
-				}
-			}
-		};
-		thead.setName("心跳线程");
-		thead.setDaemon(true);
-		thead.start();
-	}
-
-	/**
-	 * 断线重连
-	 * @return
-	 */
-	public static boolean offlineReconnect(){
-		String src = userName + loginKey;
-		String LoginMD5 = null;
-		try {
-			LoginMD5 = CryptUtil.md5(src);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		//断线重连
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("userName", userName);
-		params.put("loginKey", LoginMD5);
-		params.put("server", "1");
-		params.put("loginWay", "0");
-		Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
-		if(response == null){
-			return false;
-		}
-		return true;
-	}
-	
 	private long time;
 	
 	@Override
@@ -227,6 +171,7 @@ public class MainActivity extends AndroidApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		tranceGame.dispose();
+		unregisterReceiver(receiver);
 		System.exit(0);
 	}
 }

@@ -19,6 +19,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.ConnectionChangeReceiver;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.LoginScreen;
@@ -110,7 +111,7 @@ public class PlayerHandler extends HandlerSupport {
 							MainActivity.worldPlayers.put(e.getKey(),value);
 						}
 					}
-					MainActivity.heartBeat();
+					ConnectionChangeReceiver.heartBeat();
 				}
 				LoginScreen.login = false;
 			}
