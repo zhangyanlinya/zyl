@@ -96,13 +96,12 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 		Thread thead = new Thread (){
 			public void run(){
 				while(true){
-					Log.e(TAG, "检测连接");
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					long idleTime = SimpleSocketClient.socket.getLastBothIdleTime();
+					long idleTime = SimpleSocketClient.socket.getIdleTime();
 					if(idleTime < 10000){
 						continue;
 					}

@@ -276,9 +276,9 @@ public class SimpleSocketClient {
 		return sn;
 	}
 	
-	public long getLastBothIdleTime(){
+	public long getIdleTime(){
 		if(session != null){
-			return session.getLastBothIdleTime();
+			return System.currentTimeMillis() - session.getLastIoTime();
 		}
 		return 0;
 	}
