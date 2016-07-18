@@ -22,9 +22,9 @@ import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerResult;
 
-public class ConnectionChangeReceiver extends BroadcastReceiver{
+public class NetChangeReceiver extends BroadcastReceiver{
 	
-	private static final String TAG =ConnectionChangeReceiver.class.getSimpleName();  
+	private static final String TAG =NetChangeReceiver.class.getSimpleName();  
 	
 	@Override
 	public void onReceive(Context context, Intent arg1) {

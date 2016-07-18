@@ -43,7 +43,7 @@ public class MainActivity extends AndroidApplication {
 	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
-	private ConnectionChangeReceiver receiver;
+	private NetChangeReceiver receiver;
 	
 	private Handler handler = new MyHandler(MainActivity.this);
 	
@@ -95,7 +95,7 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		receiver =  new ConnectionChangeReceiver();
+		receiver =  new NetChangeReceiver();
 		IntentFilter filter = new IntentFilter();  
 		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION); 
 		registerReceiver(receiver, filter); 
