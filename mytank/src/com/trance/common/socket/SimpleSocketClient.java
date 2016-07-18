@@ -261,8 +261,6 @@ public class SimpleSocketClient {
 		return this.session != null && this.session.isConnected();
 	}
 
-	private long sendTime;
-	
 	/**
 	 * 取得序列号
 	 * 
@@ -275,12 +273,14 @@ public class SimpleSocketClient {
 			sn = 1;
 		}
 		
-		sendTime = System.currentTimeMillis();
 		return sn;
 	}
 	
-	public long getSendIdleTime(){
-		return System.currentTimeMillis() - sendTime;
+	public long getLastBothIdleTime(){
+		if(session != null){
+			return session.getLastBothIdleTime();
+		}
+		return 0;
 	}
 
 	/**

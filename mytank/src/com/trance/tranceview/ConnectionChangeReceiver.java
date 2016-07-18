@@ -72,13 +72,15 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 	}
 	
 	private static boolean isConnect = true;
+	private static boolean isChangetoConnect = false;
 	
 	private void onConnected(Context context) {
 		Toast.makeText(context, "网络连接成功", Toast.LENGTH_LONG).show();
-		if(SimpleSocketClient.socket == null){
-			return;
-		}
+//		if(SimpleSocketClient.socket == null){
+//			return;
+//		}
 //		sendHeartbeat();
+		isChangetoConnect = true;
 	}
 
 	private void onDisconnected(Context context) {
@@ -91,27 +93,26 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 	 * 心跳
 	 */
 	public static void heartBeat(){
-		Thread thead =new Thread (){
+		Thread thead = new Thread (){
 			public void run(){
 				while(true){
 					Log.e(TAG, "检测连接");
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-//					long idleTime = SimpleSocketClient.socket.getSendIdleTime();
-//					if(idleTime < 10000){
-//						continue;
-//					}
-//					if(SimpleSocketClient.socket.isConnected()){
-//						continue;
-//					}
+					long idleTime = SimpleSocketClient.socket.getLastBothIdleTime();
+					if(idleTime < 10000){
+						continue;
+					}
+					if(SimpleSocketClient.socket.isConnected() && !isChangetoConnect){
+						continue;
+					}
 					if(!isConnect){
 						continue;
 					}
 					sendHeartbeat();
-					success = false;
 				}
 			}
 		};
@@ -120,9 +121,9 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 		thead.start();
 	}
 	
-	private static boolean success = false;
+	private static boolean lock = false;
 	private synchronized static void sendHeartbeat(){
-		if(success){
+		if(lock){
 			return;
 		}
 		Log.e(TAG, "发送心跳");
@@ -130,7 +131,8 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
-		success = offlineReconnect();
+		lock = offlineReconnect();
+		lock = false;
 	}
 
 	/**
@@ -164,6 +166,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver{
 			}
 		}
 		Log.e(TAG, "断线重连成功");
+		isChangetoConnect = false;
 		return true;
 	}
 }
