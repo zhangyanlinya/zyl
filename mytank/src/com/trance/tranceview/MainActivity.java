@@ -172,6 +172,7 @@ public class MainActivity extends AndroidApplication {
 		super.onDestroy();
 		tranceGame.dispose();
 		unregisterReceiver(receiver);
+		Gdx.app.exit();
 		System.exit(0);
 	}
 }

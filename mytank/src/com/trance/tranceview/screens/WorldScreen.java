@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -21,8 +22,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
@@ -53,6 +59,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
+	private Dialog loading;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
 	
 	public WorldScreen(final TranceGame tranceGame) {
@@ -86,6 +93,13 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		}
 		font = FontUtil.getInstance().getFont(35, sb.toString(), Color.WHITE);;
 		
+//		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
+//				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
+//		Drawable background = new TextureRegionDrawable(tips);
+//		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
+//		loading = new Dialog("connect server...", style);
+		
+		
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 
@@ -113,6 +127,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				location.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
+//						loading.show(stage);
 						if(dto != null){
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
@@ -144,6 +159,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							params.put("y", oy);
 							SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						}
+//						loading.hide();
 					}
 				});
 			}

@@ -76,10 +76,6 @@ public class NetChangeReceiver extends BroadcastReceiver{
 	
 	private void onConnected(Context context) {
 		Toast.makeText(context, "网络连接成功", Toast.LENGTH_LONG).show();
-//		if(SimpleSocketClient.socket == null){
-//			return;
-//		}
-//		sendHeartbeat();
 		isChangetoConnect = true;
 	}
 
