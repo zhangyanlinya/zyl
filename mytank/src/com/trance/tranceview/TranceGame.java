@@ -1,5 +1,7 @@
 package com.trance.tranceview;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.trance.tranceview.screens.GameScreen;
@@ -10,6 +12,7 @@ import com.trance.tranceview.utils.AssetsManager;
 
 public class TranceGame extends Game {
 	
+	private AssetsManager assetManager;
 	public Screen loginScreen;//
 	public Screen worldScreen;//
 	public Screen mapScreen;    //
@@ -19,12 +22,12 @@ public class TranceGame extends Game {
 		
 		try {
 //			AudioUtils.getInstance().init();
-			AssetsManager.getInstance().init(); //初始化资源
+			assetManager = AssetsManager.getInstance();
+			assetManager.init(); //初始化资源
 			loginScreen = new LoginScreen(this);
 			worldScreen = new WorldScreen(this);
 			mapScreen = new MapScreen(this);
 			gameScreen = new GameScreen(this);
-			this.setScreen(loginScreen);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -34,7 +37,23 @@ public class TranceGame extends Game {
 		
 	}
 	
+	private boolean init;
 	
+	@Override
+	public void render() {
+		super.render();
+		if(assetManager.update() && !init){
+			this.setScreen(loginScreen);
+			init = true;
+			return;
+		}
+		if(init){
+			return;
+		}
+		float progress = assetManager.getProgress(); 
+		Log.e(this.getClass().getSimpleName(), progress + "");
+	}
+
 	/**
 	 * 开启游戏
 	 */
@@ -49,7 +68,8 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
-		AssetsManager.getInstance().dispose();
+		assetManager.dispose();
+		init = false;
 		super.dispose();
 	}
 }

@@ -116,7 +116,7 @@ public class GameScreen implements Screen , ContactListener{
 	private Drawable touchKnob;
 	private Texture blockTexture;
 	private Image fireImage;
-	
+
 	/**
 	 * 一局所用总时间
 	 */

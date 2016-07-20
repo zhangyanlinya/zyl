@@ -42,7 +42,6 @@ public class AssetsManager extends AssetManager{
     	load("block/block.pack", TextureAtlas.class);
     	load("ui/dir.png", Texture.class);
     	load("ui/bullet.png", Texture.class);
-//    	load("ui/fire.png", Texture.class);
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
@@ -57,9 +56,6 @@ public class AssetsManager extends AssetManager{
     	load("world/f-28.png", Texture.class);
     	
     	ininSound();
-    	
-		finishLoading();
-		
     }
     
     /**
