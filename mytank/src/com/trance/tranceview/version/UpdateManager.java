@@ -7,12 +7,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -31,8 +33,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+
 import com.trance.trancetank.R;
-import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.constant.LogTag;
 
 @SuppressLint({ "HandlerLeak", "SdCardPath" })
@@ -45,8 +47,8 @@ public class UpdateManager {
 	private Boolean interceptFlag = false;                              //标记用户是否在下载过程中取消下载
 	private Thread downloadApkThread = null;                            //下载线程
 	private Thread checkVersionThread = null;                            //下载线程
-	private final String checkUrl = "http://"+MainActivity.IP+":8080/trance_admin/version";    				    //apk的版本信息
-	private final String apkUrl = "http://"+MainActivity.IP+":8080/trance_admin/download/mytank.apk";      		//apk的URL地址
+	private final String checkUrl = "http://112.74.30.92:8080/trance_admin/version";    				    //apk的版本信息
+	private final String apkUrl = "http://112.74.30.92:8080/trance_admin/download/mytank.apk";      		//apk的URL地址
 	private final String savePath = "/sdcard/updateApk";              	//下载的apk存放的路径
 	private final String saveFileName = savePath + "TranceTank.apk";    //下载的apk文件
 	private int progress = 0;                                           //下载进度

@@ -27,6 +27,7 @@ import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -362,7 +363,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		parms.put("level", level);
 		parms.put("from", from);
 		parms.put("to", to);
-		SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
+		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
 	}
 	
 	@Override

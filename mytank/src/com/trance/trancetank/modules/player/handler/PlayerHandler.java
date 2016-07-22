@@ -19,7 +19,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.tranceview.NetChangeReceiver;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.LoginScreen;
@@ -39,6 +38,28 @@ public class PlayerHandler extends HandlerSupport {
 
 	@Override
 	public void init() {
+		this.registerProcessor(new ResponseProcessorAdapter(){
+
+			@Override
+			public int getModule() {
+				return Module.PLAYER;
+			}
+
+			@Override
+			public int getCmd() {
+				return PlayerCmd.HEART_BEAT;
+			}
+
+			@Override
+			public Object getType() {
+				return null;
+			}
+
+			@Override
+			public void callback(IoSession session, Response response,
+					Object message) {
+			}
+		});
 
 		this.registerProcessor(new ResponseProcessorAdapter(){
 
@@ -112,21 +133,22 @@ public class PlayerHandler extends HandlerSupport {
 						}
 					}
 //					NetChangeReceiver.heartBeat();
+					Gdx.app.postRunnable(new Runnable() {
+						
+						@Override
+						public void run() {
+							MainActivity.tranceGame.startGame();
+						}
+					});
 				}
 				LoginScreen.login = false;
 			}
 
 			@Override
 			public void handleMessage(Message msg, Context context) {
-				final MainActivity activity = (MainActivity)context;
+//				final MainActivity activity = (MainActivity)context;
 				
-				Gdx.app.postRunnable(new Runnable() {
-					
-					@Override
-					public void run() {
-						activity.tranceGame.startGame();
-					}
-				});
+				
 			}
 		});
 		

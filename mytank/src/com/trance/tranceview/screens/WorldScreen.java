@@ -42,6 +42,7 @@ import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 
@@ -132,7 +133,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
 							params.put("targetId", dto.getId());
-							Response response = SimpleSocketClient.socket.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+							Response response = ClientServiceImpl.getInstance().send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
 							if(response != null){
 								ResponseStatus status = response.getStatus();
 								if (status == ResponseStatus.SUCCESS) {
@@ -157,7 +158,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							Map<String,Object> params = new HashMap<String,Object>();
 							params.put("x", ox);
 							params.put("y", oy);
-							SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
+							ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						}
 //						loading.hide();
 					}

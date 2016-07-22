@@ -17,12 +17,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
-import com.trance.trancetank.modules.mapdata.handler.MapDataHandler;
-import com.trance.trancetank.modules.player.handler.PlayerHandler;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.trancetank.modules.world.handler.WorldHandler;
+import com.trance.tranceview.net.ClientService;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
@@ -31,19 +29,13 @@ import com.trance.tranceview.version.UpdateManager;
 
 public class MainActivity extends AndroidApplication {
 	
-	public TranceGame tranceGame;
-//	public final static String IP = "192.168.0.4";
-//	public final static String IP = "192.168.0.103";
-	public final static String IP = "112.74.30.92";
-	public final static int PORT = 10101;
+	public static TranceGame tranceGame;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
 	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
-//	private NetChangeReceiver receiver;
-	
-	private Handler handler = new MyHandler(MainActivity.this);
+	private ClientService client ;
 	
 	static class MyHandler extends Handler{
 		
@@ -64,7 +56,7 @@ public class MainActivity extends AndroidApplication {
 						.show();
 				break;
 			case 0:
-				ResponseProcessor  processor = SimpleSocketClient.responseProcessors.getProcessor(module, cmd);
+				ResponseProcessor  processor = ClientServiceImpl.getInstance().getResponseProcessors().getProcessor(module, cmd);
 				processor.handleMessage(msg, reference.get());
 				break;
 			default:
@@ -74,16 +66,7 @@ public class MainActivity extends AndroidApplication {
 			}
 		}
 	} 
-	
-	/**
-	 * 注册请求响应处理器
-	 */
-	private void registerProcessor() {
-		SimpleSocketClient socket = SimpleSocketClient.init(IP, PORT, handler);
-		new PlayerHandler(socket);
-		new WorldHandler(socket);
-		new MapDataHandler(socket);
-	}
+
 
 	
 	@Override
@@ -92,12 +75,6 @@ public class MainActivity extends AndroidApplication {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-//		receiver =  new NetChangeReceiver();
-//		IntentFilter filter = new IntentFilter();  
-//		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION); 
-//		registerReceiver(receiver, filter); 
-		
 		
 		tranceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
@@ -120,16 +97,11 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		// 注册请求响应处理器
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				registerProcessor();
-			}
-			
-		}).start();
+		
+		client = ClientServiceImpl.getInstance();
+		client.init();
 		isInit = true;
+		
 	}
 
 	
@@ -169,7 +141,7 @@ public class MainActivity extends AndroidApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		tranceGame.dispose();
-//		unregisterReceiver(receiver);
+		client.destroy();
 		Gdx.app.exit();
 		System.exit(0);
 	}

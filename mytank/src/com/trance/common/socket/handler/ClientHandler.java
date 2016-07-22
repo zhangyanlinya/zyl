@@ -6,29 +6,58 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.trance.common.socket.ClientContext;
 import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
-import com.trance.tranceview.constant.LogTag;
+import com.trance.common.socket.model.ResponseStatus;
+import com.trance.trancetank.config.Module;
+import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.tranceview.net.ClientServiceImpl;
 
 
 /**
  * 客户端 {@link IoHandler}
  * 
- * @author zhangyl
+ * @author bingshan
  */
 public class ClientHandler extends IoHandlerAdapter {
 	
-	private Handler handler;
+	/**
+	 * logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 	
-	public ClientHandler(Handler handler){
-		this.handler = handler;
+	/**
+	  * session建立时调用
+	  */
+	 @Override
+	public void sessionCreated(IoSession session) throws Exception {
+		logger.info("-IoSession实例:" + session.toString());
+		// 设置IoSession闲置时间，参数单位是秒
+		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
 	}
+	 
+	 /**
+	  * session闲置的时候调用
+	  */
+	@Override
+	public void sessionIdle(IoSession session, IdleStatus status)
+			throws Exception {
+		Response response =	ClientServiceImpl.getInstance().send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
+		if(response != null && response.getStatus() == ResponseStatus.SUCCESS){
+			return;//还活着
+		}
+		
+		// 死了 则关闭连接
+		if (status == IdleStatus.BOTH_IDLE) {
+			session.close(true);
+		}
+	}
+	 
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
@@ -37,7 +66,7 @@ public class ClientHandler extends IoHandlerAdapter {
 		}
 		
 		if (!(message instanceof Response)) {
-			Log.e(LogTag.TAG,"未能识别的响应消息类型！");
+			logger.error("未能识别的响应消息类型！");
 		}
 		
 		Response response = (Response) message;
@@ -45,8 +74,8 @@ public class ClientHandler extends IoHandlerAdapter {
 		if (response.isCompressed()) {
 			//TODO 解压
 		}
-		ResponseProcessors  responseProcessors = (ResponseProcessors) session.getAttribute("responseProcessors");
-		ResponseProcessor processor = responseProcessors.getProcessor(response.getModule(), response.getCmd());
+		
+		ResponseProcessor processor = this.responseProcessors.getProcessor(response.getModule(), response.getCmd());
 		if (processor != null && processor.getType() != null) {
 			//对象转换
 			Object obj = this.objectConverters.decode(response.getFormat(), response.getValueBytes(), processor.getType());
@@ -64,40 +93,19 @@ public class ClientHandler extends IoHandlerAdapter {
 				
 			} else {//异步回调
 				if (processor == null) {
-					Log.e(LogTag.TAG, "没有对应的响应消息处理器[module: ["+ response.getModule() +"], cmd: ["+ response.getCmd() +"]");
+					logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
 				} else {
 					//响应回调
 					processor.callback(session, response, ctx.getMessage());
-					Message msg = Message.obtain();
-					msg.what = response.getStatus().getValue();
-					msg.arg1 = response.getModule();
-					msg.arg2 = response.getCmd();
-					msg.obj = response.getValue();
-					handler.sendMessage(msg);
 				}
 			}			
 		} else {//没有sn
 			if (processor == null) {
-				Log.e(LogTag.TAG, "没有对应的响应消息处理器[module: ["+ response.getModule() +"], cmd: ["+ response.getCmd() +"]");
+				logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
 			} else {
 				//响应回调
 				processor.callback(session, response, null);
-				Message msg = Message.obtain();
-				msg.what = response.getStatus().getValue();
-				msg.arg1 = response.getModule();
-				msg.arg2 = response.getCmd();
-				handler.sendMessage(msg);
 			}
-		}
-	}
-
-	
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status)
-			throws Exception {
-		Log.e(this.getClass().getSimpleName(),"-客户端与服务端连接[空闲] - " + status.toString());
-		if(session != null){
-			session.close(true);
 		}
 	}
 
@@ -155,5 +163,5 @@ public class ClientHandler extends IoHandlerAdapter {
 	public void setRequestContext(Map<Integer, ClientContext> requestContext) {
 		this.requestContext = requestContext;
 	}
-	
+
 }

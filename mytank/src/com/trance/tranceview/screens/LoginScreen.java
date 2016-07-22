@@ -25,6 +25,7 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 
@@ -36,7 +37,6 @@ public class LoginScreen implements Screen{
 	private Stage stage;
 	private boolean init;
 	public static boolean login;
-	private boolean connect = true;
 	private TranceGame tranceGame;
 	
 	public LoginScreen(TranceGame tranceGame) {
@@ -104,10 +104,7 @@ public class LoginScreen implements Screen{
 		params.put("loginWay", "0");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		connect = SimpleSocketClient.socket.sendAsync(Request.valueOf(module, cmd, params));
-		if(!connect){
-			login = false;
-		}
+		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(module, cmd, params));
 	}
 
 	@Override
@@ -117,7 +114,7 @@ public class LoginScreen implements Screen{
 		stage.draw();
 		spriteBatch.begin();
 		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
-		if(!connect){
+		if(!login){
 			font.draw(spriteBatch,"[网络连接失败]",350,200);
 		}
 		spriteBatch.end();

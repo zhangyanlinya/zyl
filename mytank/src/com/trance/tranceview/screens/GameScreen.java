@@ -1,5 +1,6 @@
 package com.trance.tranceview.screens;
 
+import java.sql.ClientInfoStatus;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,8 @@ import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.net.ClientService;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.WorldUtils;
@@ -221,7 +224,7 @@ public class GameScreen implements Screen , ContactListener{
 				if(MapData.playerId > 0L && MainActivity.player != null && MapData.playerId != MainActivity.player.getId()){
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", MapData.playerId);
-					SimpleSocketClient.socket.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
+					ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
 //					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
 //					music.play();
 				}
