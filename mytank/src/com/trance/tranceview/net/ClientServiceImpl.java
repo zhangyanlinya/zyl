@@ -80,12 +80,6 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public Response send(Request request) {
-//		checkSocketClient();
-		
-		if (this.socketClient == null || !this.socketClient.isConnected()) {
-			return null;
-		}
-		
 		try {
 			Response response = this.socketClient.send(request);
 			return response;
@@ -98,12 +92,6 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public void sendAsync(Request request) {
-//		checkSocketClient();
-		
-		if (this.socketClient == null || !this.socketClient.isConnected()) {
-			return ;
-		}
-		
 		try {
 			this.socketClient.sendAsync(request);
 		} catch (Exception ex) {
