@@ -13,7 +13,6 @@ import com.trance.common.socket.ClientContext;
 import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
-import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.net.ClientServiceImpl;
@@ -38,24 +37,15 @@ public class ClientHandler extends IoHandlerAdapter {
 	public void sessionCreated(IoSession session) throws Exception {
 		logger.info("-IoSession实例:" + session.toString());
 		// 设置IoSession闲置时间，参数单位是秒
-		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
+		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 300);
 	}
 	 
 	 /**
 	  * session闲置的时候调用
 	  */
 	@Override
-	public void sessionIdle(IoSession session, IdleStatus status)
-			throws Exception {
-		Response response =	ClientServiceImpl.getInstance().send(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
-		if(response != null && response.getStatus() == ResponseStatus.SUCCESS){
-			return;//还活着
-		}
-		
-		// 死了 则关闭连接
-		if (status == IdleStatus.BOTH_IDLE) {
-			session.close(true);
-		}
+	public void sessionIdle(IoSession session, IdleStatus status)throws Exception {
+		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
 	}
 	 
 	

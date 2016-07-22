@@ -80,14 +80,15 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public Response send(Request request) {
-		checkSocketClient();
+//		checkSocketClient();
 		
 		if (this.socketClient == null || !this.socketClient.isConnected()) {
 			return null;
 		}
 		
 		try {
-			return this.socketClient.send(request);
+			Response response = this.socketClient.send(request);
+			return response;
 		} catch (Exception ex) {
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}
@@ -97,7 +98,7 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public void sendAsync(Request request) {
-		checkSocketClient();
+//		checkSocketClient();
 		
 		if (this.socketClient == null || !this.socketClient.isConnected()) {
 			return ;
@@ -160,6 +161,7 @@ public class ClientServiceImpl implements ClientService{
 	public void init() {
 //		初始化服务机地址
 		initServerAddress();
+		initSocket();
 	}
 
 	private void initServerAddress() {

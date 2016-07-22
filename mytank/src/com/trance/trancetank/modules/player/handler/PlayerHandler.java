@@ -58,6 +58,11 @@ public class PlayerHandler extends HandlerSupport {
 			@Override
 			public void callback(IoSession session, Response response,
 					Object message) {
+				if(response != null && response.getStatus() == ResponseStatus.SUCCESS){
+					return;//还活着
+				}
+				// 死了 则关闭连接
+				session.close(true);
 			}
 		});
 

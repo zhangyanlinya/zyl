@@ -97,11 +97,13 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		
 		client = ClientServiceImpl.getInstance();
-		client.init();
+		new Thread(){
+			public void run(){
+				client.init();
+			}
+		}.start();
 		isInit = true;
-		
 	}
 
 	
