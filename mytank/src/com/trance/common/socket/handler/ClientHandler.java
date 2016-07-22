@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 import android.os.Handler;
@@ -87,6 +88,16 @@ public class ClientHandler extends IoHandlerAdapter {
 				msg.arg2 = response.getCmd();
 				handler.sendMessage(msg);
 			}
+		}
+	}
+
+	
+	@Override
+	public void sessionIdle(IoSession session, IdleStatus status)
+			throws Exception {
+		Log.e(this.getClass().getSimpleName(),"-客户端与服务端连接[空闲] - " + status.toString());
+		if(session != null){
+			session.close(true);
 		}
 	}
 

@@ -45,7 +45,7 @@ public class Block extends GameActor implements Poolable{
 	// 方向
   	public Dir dir = Dir.U;
 	// 速度
-	public float speed = 10;
+	public float speed = 5;
 	
 	//攻击间隔时间
 	public long fireDelay = 500;

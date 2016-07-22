@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -82,6 +81,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	}
 	
 	private void init(){
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
 		spriteBatch = new SpriteBatch();
 		
 		StringBuilder sb = new StringBuilder("点赞");
@@ -93,15 +94,14 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		}
 		font = FontUtil.getInstance().getFont(35, sb.toString(), Color.WHITE);;
 		
-//		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
-//				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
-//		Drawable background = new TextureRegionDrawable(tips);
-//		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
-//		loading = new Dialog("connect server...", style);
+		//提示框
+		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
+				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
+		Drawable background = new TextureRegionDrawable(tips);
+		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
+		loading = new Dialog("点赞",style);
+		loading.setPosition(WIDTH/2 - loading.getWidth()/2, HEIGHT/2 - loading.getHeight()/2);
 		
-		
-		WIDTH = Gdx.graphics.getWidth();
-		HEIGHT = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		int sw = 480 * 20;

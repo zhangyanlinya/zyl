@@ -111,7 +111,7 @@ public class PlayerHandler extends HandlerSupport {
 							MainActivity.worldPlayers.put(e.getKey(),value);
 						}
 					}
-					NetChangeReceiver.heartBeat();
+//					NetChangeReceiver.heartBeat();
 				}
 				LoginScreen.login = false;
 			}

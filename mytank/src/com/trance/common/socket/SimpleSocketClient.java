@@ -5,9 +5,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
+import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -36,6 +38,7 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.NamedThreadFactory;
+import com.trance.tranceview.NetChangeReceiver;
 
 /**
  * 简单的客户机实现
@@ -53,7 +56,7 @@ public class SimpleSocketClient {
 	/**
 	 * SocketConnector
 	 */
-	private static SocketConnector connector;
+	private SocketConnector connector;
 
 	/**
 	 * Socket session
@@ -63,7 +66,7 @@ public class SimpleSocketClient {
 	/**
 	 * ExecutorFilter
 	 */
-	private static ExecutorFilter executorFilter;
+	private ExecutorFilter executorFilter;
 
 	/**
 	 * InetSocketAddress
@@ -98,9 +101,8 @@ public class SimpleSocketClient {
 		return socket;
 	}
 
-	private synchronized static void initNioSocketConnector(int threadCount, Handler androidHandler) {
-		
-		if(connector != null && !connector.isDisposed()){
+	private void initNioSocketConnector(int threadCount, Handler androidHandler) {
+		if(connector != null && connector.isActive()){
 			return ;
 		}
 		// 注册默认对象转换器
@@ -113,6 +115,9 @@ public class SimpleSocketClient {
 		sessionConfig.setKeepAlive(true);
 		sessionConfig.setTcpNoDelay(false);
 		sessionConfig.setSoLinger(0);
+		sessionConfig.setIdleTime(IdleStatus.BOTH_IDLE, 300000); //5分钟  空闲
+		sessionConfig.setIdleTime(IdleStatus.READER_IDLE, 300000);
+		sessionConfig.setIdleTime(IdleStatus.WRITER_IDLE, 300000);
 		
 		connector.setConnectTimeoutMillis(10000);
 		
@@ -130,6 +135,23 @@ public class SimpleSocketClient {
 		// IoHandler
 		IoHandler handler = createClientHandler(androidHandler);
 		connector.setHandler(handler);
+		
+		
+//      断线重连回调拦截器  
+        connector.getFilterChain().addFirst("reconnection", new IoFilterAdapter() {  
+            @Override  
+            public void sessionClosed(NextFilter nextFilter, IoSession ioSession) throws Exception {  
+					for (;;) {
+						Thread.sleep(3000);
+						boolean success = NetChangeReceiver.offlineReconnect();
+						if (success) {
+							break;
+						}
+						logger.error("重连服务器登录失败,3秒再连接一次");
+					}
+            }  
+        });  
+		
 		
 	}
 

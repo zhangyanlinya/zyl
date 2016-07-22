@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,7 +41,7 @@ public class MainActivity extends AndroidApplication {
 	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
-	private NetChangeReceiver receiver;
+//	private NetChangeReceiver receiver;
 	
 	private Handler handler = new MyHandler(MainActivity.this);
 	
@@ -95,10 +93,10 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		receiver =  new NetChangeReceiver();
-		IntentFilter filter = new IntentFilter();  
-		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION); 
-		registerReceiver(receiver, filter); 
+//		receiver =  new NetChangeReceiver();
+//		IntentFilter filter = new IntentFilter();  
+//		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION); 
+//		registerReceiver(receiver, filter); 
 		
 		
 		tranceGame = new TranceGame();
@@ -171,7 +169,7 @@ public class MainActivity extends AndroidApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		tranceGame.dispose();
-		unregisterReceiver(receiver);
+//		unregisterReceiver(receiver);
 		Gdx.app.exit();
 		System.exit(0);
 	}

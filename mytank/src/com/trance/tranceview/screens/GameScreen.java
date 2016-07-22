@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.util.Log;
+import android.view.ViewParent;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -159,6 +160,7 @@ public class GameScreen implements Screen , ContactListener{
 			}
 			
 		});
+		
 		stage.addActor(fireImage);
 		stage.addActor(touchpad);
 		
