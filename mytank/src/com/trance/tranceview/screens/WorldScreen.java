@@ -113,16 +113,13 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		for(int x = 0; x < 20; x ++){
 			for(int y = 0 ; y < 20; y ++){
-				WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font);
+				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
+				WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
 				location.setPosition(x * 480 , y * 800);
 //				location.setColor(x, y, x, 1);
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
 				worldImages.put(key, location);
 				stage.addActor(location);
-				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
-				if(dto != null){
-					location.setName(dto.getPlayerName());
-				}
 				final int ox = x;
 				final int oy = y;
 				location.addListener(new ClickListener() {
