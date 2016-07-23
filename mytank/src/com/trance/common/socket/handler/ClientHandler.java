@@ -9,12 +9,15 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.util.Log;
+
 import com.trance.common.socket.ClientContext;
 import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.net.ClientServiceImpl;
 
 
@@ -25,17 +28,13 @@ import com.trance.tranceview.net.ClientServiceImpl;
  */
 public class ClientHandler extends IoHandlerAdapter {
 	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 	
 	/**
 	  * session建立时调用
 	  */
 	 @Override
 	public void sessionCreated(IoSession session) throws Exception {
-		logger.info("-IoSession实例:" + session.toString());
+		Log.e(LogTag.TAG, "-IoSession实例:" + session.toString());
 		// 设置IoSession闲置时间，参数单位是秒
 		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 300);
 	}
@@ -56,7 +55,7 @@ public class ClientHandler extends IoHandlerAdapter {
 		}
 		
 		if (!(message instanceof Response)) {
-			logger.error("未能识别的响应消息类型！");
+			Log.e(LogTag.TAG, "未能识别的响应消息类型！");
 		}
 		
 		Response response = (Response) message;
@@ -83,7 +82,7 @@ public class ClientHandler extends IoHandlerAdapter {
 				
 			} else {//异步回调
 				if (processor == null) {
-					logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
+					Log.e(LogTag.TAG, "没有对应的响应消息处理器[module:"+response.getModule()+", cmd:"+response.getCmd()+"]！");
 				} else {
 					//响应回调
 					processor.callback(session, response, ctx.getMessage());
@@ -91,7 +90,7 @@ public class ClientHandler extends IoHandlerAdapter {
 			}			
 		} else {//没有sn
 			if (processor == null) {
-				logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！", new Object[] {response.getModule(), response.getCmd()});
+				Log.e(LogTag.TAG, "没有对应的响应消息处理器[module:"+response.getModule()+", cmd:"+response.getCmd()+"]！");
 			} else {
 				//响应回调
 				processor.callback(session, response, null);

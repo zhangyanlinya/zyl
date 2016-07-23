@@ -132,7 +132,7 @@ public class ClientServiceImpl implements ClientService{
 			logger.info("连接远程服务器[ip: {}, port: {}]成功！", this.ip, this.port);
 			
 		} catch (Exception ex) {
-			logger.error("初始化远程服务器[ip: {}, port: {}] 连接错误：{}", new Object[] {this.ip, this.port, ex.getMessage()});
+			logger.error("初始化远程服务器[ip: {}, port: {}] 连接错误：{}", this.ip, this.port, ex.getMessage());
 			return false;
 		}
 		
