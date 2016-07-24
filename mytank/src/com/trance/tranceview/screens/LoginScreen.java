@@ -2,9 +2,11 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -19,11 +21,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -35,7 +42,6 @@ public class LoginScreen implements Screen{
 	private BitmapFont font;
 	private Stage stage;
 	private boolean init;
-	public static boolean login;
 	private TranceGame tranceGame;
 	
 	public LoginScreen(TranceGame tranceGame) {
@@ -45,7 +51,7 @@ public class LoginScreen implements Screen{
 	public void init(){
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
-		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏网络连接失败", Color.RED);
+		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏", Color.RED);
 		//GO
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
 				AssetsManager.getInstance().get("ui/loginbg.png", Texture.class)));
@@ -84,6 +90,7 @@ public class LoginScreen implements Screen{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected synchronized void login() {
 		String src = MainActivity.userName + MainActivity.loginKey;
 		String loginMD5 = null;
@@ -99,7 +106,49 @@ public class LoginScreen implements Screen{
 		params.put("loginWay", "0");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		SocketUtil.sendAsync(Request.valueOf(module, cmd, params));
+		Response response = SocketUtil.send(Request.valueOf(module, cmd, params),true);
+		if(response == null){
+			return;
+		}
+		
+		ResponseStatus status = response.getStatus();
+		if (status == ResponseStatus.SUCCESS) {
+			byte[] bytes = response.getValueBytes();
+			Result<PlayerDto> result = JSON.parseObject(bytes, Result.class);
+			if (result == null) {
+				return;
+			}
+			Object pobj = result.get("content");
+			if (pobj == null) {
+				return;
+			}
+			PlayerDto playerDto = JSON.parseObject(pobj.toString(),
+					PlayerDto.class);
+			MainActivity.player = playerDto;
+
+			Object mobj = result.get("mapdata");
+			if (mobj != null) {
+				int[][] map = JSON.parseObject(mobj.toString(), int[][].class);
+				MapData.myMap = map;
+			}
+
+			Object wobj = result.get("worldPlayers");
+			if (wobj != null) {
+				Map<String, Object> map = (Map<String, Object>) wobj;
+				for (Entry<String, Object> e : map.entrySet()) {
+					String dto = JSON.toJSONString(e.getValue());
+					PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
+					MainActivity.worldPlayers.put(e.getKey(), value);
+				}
+			}
+			Gdx.app.postRunnable(new Runnable() {
+				
+				@Override
+				public void run() {
+					tranceGame.startGame();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -109,9 +158,6 @@ public class LoginScreen implements Screen{
 		stage.draw();
 		spriteBatch.begin();
 		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
-		if(!login){
-			font.draw(spriteBatch,"[网络连接失败]",350,200);
-		}
 		spriteBatch.end();
 	}
 	
@@ -144,7 +190,6 @@ public class LoginScreen implements Screen{
 		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();
-		login = false;
 	}
 	
 }

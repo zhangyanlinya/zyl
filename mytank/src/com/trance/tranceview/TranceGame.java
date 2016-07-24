@@ -1,6 +1,5 @@
 package com.trance.tranceview;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.badlogic.gdx.Game;
@@ -18,11 +17,6 @@ public class TranceGame extends Game {
 	public Screen worldScreen;//
 	public Screen mapScreen;    //
 	public Screen gameScreen;  //
-	private Context context;
-	
-	public TranceGame(Context context) {
-		this.context = context;
-	}
 	
 	@Override
 	public void create() {

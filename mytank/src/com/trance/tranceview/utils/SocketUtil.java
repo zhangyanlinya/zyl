@@ -25,6 +25,13 @@ public class SocketUtil {
 		return clientService.send(request);
 	}
 	
+	/**
+	 * 同步发送请求
+	 * @param request
+	 * @param showDialog 是否显示悬浮进度
+	 * @return
+	 */
+	
 	public static Response send(Request request, boolean showDialog) {
 		return clientService.send(request,showDialog);
 	}

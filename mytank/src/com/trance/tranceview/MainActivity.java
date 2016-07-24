@@ -28,10 +28,10 @@ import com.trance.tranceview.version.UpdateManager;
 
 public class MainActivity extends AndroidApplication {
 	
-	public static TranceGame tranceGame;
+	public TranceGame tranceGame;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
-	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
+	public static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
 	
@@ -76,7 +76,7 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		tranceGame = new TranceGame(this);
+		tranceGame = new TranceGame();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计
         config.useCompass = false;		  //禁用罗盘
@@ -98,11 +98,12 @@ public class MainActivity extends AndroidApplication {
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
 		ProgressDialog dialog = new ProgressDialog(this);
-		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条  
-	    dialog.setCancelable(true);// 设置是否可以通过点击Back键取消  
+		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  
 	    dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条  
-	    dialog.setTitle("提示");  
-	    dialog.setMax(100); 
+//	    dialog.setMax(10); 
+	    dialog.setIndeterminate(true);
+	    dialog.setMessage("连接服务器中...");
+//	    dialog.show();
 		final Handler handler = new MyHandler(this,dialog);
 		
 		new Thread(){
