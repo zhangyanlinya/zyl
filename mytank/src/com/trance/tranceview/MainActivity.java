@@ -49,8 +49,7 @@ public class MainActivity extends AndroidApplication {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case -1:
-				Toast.makeText(reference.get(), "网络连接失败", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(reference.get(), "网络连接失败", Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
 				dialog.show();
