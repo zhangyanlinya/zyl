@@ -6,8 +6,6 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.util.Log;
 
@@ -18,7 +16,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.constant.LogTag;
-import com.trance.tranceview.net.ClientServiceImpl;
+import com.trance.tranceview.utils.SocketUtil;
 
 
 /**
@@ -44,7 +42,7 @@ public class ClientHandler extends IoHandlerAdapter {
 	  */
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)throws Exception {
-		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
+		SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
 	}
 	 
 	

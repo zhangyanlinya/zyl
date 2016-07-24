@@ -18,16 +18,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.SocketUtil;
 
 public class LoginScreen implements Screen{
 	
@@ -104,7 +103,7 @@ public class LoginScreen implements Screen{
 		params.put("loginWay", "0");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(module, cmd, params));
+		SocketUtil.sendAsync(Request.valueOf(module, cmd, params));
 	}
 
 	@Override

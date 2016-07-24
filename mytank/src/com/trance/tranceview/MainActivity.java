@@ -17,13 +17,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.net.ClientService;
 import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
+import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.version.UpdateManager;
 
 
@@ -56,8 +56,8 @@ public class MainActivity extends AndroidApplication {
 						.show();
 				break;
 			case 0:
-				ResponseProcessor  processor = ClientServiceImpl.getInstance().getResponseProcessors().getProcessor(module, cmd);
-				processor.handleMessage(msg, reference.get());
+//				ResponseProcessor  processor = ClientServiceImpl.getInstance(MainActivity.this).getResponseProcessors().getProcessor(module, cmd);
+//				processor.handleMessage(msg, reference.get());
 				break;
 			default:
 				Toast.makeText(reference.get(), msg.what + result,
@@ -76,7 +76,7 @@ public class MainActivity extends AndroidApplication {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		tranceGame = new TranceGame();
+		tranceGame = new TranceGame(this);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();  
         config.useAccelerometer = false;  //禁用加速计
         config.useCompass = false;		  //禁用罗盘
@@ -97,10 +97,9 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		client = ClientServiceImpl.getInstance();
 		new Thread(){
 			public void run(){
-				client.init();
+				SocketUtil.init(MainActivity.this);
 			}
 		}.start();
 		isInit = true;

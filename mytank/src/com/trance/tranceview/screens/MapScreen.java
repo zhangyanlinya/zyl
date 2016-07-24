@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -18,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
@@ -27,10 +28,10 @@ import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.SocketUtil;
 
 public class MapScreen implements Screen ,InputProcessor{
 
@@ -68,6 +69,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	public final static Pool<Block> blockPool = new BlockPool();
 	
 	private boolean init;
+	
 	public MapScreen(TranceGame game){
 		this.game = game;
 	}
@@ -363,7 +365,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		parms.put("level", level);
 		parms.put("from", from);
 		parms.put("to", to);
-		ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
+		SocketUtil.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
 	}
 	
 	@Override

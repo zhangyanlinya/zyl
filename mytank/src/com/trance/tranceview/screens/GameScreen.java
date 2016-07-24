@@ -1,13 +1,11 @@
 package com.trance.tranceview.screens;
 
-import java.sql.ClientInfoStatus;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import android.util.Log;
-import android.view.ViewParent;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -43,7 +41,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
@@ -56,10 +53,9 @@ import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.net.ClientService;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 public class GameScreen implements Screen , ContactListener{
@@ -224,7 +220,7 @@ public class GameScreen implements Screen , ContactListener{
 				if(MapData.playerId > 0L && MainActivity.player != null && MapData.playerId != MainActivity.player.getId()){
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", MapData.playerId);
-					ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
+					SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
 //					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
 //					music.play();
 				}

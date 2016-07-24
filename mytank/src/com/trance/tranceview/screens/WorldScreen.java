@@ -3,6 +3,8 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Context;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -29,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -42,9 +43,9 @@ import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.SocketUtil;
 
 public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
@@ -62,7 +63,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private Dialog loading;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
 	
-	public WorldScreen(final TranceGame tranceGame) {
+	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 		
 	}
@@ -130,7 +131,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
 							params.put("targetId", dto.getId());
-							Response response = ClientServiceImpl.getInstance().send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
 							if(response != null){
 								ResponseStatus status = response.getStatus();
 								if (status == ResponseStatus.SUCCESS) {
@@ -155,7 +156,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							Map<String,Object> params = new HashMap<String,Object>();
 							params.put("x", ox);
 							params.put("y", oy);
-							ClientServiceImpl.getInstance().sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
+							SocketUtil.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						}
 //						loading.hide();
 					}

@@ -1,5 +1,6 @@
 package com.trance.tranceview;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.badlogic.gdx.Game;
@@ -17,24 +18,22 @@ public class TranceGame extends Game {
 	public Screen worldScreen;//
 	public Screen mapScreen;    //
 	public Screen gameScreen;  //
+	private Context context;
+	
+	public TranceGame(Context context) {
+		this.context = context;
+	}
+	
 	@Override
 	public void create() {
 		
-		try {
-//			AudioUtils.getInstance().init();
-			assetManager = AssetsManager.getInstance();
-			assetManager.init(); //初始化资源
-			loginScreen = new LoginScreen(this);
-			worldScreen = new WorldScreen(this);
-			mapScreen = new MapScreen(this);
-			gameScreen = new GameScreen(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public TranceGame() {
-		
+//		AudioUtils.getInstance().init();
+		assetManager = AssetsManager.getInstance();
+		assetManager.init(); //初始化资源
+		loginScreen = new LoginScreen(this);
+		worldScreen = new WorldScreen(this);
+		mapScreen = new MapScreen(this);
+		gameScreen = new GameScreen(this);
 	}
 	
 	private boolean init;

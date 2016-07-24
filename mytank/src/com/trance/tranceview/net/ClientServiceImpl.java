@@ -7,6 +7,9 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.common.socket.handler.ResponseProcessors;
@@ -19,6 +22,7 @@ import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerResult;
 import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.dialog.AndroidDialog;
 
 public class ClientServiceImpl implements ClientService{
 	
@@ -44,15 +48,15 @@ public class ClientServiceImpl implements ClientService{
 	 */
 	private int port = 10101;
 	
-	/**
-	 * 上次重连时间
-	 */
-	private long lastReconnectTime;
-	
-	/**
-	 * 断线重连时间间隔
-	 */
-	private static final long RECONNECT_INTERVAL = 20 * 1000L;
+//	/**
+//	 * 上次重连时间
+//	 */
+//	private long lastReconnectTime;
+//	
+//	/**
+//	 * 断线重连时间间隔
+//	 */
+//	private static final long RECONNECT_INTERVAL = 20 * 1000L;
 	
 	/**
 	 * 响应处理器集合
@@ -62,15 +66,11 @@ public class ClientServiceImpl implements ClientService{
 
 	private int threadCount = 5;
 	
-	private static ClientServiceImpl service;
+	private Context context;
 	
-	public static ClientServiceImpl getInstance(){
-		if(service == null){
-			service = new ClientServiceImpl();
-		}
-		return service;
+	public ClientServiceImpl(Context context) {
+		this.context = context;
 	}
-	
 	
 	@Override
 	public void registerProcessor(ResponseProcessor processor) {
@@ -80,11 +80,14 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public Response send(Request request) {
+		ProgressDialog dialog = AndroidDialog.show(context, "test", "test");
 		try {
 			Response response = this.socketClient.send(request);
 			return response;
 		} catch (Exception ex) {
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
+		}finally{
+			dialog.dismiss();
 		}
 		return null;
 	
@@ -100,25 +103,25 @@ public class ClientServiceImpl implements ClientService{
 		
 	}
 	
-	/**
-	 * 检查SocketClient状态
-	 */
-	private void checkSocketClient() {
-		if (this.socketClient == null || !this.socketClient.isConnected()) {
-			synchronized(this) {
-				if (this.socketClient == null || !this.socketClient.isConnected()) {
-					if (System.currentTimeMillis() - this.lastReconnectTime >= RECONNECT_INTERVAL) {
-						this.lastReconnectTime = System.currentTimeMillis();
-						this.initSocket();
-						
-						this.lastReconnectTime = System.currentTimeMillis();
-					} else {
-						return;
-					}
-				}
-			}
-		}
-	}
+//	/**
+//	 * 检查SocketClient状态
+//	 */
+//	private void checkSocketClient() {
+//		if (this.socketClient == null || !this.socketClient.isConnected()) {
+//			synchronized(this) {
+//				if (this.socketClient == null || !this.socketClient.isConnected()) {
+//					if (System.currentTimeMillis() - this.lastReconnectTime >= RECONNECT_INTERVAL) {
+//						this.lastReconnectTime = System.currentTimeMillis();
+//						this.initSocket();
+//						
+//						this.lastReconnectTime = System.currentTimeMillis();
+//					} else {
+//						return;
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	private boolean initSocket() {
 		try {
@@ -181,7 +184,7 @@ public class ClientServiceImpl implements ClientService{
 		params.put("loginKey", LoginMD5);
 		params.put("server", "1");
 		params.put("loginWay", "0");
-		Response response = ClientServiceImpl.getInstance().send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
+		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return false;
 		}
