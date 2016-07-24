@@ -164,12 +164,8 @@ public class SimpleSocketClient {
 			ctx.await(15, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {
-			logger.error("发起请求超时");
-			
-			Response response = Response.wrap(request);
-			response.setSn(ctx.getOrignSn());
-			response.setStatus(ResponseStatus.ERROR);
-			return response;
+			logger.error("发起请求失败");
+			return null;
 		} finally {
 			this.requestContext.remove(sn);
 			request.setSn(ctx.getOrignSn());

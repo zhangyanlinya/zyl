@@ -47,10 +47,9 @@ public class MainActivity extends AndroidApplication {
 		
 		@Override
 		public void handleMessage(Message msg) {
-			String result = "连接超时";
 			switch (msg.what) {
 			case -1:
-				Toast.makeText(reference.get(), result, Toast.LENGTH_LONG)
+				Toast.makeText(reference.get(), "网络连接失败", Toast.LENGTH_SHORT)
 						.show();
 				break;
 			case 1:
@@ -60,7 +59,7 @@ public class MainActivity extends AndroidApplication {
 				dialog.dismiss();
 				break;
 			default:
-				Toast.makeText(reference.get(), msg.what + result,
+				Toast.makeText(reference.get(), msg.what + "",
 						Toast.LENGTH_LONG).show();
 				break;
 			}
@@ -92,26 +91,28 @@ public class MainActivity extends AndroidApplication {
 		if(isInit){
 			return;
 		}
+		
 		UpdateManager update = new UpdateManager(this);
 	    update.checkUpdate();
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
+		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  
 	    dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条  
-//	    dialog.setMax(10); 
+	    dialog.setCancelable(false);
 	    dialog.setIndeterminate(true);
 	    dialog.setMessage("连接服务器中...");
-//	    dialog.show();
+	    WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+	    lp.alpha = 0.8f;
+	    
 		final Handler handler = new MyHandler(this,dialog);
-		
 		new Thread(){
 			public void run(){
 				SocketUtil.init(handler);
 			}
 		}.start();
-		
 		isInit = true;
 	}
 
