@@ -79,10 +79,15 @@ public class ClientServiceImpl implements ClientService{
 			msg.what = 1;
 			handler.sendMessage(msg);
 		}
+		
 		try {
 			Response response = this.socketClient.send(request);
+			if(showDialog && response == null){
+				Message msg = Message.obtain();
+				msg.what = -1;
+				handler.sendMessage(msg);
+			}
 			return response;
-			
 		} catch (Exception ex) {
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{

@@ -47,10 +47,9 @@ public class MainActivity extends AndroidApplication {
 		
 		@Override
 		public void handleMessage(Message msg) {
-			String result = "连接超时";
 			switch (msg.what) {
 			case -1:
-				Toast.makeText(reference.get(), result, Toast.LENGTH_LONG)
+				Toast.makeText(reference.get(), "网络连接失败", Toast.LENGTH_LONG)
 						.show();
 				break;
 			case 1:
@@ -60,7 +59,7 @@ public class MainActivity extends AndroidApplication {
 				dialog.dismiss();
 				break;
 			default:
-				Toast.makeText(reference.get(), msg.what + result,
+				Toast.makeText(reference.get(), msg.what + "",
 						Toast.LENGTH_LONG).show();
 				break;
 			}
