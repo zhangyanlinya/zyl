@@ -165,19 +165,12 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	
 		//Home
 		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
-//		home.addListener(new ClickListener() {
-//
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				MapData.map = MapData.myMap.clone();
-//				MapData.other = false;
-//				tranceGame.setScreen(tranceGame.mapScreen);
-//			}
-//
-//		});
-		home.setPosition(10, 10);
+		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
+		
+		bg = AssetsManager.getInstance().get("ui/loginbg.png",Texture.class);
 	}
 	
+	private Texture bg;
 	
 	@Override
 	public void pause() {
@@ -189,13 +182,15 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 
-		stage.draw();
 		spriteBatch.begin();
+//		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
 		if(MainActivity.player != null){
 			font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
 		}
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
+		
+		stage.draw();
 	}
 
 	@Override
