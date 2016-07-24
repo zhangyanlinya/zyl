@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -22,12 +21,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -58,7 +53,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
-	private Dialog loading;
+	private float sw = 480 * 20;
+	private float sh = 800 * 20;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
 	
 	public WorldScreen(TranceGame tranceGame) {
@@ -72,12 +68,30 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			init();
 			init = true;
 		}
+		
+//		updateCameraZoom();
+		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		GestureDetector gestureHandler = new GestureDetector(this);
 		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		
+	}
+	
+	/**
+	 * update camera zoom
+	 */
+	public void updateCameraZoom(){
+		new Thread(){
+			public void run(){
+				for(int i = 0; i < 5 ; i++){
+					initialScale -= 0.1;
+					try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+				}
+			}
+		}.start();
 	}
 	
 	private void init(){
@@ -92,22 +106,13 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				sb.append(name);
 			}
 		}
+		
 		font = FontUtil.getInstance().getFont(35, sb.toString(), Color.WHITE);;
-		
-		//提示框
-		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
-		Drawable background = new TextureRegionDrawable(tips);
-		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
-		loading = new Dialog("点赞",style);
-		loading.setPosition(WIDTH/2 - loading.getWidth()/2, HEIGHT/2 - loading.getHeight()/2);
-		
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		int sw = 480 * 20;
-		int sh = 800 * 20;
 		stage = new Stage(sw, sh);
-		camera.setToOrtho(false, WIDTH * 2, HEIGHT * 2);
+		camera.setToOrtho(false, WIDTH, HEIGHT);
+//		camera.translate(sw/2, sh/2);
 		stage.setCamera(camera);
 		
 		for(int x = 0; x < 20; x ++){
@@ -181,7 +186,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	public void render(float delatime) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-
+		
+		stage.draw();
 		spriteBatch.begin();
 //		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
 		if(MainActivity.player != null){
@@ -190,7 +196,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 		
-		stage.draw();
+		
 	}
 
 	@Override
@@ -251,6 +257,12 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
+//		float cx = camera.position.x ;
+//		float cy = camera.position.y;
+//		System.out.println("x: " +camera.position.x +"  y: " + camera.position.y );
+//		if(cx < sw / 2){
+//			return false; 
+//		} 
 		camera.translate(-deltaX , deltaY);
 		return true;
 	}
@@ -302,7 +314,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(screenX < 100 && screenY > HEIGHT - 100 ){
+		if(screenX < 150 && screenY > HEIGHT - 150 ){
 			MapData.map = MapData.myMap;
 			MapData.other = false;
 			tranceGame.setScreen(tranceGame.mapScreen);

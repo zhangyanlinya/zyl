@@ -192,6 +192,7 @@ public class GameScreen implements Screen , ContactListener{
 		
 		//返回家
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
+		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
 			
 			@Override
@@ -254,14 +255,14 @@ public class GameScreen implements Screen , ContactListener{
 		//Create new TouchPad with the created style
 		touchpad = new Touchpad(10, touchpadStyle);
 		//setBounds(x,y,width,height)
-		touchpad.setBounds(100, 100, 360, 360);
+		touchpad.setBounds(100, 100, 300, 300);
 		
 		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
 //		fireSprite = new Sprite(blockTexture);
 		fireImage = new Image(blockTexture);
 		//Set position to centre of the screen
 		int side = width / 8;
-		fireImage.setBounds(width/2 + side * 2 , control_height/2 - side/2, side, side);
+		fireImage.setBounds(width/2 + side * 2 , control_height/2 - side/2, side - side/4, side - side/4);
 	}
 
 	//DestoryBody
