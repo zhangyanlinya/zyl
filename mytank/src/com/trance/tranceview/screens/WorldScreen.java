@@ -3,8 +3,6 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.content.Context;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -131,7 +129,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
 							params.put("targetId", dto.getId());
-							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params));
+							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params),true);
 							if(response != null){
 								ResponseStatus status = response.getStatus();
 								if (status == ResponseStatus.SUCCESS) {

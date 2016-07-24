@@ -20,6 +20,8 @@ public interface ClientService {
 	 */
 	Response send(Request request);
 	
+	Response send(Request request, boolean showDialog);
+	
 	/**
 	 * 异步发送请求
 	 * @param request Request
@@ -31,4 +33,6 @@ public interface ClientService {
 	void destroy();
 
 	ResponseProcessors getResponseProcessors();
+
+	
 }

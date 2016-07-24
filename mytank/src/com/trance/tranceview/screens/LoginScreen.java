@@ -54,10 +54,6 @@ public class LoginScreen implements Screen{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if(login){
-					return;
-				}
-				login = true;
 				new Thread(){
 					public void run(){
 						login();

@@ -1,29 +1,17 @@
 package com.trance.tranceview.net;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.Looper;
+import android.os.Handler;
+import android.os.Message;
 
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.common.socket.handler.ResponseProcessors;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
-import com.trance.common.socket.model.ResponseStatus;
-import com.trance.common.util.CryptUtil;
-import com.trance.trancetank.config.Module;
-import com.trance.trancetank.model.Result;
-import com.trance.trancetank.modules.player.handler.PlayerCmd;
-import com.trance.trancetank.modules.player.handler.PlayerResult;
-import com.trance.tranceview.MainActivity;
-import com.trance.tranceview.dialog.AndroidDialog;
 
 public class ClientServiceImpl implements ClientService{
 	
@@ -67,10 +55,10 @@ public class ClientServiceImpl implements ClientService{
 
 	private int threadCount = 5;
 	
-	private Context context;
+	private Handler handler;
 	
-	public ClientServiceImpl(Context context) {
-		this.context = context;
+	public ClientServiceImpl(Handler handler) {
+		this.handler = handler;
 	}
 	
 	@Override
@@ -78,19 +66,31 @@ public class ClientServiceImpl implements ClientService{
 		this.responseProcessors.registerProcessor(processor);
 		
 	}
-
+	
 	@Override
-	public Response send(Request request) {
-		Looper.prepare();
-		ProgressDialog dialog = AndroidDialog.show(context, "test", "test");
+	public Response send(Request request){
+		return send(request,false);
+	}
+	
+	@Override
+	public Response send(Request request, boolean showDialog) {
+		if(showDialog){
+			Message msg = Message.obtain();
+			msg.what = 1;
+			handler.sendMessage(msg);
+		}
 		try {
 			Response response = this.socketClient.send(request);
 			return response;
+			
 		} catch (Exception ex) {
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
-			dialog.dismiss();
-			Looper.loop();
+			if(showDialog){
+				Message msg2 = Message.obtain();
+				msg2.what = 2;
+				handler.sendMessage(msg2);
+			}
 		}
 		return null;
 	

@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +19,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.tranceview.net.ClientService;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
@@ -35,29 +34,30 @@ public class MainActivity extends AndroidApplication {
 	public final static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
-	private ClientService client ;
 	
 	static class MyHandler extends Handler{
 		
-		WeakReference<Context> reference;
+		private WeakReference<Context> reference;
+		private ProgressDialog dialog;
 		
-		public MyHandler(Context context){
+		public MyHandler(Context context, ProgressDialog dialog){
 			this.reference = new WeakReference<Context>(context);
+			this.dialog = dialog;
 		}
 		
 		@Override
 		public void handleMessage(Message msg) {
-			int module = msg.arg1;
-			int cmd = msg.arg2;
 			String result = "连接超时";
 			switch (msg.what) {
 			case -1:
 				Toast.makeText(reference.get(), result, Toast.LENGTH_LONG)
 						.show();
 				break;
-			case 0:
-//				ResponseProcessor  processor = ClientServiceImpl.getInstance(MainActivity.this).getResponseProcessors().getProcessor(module, cmd);
-//				processor.handleMessage(msg, reference.get());
+			case 1:
+				dialog.show();
+				break;
+			case 2:
+				dialog.dismiss();
 				break;
 			default:
 				Toast.makeText(reference.get(), msg.what + result,
@@ -97,11 +97,20 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
+		ProgressDialog dialog = new ProgressDialog(this);
+		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条  
+	    dialog.setCancelable(true);// 设置是否可以通过点击Back键取消  
+	    dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条  
+	    dialog.setTitle("提示");  
+	    dialog.setMax(100); 
+		final Handler handler = new MyHandler(this,dialog);
+		
 		new Thread(){
 			public void run(){
-				SocketUtil.init(MainActivity.this);
+				SocketUtil.init(handler);
 			}
 		}.start();
+		
 		isInit = true;
 	}
 
@@ -142,7 +151,7 @@ public class MainActivity extends AndroidApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		tranceGame.dispose();
-		client.destroy();
+		SocketUtil.destroy();
 		Gdx.app.exit();
 		System.exit(0);
 	}

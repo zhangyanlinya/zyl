@@ -1,6 +1,6 @@
 package com.trance.tranceview.utils;
 
-import android.content.Context;
+import android.os.Handler;
 
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -11,8 +11,8 @@ public class SocketUtil {
 	
 	private static ClientService clientService;
 	
-	public static void init(Context context){
-		clientService = new ClientServiceImpl(context);
+	public static void init(Handler handler){
+		clientService = new ClientServiceImpl(handler);
 		clientService.init();
 	}
 	
@@ -25,12 +25,20 @@ public class SocketUtil {
 		return clientService.send(request);
 	}
 	
+	public static Response send(Request request, boolean showDialog) {
+		return clientService.send(request,showDialog);
+	}
+	
 	 /**
 	 * 异步发送请求
 	 * @param request Request
 	 */
 	public static void sendAsync(Request request){
 		clientService.sendAsync(request);
+	}
+
+	public static void destroy() {
+		clientService.destroy();
 	}
 
 }

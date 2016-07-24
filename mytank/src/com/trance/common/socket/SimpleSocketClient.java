@@ -164,8 +164,7 @@ public class SimpleSocketClient {
 			ctx.await(15, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {
-			String message = String.format("发起请求异常：%s", ex.getMessage());
-			logger.error(message, ex);
+			logger.error("发起请求超时");
 			
 			Response response = Response.wrap(request);
 			response.setSn(ctx.getOrignSn());
