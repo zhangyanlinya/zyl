@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Looper;
 
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.ResponseProcessor;
@@ -80,6 +81,7 @@ public class ClientServiceImpl implements ClientService{
 
 	@Override
 	public Response send(Request request) {
+		Looper.prepare();
 		ProgressDialog dialog = AndroidDialog.show(context, "test", "test");
 		try {
 			Response response = this.socketClient.send(request);
@@ -88,6 +90,7 @@ public class ClientServiceImpl implements ClientService{
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
 			dialog.dismiss();
+			Looper.loop();
 		}
 		return null;
 	
@@ -162,40 +165,5 @@ public class ClientServiceImpl implements ClientService{
 	@Override
 	public ResponseProcessors getResponseProcessors() {
 		return responseProcessors;
-	}
-	
-	
-	/**
-	 * 断线重连
-	 * @return
-	 */
-	public boolean offlineReconnect(){
-		String src = MainActivity.userName + MainActivity.loginKey;
-		String LoginMD5 = null;
-		try {
-			LoginMD5 = CryptUtil.md5(src);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		//断线重连
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("userName", MainActivity.userName);
-		params.put("loginKey", LoginMD5);
-		params.put("server", "1");
-		params.put("loginWay", "0");
-		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return false;
-		}
-		Result<?> result = (Result<?>) response.getValue();
-		if(result != null){
-			if(result.getCode() != PlayerResult.SUCCESS){
-				logger.error("断线重连失败 code =" + result.getCode());
-				return false;
-			}
-		}
-		logger.error("断线重连成功");
-		return true;
 	}
 }
