@@ -181,7 +181,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	public void render(float delatime) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-
+		
+		stage.draw();
 		spriteBatch.begin();
 //		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
 		if(MainActivity.player != null){
@@ -190,7 +191,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 		
-		stage.draw();
+		
 	}
 
 	@Override
@@ -302,7 +303,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(screenX < 100 && screenY > HEIGHT - 100 ){
+		if(screenX < 150 && screenY > HEIGHT - 150 ){
 			MapData.map = MapData.myMap;
 			MapData.other = false;
 			tranceGame.setScreen(tranceGame.mapScreen);

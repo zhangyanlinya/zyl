@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -104,6 +102,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		//返回世界地图
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 //		toWorld.setPosition(width - toWorld.getWidth()*2, toWorld.getHeight());
+		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
 			
 			@Override
