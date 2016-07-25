@@ -23,9 +23,7 @@ public class WorldImage extends Image{
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(dto != null){
-			int len = dto.getPlayerName().length();
-			String name = len > 6 ? dto.getPlayerName().substring(0,6) : dto.getPlayerName();
-			name = name + ": ";
+			String name = dto.getPlayerName() + ": ";
 			font.setColor(Color.WHITE);
 			font.draw(batch, name ,this.getX(),this.getY());
 			font.setColor(Color.RED);

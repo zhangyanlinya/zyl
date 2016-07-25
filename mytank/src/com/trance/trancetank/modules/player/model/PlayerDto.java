@@ -62,6 +62,8 @@ public class PlayerDto implements Serializable {
 	}
 
 	public String getPlayerName() {
+		int len = playerName.length();
+		playerName = len > 6 ? playerName.substring(0,6) : playerName;
 		return playerName;
 	}
 

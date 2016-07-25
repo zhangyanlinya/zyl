@@ -93,8 +93,6 @@ public class WorldHandler extends HandlerSupport {
 								int y = (Integer) result.get("y");
 								String key = new StringBuilder().append(x).append("_").append(y).toString();
 								MainActivity.worldPlayers.put(key,playerDto);
-								WorldImage image = WorldScreen.worldImages.get(key);
-								image.setName(playerDto.getPlayerName());
 							}
 						}
 					}

@@ -3,7 +3,6 @@ package com.trance.tranceview;
 import android.util.Log;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.MapScreen;
@@ -13,10 +12,10 @@ import com.trance.tranceview.utils.AssetsManager;
 public class TranceGame extends Game {
 	
 	private AssetsManager assetManager;
-	public Screen loginScreen;//
-	public Screen worldScreen;//
-	public Screen mapScreen;    //
-	public Screen gameScreen;  //
+	public LoginScreen loginScreen;//
+	public WorldScreen worldScreen;//
+	public MapScreen mapScreen;    //
+	public GameScreen gameScreen;  //
 	
 	@Override
 	public void create() {

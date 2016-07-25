@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -21,12 +22,14 @@ import com.badlogic.gdx.utils.Pool;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
+import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BlockPool;
+import com.trance.tranceview.textinput.RenameTextInputListener;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -61,12 +64,17 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private Image attack;
 	private Image toWorld;
+	private Image rename;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
 	public final static Pool<Block> blockPool = new BlockPool();
 	
 	private boolean init;
+	
+	private TextInputListener listener;
+	
+	private PlayerDto playerDto;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -79,14 +87,13 @@ public class MapScreen implements Screen ,InputProcessor{
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width  = (width - game_width)/2;
-		control_height = height - game_height-length;//再减一格
+		control_height = height - game_height-length * 2;//再减2格
 		
 		stage = new Stage(width, height, true);
 		
 		//文字 
 		spriteBatch = new SpriteBatch();
 		
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击", Color.RED);
 		
 		//攻击
 		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
@@ -101,7 +108,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		//返回世界地图
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
-//		toWorld.setPosition(width - toWorld.getWidth()*2, toWorld.getHeight());
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
 			
@@ -110,6 +116,22 @@ public class MapScreen implements Screen ,InputProcessor{
 				toWorld();
 			}
 		});
+		
+		//Rename
+		listener = new RenameTextInputListener();
+		rename = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.GOTOFIGHT));
+		rename.setBounds(10 + toWorld.getWidth() + toWorld.getWidth()/2, 10, rename.getWidth() + rename.getWidth()/2, rename.getHeight() + rename.getHeight()/2);
+		rename.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.input.getTextInput(listener, "请输入要改的名字", "奥特曼大战金铜葫芦娃");
+			}
+		});
+	}
+	
+	public void setPlayerDto(PlayerDto playerDto){
+		this.playerDto = playerDto;
 	}
 
 	@Override
@@ -124,6 +146,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
+		stage.addActor(rename);
+		
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
+		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
@@ -153,6 +179,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.draw();
 		spriteBatch.begin();
 		font.draw(spriteBatch,"可拖动砖块编辑",0,height);
+		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		font.draw(spriteBatch,"攻击",width-200,100);
 		spriteBatch.end();
 	}

@@ -129,7 +129,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				location.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-//						loading.show(stage);
 						if(dto != null){
 							MapData.playerId = dto.getId();
 							HashMap<String,Object> params = new HashMap<String,Object>();
@@ -152,6 +151,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 										}
 										MapData.other = true;
 										tranceGame.setScreen(tranceGame.mapScreen);
+										tranceGame.mapScreen.setPlayerDto(dto);
 									}
 								}
 							}
@@ -161,11 +161,9 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							params.put("y", oy);
 							SocketUtil.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 						}
-//						loading.hide();
 					}
 				});
 			}
-
 		}
 	
 		//Home
@@ -318,6 +316,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			MapData.map = MapData.myMap;
 			MapData.other = false;
 			tranceGame.setScreen(tranceGame.mapScreen);
+			tranceGame.mapScreen.setPlayerDto(MainActivity.player);
 		}
 		return false;
 	}
