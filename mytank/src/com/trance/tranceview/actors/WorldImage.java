@@ -30,4 +30,8 @@ public class WorldImage extends Image{
 			font.draw(batch, dto.getUp()+"" ,this.getX() + getWidth() + getWidth()/2, this.getY());
 		}
 	}
+	
+	public PlayerDto getPlayerDto(){
+		return dto;
+	}
 }

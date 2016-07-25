@@ -124,6 +124,7 @@ public class LoginScreen implements Screen{
 			}
 			PlayerDto playerDto = JSON.parseObject(pobj.toString(),
 					PlayerDto.class);
+			playerDto.setMyself(true);
 			MainActivity.player = playerDto;
 
 			Object mobj = result.get("mapdata");

@@ -125,7 +125,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.input.getTextInput(listener, "请输入要改的名字", "奥特曼大战金铜葫芦娃");
+				Gdx.input.getTextInput(listener, "请输入要改的名字", "奥特曼大战金");
 			}
 		});
 	}
@@ -146,7 +146,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
-		stage.addActor(rename);
+		if(playerDto.isMyself()){
+			stage.addActor(rename);
+		}
 		
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
 		
@@ -178,7 +180,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
 		spriteBatch.begin();
-		font.draw(spriteBatch,"可拖动砖块编辑",0,height);
+		if(playerDto.isMyself()){
+			font.draw(spriteBatch,"可拖动砖块编辑",0,height);
+		}
 		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		font.draw(spriteBatch,"攻击",width-200,100);
 		spriteBatch.end();

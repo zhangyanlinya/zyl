@@ -100,6 +100,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		spriteBatch = new SpriteBatch();
 		
 		StringBuilder sb = new StringBuilder("点赞");
+		sb.append(MainActivity.player.getPlayerName());
 		if(!MainActivity.worldPlayers.isEmpty()){
 			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
 				String name = dto.getPlayerName();
@@ -107,20 +108,27 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			}
 		}
 		
-		font = FontUtil.getInstance().getFont(35, sb.toString(), Color.WHITE);;
+		font = FontUtil.getInstance().getFont(25, sb.toString(), Color.WHITE);;
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(sw, sh);
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-//		camera.translate(sw/2, sh/2);
+		camera.translate(sw / 2 - 480 , sh / 2 - 800 );
 		stage.setCamera(camera);
 		
 		for(int x = 0; x < 20; x ++){
 			for(int y = 0 ; y < 20; y ++){
-				final PlayerDto dto = MainActivity.getWorldPlayerDto(x, y);
-				WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
+				PlayerDto dto = null;
+				if(x == 10 && y == 10){
+					dto = MainActivity.player;
+				}else{
+					dto = MainActivity.getWorldPlayerDto(x, y);
+				}
+				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
 				location.setPosition(x * 480 , y * 800);
-//				location.setColor(x, y, x, 1);
+				if(x == 10 && y == 10){
+					location.setColor(255,0,255,1);
+				}
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
 				worldImages.put(key, location);
 				stage.addActor(location);
@@ -129,37 +137,42 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				location.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						if(dto != null){
-							MapData.playerId = dto.getId();
-							HashMap<String,Object> params = new HashMap<String,Object>();
-							params.put("targetId", dto.getId());
-							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params),true);
-							if(response != null){
-								ResponseStatus status = response.getStatus();
-								if (status == ResponseStatus.SUCCESS) {
-									HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-									int code = (Integer) result.get("result");
-									if (code == 0) {
-										if (result.get("mapJson") != null) {
-											MapData.map = JsonUtils.jsonString2Object(
-													result.get("mapJson").toString(),
-													int[][].class);
-											
-											
-										}else{
-											MapData.map = MapData.baseMap[0].clone();//原始的
-										}
-										MapData.other = true;
-										tranceGame.setScreen(tranceGame.mapScreen);
-										tranceGame.mapScreen.setPlayerDto(dto);
-									}
-								}
-							}
-						}else{
+						PlayerDto dto = location.getPlayerDto();
+						if(dto == null){
 							Map<String,Object> params = new HashMap<String,Object>();
 							params.put("x", ox);
 							params.put("y", oy);
 							SocketUtil.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
+							return;
+						}
+						if(ox == 10 && oy == 10){
+							dto.setMyself(true);
+							gotoHome();
+							return;
+						}
+						MapData.playerId = dto.getId();
+						HashMap<String,Object> params = new HashMap<String,Object>();
+						params.put("targetId", dto.getId());
+						Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params),true);
+						if(response == null){
+							return;
+						}
+						ResponseStatus status = response.getStatus();
+						if (status == ResponseStatus.SUCCESS) {
+							HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
+							int code = (Integer) result.get("result");
+							if (code == 0) {
+								if (result.get("mapJson") != null) {
+									MapData.map = JsonUtils.jsonString2Object(
+											result.get("mapJson").toString(),
+											int[][].class);
+								}else{
+									MapData.map = MapData.baseMap[0].clone();//原始的
+								}
+								MapData.other = true;
+								tranceGame.mapScreen.setPlayerDto(dto);
+								tranceGame.setScreen(tranceGame.mapScreen);
+							}
 						}
 					}
 				});
@@ -171,6 +184,13 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
 		
 		bg = AssetsManager.getInstance().get("ui/loginbg.png",Texture.class);
+	}
+	
+	private void gotoHome(){
+		MapData.map = MapData.myMap;
+		MapData.other = false;
+		tranceGame.mapScreen.setPlayerDto(MainActivity.player);
+		tranceGame.setScreen(tranceGame.mapScreen);
 	}
 	
 	private Texture bg;
@@ -188,9 +208,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		stage.draw();
 		spriteBatch.begin();
 //		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
-		if(MainActivity.player != null){
-			font.draw(spriteBatch, "点赞： " + MainActivity.player.getUp() ,0,HEIGHT);
-		}
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 		
@@ -313,10 +330,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if(screenX < 150 && screenY > HEIGHT - 150 ){
-			MapData.map = MapData.myMap;
-			MapData.other = false;
-			tranceGame.setScreen(tranceGame.mapScreen);
-			tranceGame.mapScreen.setPlayerDto(MainActivity.player);
+			gotoHome();
 		}
 		return false;
 	}

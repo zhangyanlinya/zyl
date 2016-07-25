@@ -52,6 +52,10 @@ public class PlayerDto implements Serializable {
 	 */
 	private int server;
 	
+	/**
+	 * myself
+	 */
+	private boolean myself;
 
 	public long getId() {
 		return id;
@@ -123,6 +127,14 @@ public class PlayerDto implements Serializable {
 	 */
 	public void setUp(long up) {
 		this.up = up;
+	}
+
+	public boolean isMyself() {
+		return myself;
+	}
+
+	public void setMyself(boolean myself) {
+		this.myself = myself;
 	}
 	
 	
