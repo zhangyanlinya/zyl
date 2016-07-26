@@ -23,6 +23,7 @@ import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
@@ -125,7 +126,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.input.getTextInput(listener, "请输入要改的名字", "奥特曼大战金");
+				Gdx.input.getTextInput(listener, "请输入要改的名字", MainActivity.player.getPlayerName());
 			}
 		});
 	}
