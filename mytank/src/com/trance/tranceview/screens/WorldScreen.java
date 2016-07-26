@@ -43,7 +43,8 @@ import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
 public class WorldScreen implements Screen, GestureListener, InputProcessor {
-
+	
+	private final static int BASE = 10;
 	private TranceGame tranceGame;
 	private OrthographicCamera camera;
 	private Stage stage;
@@ -55,8 +56,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
-	private float sw = 480 * 20;
-	private float sh = 800 * 20;
+	private float sw = 480 * BASE;
+	private float sh = 800 * BASE;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
 	
 	public WorldScreen(TranceGame tranceGame) {
@@ -131,21 +132,21 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		
 		
-		for(int x = 0; x < 20; x ++){
-			for(int y = 0 ; y < 20; y ++){
+		for(int x = 0; x < BASE; x ++){
+			for(int y = 0 ; y < BASE; y ++){
 				PlayerDto dto = null;
-				if(x == 10 && y == 10){
+				if(x == BASE/2 && y == BASE/2){
 					dto = MainActivity.player;
 				}else{
 					dto = MainActivity.getWorldPlayerDto(x, y);
 				}
 				
 				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
-				float offx =  24 * (20 % (x+1));
-				float offy =  40 * (20 % (y+1));
+				float offx =  (x ^ y) * 20;
+				float offy =  ((BASE - x) ^ (BASE - y)) * 40;
 				location.setPosition(x * 480 + offx , y * 800 + offy);
 				
-				if(x == 10 && y == 10){
+				if(x == BASE/2 && y == BASE/2){
 					location.setColor(255,0,255,1);
 				}
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
@@ -164,7 +165,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							SocketUtil.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
 							return;
 						}
-						if(ox == 10 && oy == 10){
+						if(ox == 5 && oy == 5){
 							dto.setMyself(true);
 							gotoHome();
 							return;
