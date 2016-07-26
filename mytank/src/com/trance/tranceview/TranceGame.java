@@ -47,10 +47,11 @@ public class TranceGame extends Game {
 	}
 
 	/**
-	 * 开启游戏
+	 * start
 	 */
 	public void startGame(){
-		this.setScreen(gameScreen);
+		mapScreen.setPlayerDto(MainActivity.player);
+		this.setScreen(mapScreen);
 	}
 
 	@Override

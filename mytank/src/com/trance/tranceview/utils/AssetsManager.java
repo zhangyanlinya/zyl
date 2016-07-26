@@ -54,6 +54,7 @@ public class AssetsManager extends AssetManager{
     	load("world/enemy.png", Texture.class);
     	load("world/tips.png", Texture.class);
     	load("world/f-28.png", Texture.class);
+    	load("world/bg.jpg", Texture.class);
     	
     	ininSound();
     }

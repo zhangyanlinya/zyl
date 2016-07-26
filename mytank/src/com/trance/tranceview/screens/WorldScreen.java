@@ -3,6 +3,8 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -113,8 +115,21 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(sw, sh);
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-		camera.translate(sw / 2 - 480 , sh / 2 - 800 );
+		camera.translate(sw / 2 - 480, sh / 2 - 800 );
 		stage.setCamera(camera);
+		
+		Image bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < sw; x += w){//background;
+			for(float y = -h ; y < sh ; y += h){
+				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		
+		
 		
 		for(int x = 0; x < 20; x ++){
 			for(int y = 0 ; y < 20; y ++){
@@ -124,8 +139,12 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				}else{
 					dto = MainActivity.getWorldPlayerDto(x, y);
 				}
+				
 				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
-				location.setPosition(x * 480 , y * 800);
+				float offx =  24 * (20 % (x+1));
+				float offy =  40 * (20 % (y+1));
+				location.setPosition(x * 480 + offx , y * 800 + offy);
+				
 				if(x == 10 && y == 10){
 					location.setColor(255,0,255,1);
 				}
@@ -183,7 +202,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
 		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
 		
-		bg = AssetsManager.getInstance().get("ui/loginbg.png",Texture.class);
 	}
 	
 	private void gotoHome(){
@@ -192,8 +210,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		tranceGame.mapScreen.setPlayerDto(MainActivity.player);
 		tranceGame.setScreen(tranceGame.mapScreen);
 	}
-	
-	private Texture bg;
 	
 	@Override
 	public void pause() {
