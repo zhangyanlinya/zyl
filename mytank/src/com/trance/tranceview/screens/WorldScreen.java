@@ -142,9 +142,9 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				}
 				
 				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
-				float offx =  (x ^ y) * 20;
-				float offy =  ((BASE - x) ^ (BASE - y)) * 40;
-				location.setPosition(x * 480 + offx , y * 800 + offy);
+				float opx =  x * 480 +(x ^ y) * 20;
+				float opy =  y * 800 + ((BASE - x) ^ (BASE - y)) * 40;
+				location.setPosition(opx , y * 800 + opy);
 				
 				if(x == BASE/2 && y == BASE/2){
 					location.setColor(255,0,255,1);
@@ -152,6 +152,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
 				worldImages.put(key, location);
 				stage.addActor(location);
+				
+				
 				final int ox = x;
 				final int oy = y;
 				location.addListener(new ClickListener() {
@@ -196,6 +198,14 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 						}
 					}
 				});
+				
+				if(x > 5 || x <= 0){
+					continue;
+				}
+				//tree
+				Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
+				tree.setPosition(opx + x * 5, opy + y * 5);
+				stage.addActor(tree);
 			}
 		}
 	
