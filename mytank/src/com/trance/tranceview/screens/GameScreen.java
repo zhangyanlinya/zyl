@@ -116,6 +116,7 @@ public class GameScreen implements Screen , ContactListener{
 	private Drawable touchKnob;
 	private Texture blockTexture;
 	private Image fireImage;
+	private Image bg;
 
 	/**
 	 * 一局所用总时间
@@ -142,6 +143,16 @@ public class GameScreen implements Screen , ContactListener{
 		MapData.over = false;
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h ; y < stage.getHeight() ; y += h){
+				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		stage.addActor(bg);
 		stage.addActor(toWorld);
 		initWorld();
 		initMap();
@@ -190,6 +201,8 @@ public class GameScreen implements Screen , ContactListener{
 		control_height = height - game_height -length;//再减少一格
 		renderer = new ShapeRenderer();
 		
+		bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		
 		//返回家
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
@@ -200,7 +213,6 @@ public class GameScreen implements Screen , ContactListener{
 				tranceGame.setScreen(tranceGame.worldScreen);
 			}
 		});
-		stage.addActor(toWorld);
 		
 		//提示框
 		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(

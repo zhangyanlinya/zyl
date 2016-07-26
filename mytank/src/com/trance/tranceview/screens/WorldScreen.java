@@ -128,15 +128,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			}
 		}
 		
-		
-		
-		
 		for(int x = 0; x < BASE; x ++){
 			for(int y = 0 ; y < BASE; y ++){
-				
-				
-				
-				
 				PlayerDto dto = null;
 				if(x == BASE/2 && y == BASE/2){
 					dto = MainActivity.player;
