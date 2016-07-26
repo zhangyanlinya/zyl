@@ -375,7 +375,7 @@ public class Block extends GameActor implements Poolable{
 	@Override
 	public void reset() {
 		hp = maxhp;
-		this.setStatus(Dir.U);
+		dir = Dir.U;
 	}
 	
 	@Override
