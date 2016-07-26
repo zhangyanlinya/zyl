@@ -3,8 +3,6 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -162,8 +160,20 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 					stage.addActor(tree);
 					
 					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
-					grass.setPosition(opx + 480+ x * 5, opy - y * 5);
+					grass.setPosition(opx + 480+ (x-1) * 10, opy - (y-1) * 10);
 					stage.addActor(grass);
+					
+					if( x < 5){
+						Image gra = new Image(AssetsManager.getInstance().get("world/gra0" + x +".png", Texture.class));
+						gra.setPosition(opx + 480 + x * 15, opy - y * 15);
+						stage.addActor(gra);
+					}
+					
+					if( x < 3){
+						Image stone = new Image(AssetsManager.getInstance().get("world/stone0" + x +".png", Texture.class));
+						stone.setPosition(opx + 480 + x * 25, opy - y * 25);
+						stage.addActor(stone);
+					}
 				}
 				
 				String key = new StringBuilder().append(x).append("_").append(y).toString();

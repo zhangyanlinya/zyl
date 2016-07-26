@@ -68,6 +68,14 @@ public class AssetsManager extends AssetManager{
     	load("world/grass04.png", Texture.class);
     	load("world/grass05.png", Texture.class);
     	
+    	load("world/gra01.png", Texture.class);
+    	load("world/gra02.png", Texture.class);
+    	load("world/gra03.png", Texture.class);
+    	load("world/gra04.png", Texture.class);
+    	
+    	load("world/stone01.png", Texture.class);
+    	load("world/stone02.png", Texture.class);
+    	
     	ininSound();
     }
     
