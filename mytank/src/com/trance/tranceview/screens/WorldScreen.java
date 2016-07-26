@@ -132,8 +132,13 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		
 		
+		
 		for(int x = 0; x < BASE; x ++){
 			for(int y = 0 ; y < BASE; y ++){
+				
+				
+				
+				
 				PlayerDto dto = null;
 				if(x == BASE/2 && y == BASE/2){
 					dto = MainActivity.player;
@@ -149,6 +154,18 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				if(x == BASE/2 && y == BASE/2){
 					location.setColor(255,0,255,1);
 				}
+				
+				if(x > 0 && x <= 5){
+					//tree
+					Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
+					tree.setPosition(opx + x * 5, opy + y * 5);
+					stage.addActor(tree);
+					
+					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
+					tree.setPosition(opx - x * 5, opy - y * 5);
+					stage.addActor(grass);
+				}
+				
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
 				worldImages.put(key, location);
 				stage.addActor(location);
@@ -199,13 +216,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 					}
 				});
 				
-				if(x > 5 || x <= 0){
-					continue;
-				}
-				//tree
-				Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
-				tree.setPosition(opx + x * 5, opy + y * 5);
-				stage.addActor(tree);
+
+				
 			}
 		}
 	
