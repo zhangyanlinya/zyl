@@ -149,7 +149,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
 				float opx =  x * 480 +(x ^ y) * 20;
 				float opy =  y * 800 + ((BASE - x) ^ (BASE - y)) * 40;
-				location.setPosition(opx , y * 800 + opy);
+				location.setPosition(opx , opy);
 				
 				if(x == BASE/2 && y == BASE/2){
 					location.setColor(255,0,255,1);
