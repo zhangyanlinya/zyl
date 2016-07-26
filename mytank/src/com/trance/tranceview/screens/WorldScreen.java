@@ -99,7 +99,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		HEIGHT = Gdx.graphics.getHeight();
 		spriteBatch = new SpriteBatch();
 		
-		StringBuilder sb = new StringBuilder("点赞");
+		StringBuilder sb = new StringBuilder();
 		sb.append(MainActivity.player.getPlayerName());
 		if(!MainActivity.worldPlayers.isEmpty()){
 			for(PlayerDto dto : MainActivity.worldPlayers.values() ){

@@ -29,7 +29,7 @@ import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BlockPool;
-import com.trance.tranceview.textinput.RenameTextInputListener;
+import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -118,7 +118,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		});
 		
 		//Rename
-		listener = new RenameTextInputListener();
+		listener = new RenameInputListener();
 		rename = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.GOTOFIGHT));
 		rename.setBounds(10 + toWorld.getWidth() + toWorld.getWidth()/2, 10, rename.getWidth() + rename.getWidth()/2, rename.getHeight() + rename.getHeight()/2);
 		rename.addListener(new ClickListener(){

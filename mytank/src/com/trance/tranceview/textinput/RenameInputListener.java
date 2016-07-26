@@ -13,7 +13,7 @@ import com.trance.trancetank.modules.player.handler.PlayerResult;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.utils.SocketUtil;
 
-public class RenameTextInputListener implements TextInputListener{
+public class RenameInputListener implements TextInputListener{
 
 	@Override
 	public void input(String text) {
