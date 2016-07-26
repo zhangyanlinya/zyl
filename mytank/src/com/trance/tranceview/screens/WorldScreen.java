@@ -162,7 +162,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 					stage.addActor(tree);
 					
 					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
-					tree.setPosition(opx - x * 5, opy - y * 5);
+					grass.setPosition(opx - x * 5, opy - y * 5);
 					stage.addActor(grass);
 				}
 				
