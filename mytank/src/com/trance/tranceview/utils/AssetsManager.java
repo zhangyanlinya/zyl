@@ -47,7 +47,7 @@ public class AssetsManager extends AssetManager{
     	load("ui/to_home.png", Texture.class);
     	load("ui/up.png", Texture.class);
     	load("ui/gotofight.png", Texture.class);
-    	load("ui/loginbg.png", Texture.class);
+//    	load("ui/loginbg.png", Texture.class);
     	
     	load("world/me.png", Texture.class);
     	load("world/enemy.png", Texture.class);

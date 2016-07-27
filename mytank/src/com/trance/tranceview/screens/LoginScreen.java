@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -30,6 +32,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -37,37 +40,45 @@ import com.trance.tranceview.utils.SocketUtil;
 
 public class LoginScreen implements Screen{
 	
+	private Texture background;
 	private Image start;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Stage stage;
 	private boolean init;
 	private TranceGame tranceGame;
+	private AssetsManager assetsManager;
 	
 	public LoginScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
 	
 	public void init(){
+		assetsManager = AssetsManager.getInstance();
+		assetsManager.init();
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
 		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏", Color.RED);
 		//GO
-		TextureRegionDrawable startDrawable = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.getInstance().get("ui/loginbg.png", Texture.class)));
+		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
+		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
+				background));
 		start = new Image(startDrawable);
 		start.addListener(new ClickListener(){
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				   if(!finish){
+					   return;
+				   }
 				   login();
 			}
 		});
 		
 		start.setWidth(start.getWidth() * 5);
 		start.setHeight(start.getHeight() * 5);
-		int x = (int) (Gdx.graphics.getWidth()/2 - start.getWidth()/2);
-		int y = (int) (Gdx.graphics.getHeight()/2 - start.getHeight()/2);
+		float x = Gdx.graphics.getWidth()/2 - start.getWidth()/2;
+		float y = Gdx.graphics.getHeight()/2 - start.getHeight()/2;
 		start.setX(x);
 		start.setY(y);
 		stage.addActor(start);
@@ -148,13 +159,31 @@ public class LoginScreen implements Screen{
 		}
 	}
 
+	private boolean finish; 
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
 		spriteBatch.begin();
+		font.setColor(Color.GREEN);
 		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
+		spriteBatch.end();
+		
+		if(assetsManager.update() && !finish){
+			finish = true;
+			return;
+		}
+		if(finish){
+			return;
+		}
+		spriteBatch.begin();
+		float progress = assetsManager.getProgress(); 
+		font.setColor(Color.RED);
+		float percent = progress/1*100;
+		font.draw(spriteBatch,"progress: "+ percent +"%",350,200);
+		Log.e(LogTag.TAG, percent+"");
 		spriteBatch.end();
 	}
 	
@@ -184,9 +213,11 @@ public class LoginScreen implements Screen{
 			return;
 		}
 		init = false;
+		background.dispose();
 		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();
+		assetsManager.dispose();
 	}
 	
 }
