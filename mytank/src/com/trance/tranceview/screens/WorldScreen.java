@@ -82,10 +82,10 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		leftX = WIDTH / 2;
-		rightX = sw - WIDTH;
-		donwY = HEIGHT - HEIGHT/4;
-		upY = sh - HEIGHT;
+		leftX = 0;
+		rightX = sw;
+		donwY = 0;
+		upY = sh;
 		
 		spriteBatch = new SpriteBatch();
 		
@@ -109,8 +109,8 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		Image bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		float w = bg.getWidth();
 		float h = bg.getHeight();
-		for(float x = -w ; x < sw; x += w){//background;
-			for(float y = -h ; y < sh ; y += h){
+		for(float x = -w * 2 ; x <= sw + w; x += w){//background;
+			for(float y = -h * 4 ; y <= sh + h * 4 ; y += h){
 				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
