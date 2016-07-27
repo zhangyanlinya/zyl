@@ -20,6 +20,9 @@ public class RenameInputListener implements TextInputListener{
 		if(text == null || text.trim().length() <= 0 || text.trim().length() > 10){
 			return;
 		}
+		if(text.equals(MainActivity.player.getPlayerName())){
+			return;
+		}
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("newName", text);
@@ -39,5 +42,4 @@ public class RenameInputListener implements TextInputListener{
 	public void canceled() {
 		
 	}
-
 }
