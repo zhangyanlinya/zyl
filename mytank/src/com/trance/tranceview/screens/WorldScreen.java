@@ -82,6 +82,11 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+		leftX = WIDTH / 2;
+		rightX = sw - WIDTH;
+		donwY = HEIGHT - HEIGHT/4;
+		upY = sh - HEIGHT;
+		
 		spriteBatch = new SpriteBatch();
 		
 		StringBuilder sb = new StringBuilder();
@@ -293,17 +298,15 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		return false;
 	}
 
-	private float leftX = WIDTH / 2; //
-	private float rightX = sw - WIDTH;
-	private float donwY = HEIGHT - HEIGHT/4;
-	private float upY = sh - HEIGHT;
+	private float leftX;
+	private float rightX;
+	private float donwY;
+	private float upY;
 	
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
 		float cx = camera.position.x ;
 		float cy = camera.position.y;
-		System.out.println("x: " +camera.position.x +"  y: " + camera.position.y );
-		System.out.println("HEIGHT: " +HEIGHT);
 		if(cx < leftX ){
 			camera.position.x = leftX;
 			return true;
