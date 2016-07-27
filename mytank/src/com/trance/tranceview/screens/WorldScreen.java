@@ -70,8 +70,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			init = true;
 		}
 		
-//		updateCameraZoom();
-		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		GestureDetector gestureHandler = new GestureDetector(this);
 		inputMultiplexer.addProcessor(this);
@@ -79,20 +77,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		
-	}
-	
-	/**
-	 * update camera zoom
-	 */
-	public void updateCameraZoom(){
-		new Thread(){
-			public void run(){
-				for(int i = 0; i < 5 ; i++){
-					initialScale -= 0.1;
-					try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-				}
-			}
-		}.start();
 	}
 	
 	private void init(){
@@ -218,9 +202,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 						}
 					}
 				});
-				
-
-				
 			}
 		}
 	
@@ -312,14 +293,37 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		return false;
 	}
 
+	private float leftX = WIDTH / 2; //
+	private float rightX = sw - WIDTH;
+	private float donwY = HEIGHT - HEIGHT/4;
+	private float upY = sh - HEIGHT;
+	
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-//		float cx = camera.position.x ;
-//		float cy = camera.position.y;
-//		System.out.println("x: " +camera.position.x +"  y: " + camera.position.y );
-//		if(cx < sw / 2){
-//			return false; 
-//		} 
+		float cx = camera.position.x ;
+		float cy = camera.position.y;
+		System.out.println("x: " +camera.position.x +"  y: " + camera.position.y );
+		System.out.println("HEIGHT: " +HEIGHT);
+		if(cx < leftX ){
+			camera.position.x = leftX;
+			return true;
+		}
+		
+		if(cy < donwY ){
+			camera.position.y = donwY;
+			return true;
+		}
+		
+		if(cx > rightX){
+			camera.position.x = rightX;
+			return true;
+		}
+		
+		if(cy > upY){
+			camera.position.y = upY;
+			return true;
+		}
+		
 		camera.translate(-deltaX , deltaY);
 		return true;
 	}

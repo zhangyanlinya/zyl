@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import org.codehaus.jackson.type.TypeReference;
-
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,7 +24,6 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
-import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
@@ -63,12 +60,7 @@ public class LoginScreen implements Screen{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				new Thread(){
-					public void run(){
-						login();
-					}
-				}.start();
-//				tranceGame.startGame();
+				   login();
 			}
 		});
 		
@@ -94,7 +86,7 @@ public class LoginScreen implements Screen{
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected synchronized void login() {
+	protected void login() {
 		String src = MainActivity.userName + MainActivity.loginKey;
 		String loginMD5 = null;
 		try {
