@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -17,6 +15,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -32,7 +32,6 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -48,12 +47,15 @@ public class LoginScreen implements Screen{
 	private boolean init;
 	private TranceGame tranceGame;
 	private AssetsManager assetsManager;
+	//画笔
+  	public ShapeRenderer renderer;
 	
 	public LoginScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
 	
 	public void init(){
+		renderer = new ShapeRenderer(); 
 		assetsManager = AssetsManager.getInstance();
 		assetsManager.init();
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
@@ -166,25 +168,31 @@ public class LoginScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
-		spriteBatch.begin();
-		font.setColor(Color.GREEN);
-		font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
-		spriteBatch.end();
-		
-		if(assetsManager.update() && !finish){
+		if(assetsManager.update()){
+			spriteBatch.begin();
+			font.setColor(Color.GREEN);
+			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
+			spriteBatch.end();
 			finish = true;
 			return;
 		}
-		if(finish){
-			return;
+		
+		//draw progress
+		float percent = assetsManager.getProgress(); 
+		renderer.setColor(Color.GREEN);
+		renderer.begin(ShapeType.Line);
+		renderer.rect(Gdx.graphics.getWidth() / 4 , 100, Gdx.graphics.getWidth() / 2, 40);
+		renderer.end();
+		if(percent < 0.2){
+			renderer.setColor(Color.RED);
+		}else if(percent < 0.5){
+			renderer.setColor(Color.YELLOW);
+		}else{
+			renderer.setColor(Color.GREEN);
 		}
-		spriteBatch.begin();
-		float progress = assetsManager.getProgress(); 
-		font.setColor(Color.RED);
-		float percent = progress/1*100;
-		font.draw(spriteBatch,"progress: "+ percent +"%",350,200);
-		Log.e(LogTag.TAG, percent+"");
-		spriteBatch.end();
+		renderer.begin(ShapeType.Filled);
+		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
+		renderer.end();
 	}
 	
 	@Override
@@ -218,6 +226,7 @@ public class LoginScreen implements Screen{
 		spriteBatch.dispose();
 		font.dispose();
 		assetsManager.dispose();
+		renderer.dispose();
 	}
 	
 }
