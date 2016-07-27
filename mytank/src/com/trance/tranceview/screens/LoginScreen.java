@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.codehaus.jackson.type.TypeReference;
+
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,6 +28,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
@@ -114,7 +117,8 @@ public class LoginScreen implements Screen{
 		ResponseStatus status = response.getStatus();
 		if (status == ResponseStatus.SUCCESS) {
 			byte[] bytes = response.getValueBytes();
-			HashMap<String,Object> result =  (HashMap<String, Object>) JsonUtils.bytes2Object(bytes, HashMap.class);
+			String text = new String(bytes);
+			Result<PlayerDto> result = JSON.parseObject(text, Result.class);
 			if (result == null) {
 				return;
 			}
