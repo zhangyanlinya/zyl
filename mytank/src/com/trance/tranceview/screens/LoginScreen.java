@@ -26,7 +26,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
-import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
@@ -61,11 +60,11 @@ public class LoginScreen implements Screen{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-//				new Thread(){
-//					public void run(){
+				new Thread(){
+					public void run(){
 						login();
-//					}
-//				}.start();
+					}
+				}.start();
 //				tranceGame.startGame();
 			}
 		});
@@ -115,7 +114,7 @@ public class LoginScreen implements Screen{
 		ResponseStatus status = response.getStatus();
 		if (status == ResponseStatus.SUCCESS) {
 			byte[] bytes = response.getValueBytes();
-			HashMap<String,Object> result = JSON.parseObject(bytes, HashMap.class);
+			HashMap<String,Object> result =  (HashMap<String, Object>) JsonUtils.bytes2Object(bytes, HashMap.class);
 			if (result == null) {
 				return;
 			}
