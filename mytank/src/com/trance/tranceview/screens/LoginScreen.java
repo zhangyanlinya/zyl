@@ -115,7 +115,7 @@ public class LoginScreen implements Screen{
 		ResponseStatus status = response.getStatus();
 		if (status == ResponseStatus.SUCCESS) {
 			byte[] bytes = response.getValueBytes();
-			HashMap<String,Object> result =  (HashMap<String, Object>) JsonUtils.bytes2Object(bytes, HashMap.class);
+			HashMap<String,Object> result = JSON.parseObject(bytes, HashMap.class);
 			if (result == null) {
 				return;
 			}
