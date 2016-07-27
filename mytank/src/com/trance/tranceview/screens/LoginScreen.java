@@ -174,12 +174,11 @@ public class LoginScreen implements Screen{
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
 			spriteBatch.end();
 			finish = true;
-			return;
 		}
 		
 		//draw progress
 		float percent = assetsManager.getProgress(); 
-		renderer.setColor(Color.GREEN);
+		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
 		renderer.rect(Gdx.graphics.getWidth() / 4 , 100, Gdx.graphics.getWidth() / 2, 40);
 		renderer.end();
