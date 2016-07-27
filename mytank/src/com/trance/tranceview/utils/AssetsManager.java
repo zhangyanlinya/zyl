@@ -46,7 +46,6 @@ public class AssetsManager extends AssetManager{
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
     	load("ui/up.png", Texture.class);
-    	load("ui/controls.png", Texture.class);
     	load("ui/gotofight.png", Texture.class);
     	load("ui/loginbg.png", Texture.class);
     	
@@ -111,8 +110,8 @@ public class AssetsManager extends AssetManager{
     }
     
     public  TextureRegion getControlTextureRegion(ControlType value) {
-    	Texture dirs = get("ui/controls.png", Texture.class);
-    	TextureRegion[] regions = TextureRegion.split(dirs, 64 ,64 )[0];
+//    	Texture dirs = get("ui/controls.png", Texture.class);
+//    	TextureRegion[] regions = TextureRegion.split(dirs, 64 ,64 )[0];
     	
     	TextureRegion textureRegion = null;
     	String fileName = null;
@@ -132,21 +131,6 @@ public class AssetsManager extends AssetManager{
     	case HOME:
     		fileName = "ui/to_home.png";
     		textureRegion = new TextureRegion(get(fileName, Texture.class));
-    		break;
-    	case LEFT:
-    		textureRegion = regions[0];
-    		break;
-    	case RIGHT:
-    		textureRegion = regions[1];
-    		break;
-    	case UP:
-    		textureRegion = regions[2];
-    		break;
-    	case DOWN:
-    		textureRegion = regions[0];
-    		break;
-    	case FIRE:
-    		textureRegion = regions[3];
     		break;
 		default:
 			fileName ="ui/dir.png"; 
