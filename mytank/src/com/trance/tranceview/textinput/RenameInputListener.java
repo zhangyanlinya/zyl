@@ -3,10 +3,10 @@ package com.trance.tranceview.textinput;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
+import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerResult;
@@ -28,7 +28,7 @@ public class RenameInputListener implements TextInputListener{
 			return;
 		}
 		byte[] bytes = response.getValueBytes();
-		Integer result = JSON.parseObject(bytes, Integer.class);
+		Integer result = (Integer) JsonUtils.bytes2Object(bytes, Integer.class);
 		if(result == PlayerResult.SUCCESS){
 			MainActivity.player.setPlayerName(text);
 		}
