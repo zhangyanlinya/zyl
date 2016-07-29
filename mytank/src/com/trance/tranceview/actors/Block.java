@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.trance.tranceview.config.GameConfig;
 import com.trance.tranceview.constant.BlockType;
@@ -29,7 +30,6 @@ import com.trance.tranceview.utils.WorldUtils;
 public class Block extends GameActor implements Poolable{
 	
 	public Body body;
-	
 	public int type;
 	public int i;
 	public int j;
@@ -57,6 +57,9 @@ public class Block extends GameActor implements Poolable{
 	public int level;
 	
 	public boolean move;
+	
+	//range 
+	public float range = 100;
 	
 	private float hw;
 	private float hh;
@@ -231,6 +234,22 @@ public class Block extends GameActor implements Poolable{
 				}
 			}
 		}
+	}
+	
+	/**
+	 * scan
+	 */
+	public Block scan(Array<Block> blocks){
+		Block dest = null;
+		float min = 0;
+		for(int i = 0; i < blocks.size; i++){
+			Block block = blocks.get(i);
+			float dst = block.dst(this.getX(), this.getY());
+			if(min == 0 || dst < min){
+				dest = block;
+			}
+		}
+		return dest;
 	}
 	
 	public void changeDir(Touchpad touchpad){

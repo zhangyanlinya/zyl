@@ -27,6 +27,10 @@ public class Bullet extends GameActor{
 	public float rotation;
 	private float hw;
 	private float hh;
+	
+	private float orgX;
+	private float orgY;
+	
 	//纹理区域
 	private TextureRegion textureRegion;
 	
@@ -83,6 +87,8 @@ public class Bullet extends GameActor{
 			width = textureRegion.getRegionWidth();
 			height = textureRegion.getRegionHeight();
 		}
+		orgX = x;
+		orgY = y;
 		this.setPosition(x, y);
 		this.setRotation(rotation);
 		this.setWidth(width);
@@ -106,15 +112,29 @@ public class Bullet extends GameActor{
 				getScaleY(), getRotation());
 		if(outOfScreen(x, y)){
 			dead();
+		}else
+		// over range
+		if(outofRange(x,y)){
+			dead();
 		}
 	}
 	
+	private boolean outofRange(float x, float y) {
+		final float x_d = x - orgX;
+		final float y_d = y - orgY;
+		float dst = (float)Math.sqrt(x_d * x_d + y_d * y_d);
+		if(dst > block.range){
+			return true;
+		}
+		return false;
+	}
+
 	//是否跑出边界
 	private boolean outOfScreen(float x ,float y) {
 		if(x < 0 ){
 			return true;
 		}
-		if(x> GameScreen.width){
+		if(x > GameScreen.width){
 			return true;
 		}
 		if(y < GameScreen.control_height ){
