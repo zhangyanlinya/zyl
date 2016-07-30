@@ -26,8 +26,9 @@ public class TranceGame extends Game {
 	 * start
 	 */
 	public void startGame(){
-		mapScreen.setPlayerDto(MainActivity.player);
-		this.setScreen(mapScreen);
+//		mapScreen.setPlayerDto(MainActivity.player);
+//		this.setScreen(mapScreen);
+		this.setScreen(worldScreen);
 	}
 
 	@Override

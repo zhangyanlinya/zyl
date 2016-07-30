@@ -10,8 +10,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,7 +40,7 @@ import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
-public class MapScreen implements Screen ,InputProcessor{
+public class MapScreen implements Screen ,InputProcessor,GestureListener{
 
 	private TranceGame game;
 	public static float menu_width = 0;
@@ -57,25 +62,18 @@ public class MapScreen implements Screen ,InputProcessor{
 	public static float game_height = 900;
 	/** 菜单区域宽度 */
 	public static float control_height = 300;
-	
 	private Stage stage;
-	
 	private BitmapFont font;
 	private SpriteBatch spriteBatch;
-	
 	private Image attack;
 	private Image toWorld;
 	private Image rename;
-	
 	public final static Array<Block> blocks = new Array<Block>();
-	
 	public final static Pool<Block> blockPool = new BlockPool();
-	
 	private boolean init;
-	
 	private TextInputListener listener;
-	
 	private PlayerDto playerDto;
+	private OrthographicCamera camera;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -91,6 +89,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		control_height = height - game_height-length * 2;//再减2格
 		
 		stage = new Stage(width, height, true);
+		camera = new OrthographicCamera(width, height);
+		stage.setCamera(camera);
+		camera.setToOrtho(false, width, height);
 		
 		//文字 
 		spriteBatch = new SpriteBatch();
@@ -154,6 +155,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
+		GestureDetector gestureHandler = new GestureDetector(this);
+		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -259,82 +262,79 @@ public class MapScreen implements Screen ,InputProcessor{
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(a != null){
-			screenY = height - screenY;
-			if(screenY < 0){
-				return true;
-			}
-			
-			//校正
-			screenX -= a.getWidth()/2;
-			screenY -= a.getHeight()/2;	
-			
-			Block b = compute(screenX,screenY,a);
-			if(b == null){//移除
-//				
-				if(oldy == control_height/2 ){//原始的不移除 
-					a.setPosition(oldx, oldy);
-					return true;
-				}
-				if(a.getY()  > control_height/2){ //没有移到控制区域下面不算移除
-					a.setPosition(oldx, oldy);
-					return true;
-				}
-				
-				a.remove();
-				blockPool.free(a);
-				MapData.map[oldi][oldj] = 0;
-				
-				Block block = blockPool.obtain();
-				block.i = oldi;
-				block.j = oldj;
-				block.setPosition(oldx, oldy);
-				blocks.add(block);
-				StringBuilder from = new StringBuilder();
-				from.append(oldi).append("|").append(oldj).append("|").append(0);
-				saveMaptoServer(1,from.toString(),null);
-				return true;
-			}
-			
-			a.setPosition(b.getX(), b.getY());
-			a.setIndex(b.i, b.j);
-			MapData.map[b.i][b.j] = oldType; 
-			
-			if(oldy == control_height/2){//增加
-				if(b.type == 0){
-					blocks.removeValue(b, false);
-				}else{
-					b.remove();
-				}
-				blockPool.free(b);
-				Block block = blockPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length,null);
-				stage.addActor(block);
-				StringBuilder to = new StringBuilder();
-				to.append(b.i).append("|").append(b.j).append("|").append(b.type);
-				saveMaptoServer(1,null,to.toString());
-				return true;
-				
-			}
-			
-			//替换
-			b.setPosition(oldx, oldy);
-			b.setIndex(oldi, oldj);
-			MapData.map[oldi][oldj] = b.type;
-			
-			if(oldType == b.type){
-				return true; //类型一样不用上传
-			}
-			
-			StringBuilder from = new StringBuilder();
-			from.append(oldi).append("|").append(oldj).append("|").append(oldType);
-			StringBuilder to = new StringBuilder();
-			to.append(a.i).append("|").append(a.j).append("|").append(b.type);
-			saveMaptoServer(1,from.toString(),to.toString());
+		if(a == null){
 			return true;
-			
 		}
 		
+		screenY = height - screenY;
+		if(screenY < 0){
+			return true;
+		}
+		
+		//校正
+		screenX -= a.getWidth()/2;
+		screenY -= a.getHeight()/2;	
+		
+		Block b = compute(screenX,screenY,a);
+		if(b == null){//移除
+			if(oldy == control_height/2 ){//原始的不移除 
+				a.setPosition(oldx, oldy);
+				return true;
+			}
+			if(a.getY()  > control_height/2){ //没有移到控制区域下面不算移除
+				a.setPosition(oldx, oldy);
+				return true;
+			}
+			
+			a.remove();
+			blockPool.free(a);
+			MapData.map[oldi][oldj] = 0;
+			
+			Block block = blockPool.obtain();
+			block.i = oldi;
+			block.j = oldj;
+			block.setPosition(oldx, oldy);
+			blocks.add(block);
+			StringBuilder from = new StringBuilder();
+			from.append(oldi).append("|").append(oldj).append("|").append(0);
+			saveMaptoServer(1,from.toString(),null);
+			return true;
+		}
+		
+		a.setPosition(b.getX(), b.getY());
+		a.setIndex(b.i, b.j);
+		MapData.map[b.i][b.j] = oldType; 
+		
+		if(oldy == control_height/2){//增加
+			if(b.type == 0){
+				blocks.removeValue(b, false);
+			}else{
+				b.remove();
+			}
+			blockPool.free(b);
+			Block block = blockPool.obtain();
+			block.init(null,oldType, oldx, oldy, length, length,null);
+			stage.addActor(block);
+			StringBuilder to = new StringBuilder();
+			to.append(b.i).append("|").append(b.j).append("|").append(b.type);
+			saveMaptoServer(1,null,to.toString());
+			return true;
+		}
+		
+		//替换
+		b.setPosition(oldx, oldy);
+		b.setIndex(oldi, oldj);
+		MapData.map[oldi][oldj] = b.type;
+		
+		if(oldType == b.type){
+			return true; //类型一样不用上传
+		}
+		
+		StringBuilder from = new StringBuilder();
+		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
+		StringBuilder to = new StringBuilder();
+		to.append(a.i).append("|").append(a.j).append("|").append(b.type);
+		saveMaptoServer(1,from.toString(),to.toString());
 		return true;
 	}
 	
@@ -460,5 +460,58 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(font != null){
 			font.dispose();
 		}
+	}
+
+	@Override
+	public boolean touchDown(float x, float y, int pointer, int button) {
+		initialScale = zoom;
+		return false;
+	}
+
+	@Override
+	public boolean tap(float x, float y, int count, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean longPress(float x, float y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean fling(float velocityX, float velocityY, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		return false;
+	}
+
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public float zoom = 1.0f;
+	public float initialScale = 1.0f;
+	
+	@Override
+	public boolean zoom(float initialDistance, float distance) {
+		float ratio = initialDistance / distance;
+		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 2.0f);
+		camera.zoom = zoom;
+		return false;
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
+			Vector2 pointer1, Vector2 pointer2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
