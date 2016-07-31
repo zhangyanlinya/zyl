@@ -29,6 +29,7 @@ import com.trance.tranceview.constant.ControlType;
 public class AssetsManager extends AssetManager{
 	
 	public TextureAtlas textureAtlas;
+	public TextureAtlas textureAtlas2;
 	private static AssetsManager assetsManager;
 	public static AssetsManager getInstance(){
 		if(assetsManager == null){
@@ -97,10 +98,13 @@ public class AssetsManager extends AssetManager{
     }
 	
 	public TextureRegion getBlockTextureRegion2(int value) {
-		if(textureAtlas == null){
-			textureAtlas = this.get("blocks/pic.pack", TextureAtlas.class);
+		if(value == 6 || value == 7){
+			return getBlockTextureRegion(value);
 		}
-		AtlasRegion atlasRegion = textureAtlas.findRegion("f-"+value);
+		if(textureAtlas2 == null){
+			textureAtlas2 = this.get("blocks/pic.pack", TextureAtlas.class);
+		}
+		AtlasRegion atlasRegion = textureAtlas2.findRegion("f-"+value);
 		return atlasRegion;
 	}
     
@@ -150,6 +154,9 @@ public class AssetsManager extends AssetManager{
     	super.dispose();
     	if(textureAtlas != null){
     		textureAtlas.dispose();
+    	}
+    	if(textureAtlas2 != null){
+    		textureAtlas2.dispose();
     	}
     }
 }

@@ -240,17 +240,12 @@ public class MapData extends Application {
 	public static boolean other = false;
 
 	/**
-	 * 是否打赢
-	 */
-	public static boolean win;
-	
-	/**
 	 * 选中玩家
 	 */
 	public static long playerId;
 	
 	/**
-	 * 主坦克是否死亡
+	 * game over
 	 */
-	public static boolean over;
+	public static boolean gameover;
 }

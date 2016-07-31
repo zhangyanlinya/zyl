@@ -139,10 +139,10 @@ public class GameScreen implements Screen , ContactListener{
 			init();
 			init = true;
 		}
-		MapData.win = false;
-		MapData.over = false;
+		MapData.gameover = false;
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
+		initClock();
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w ; x < stage.getWidth(); x += w){//background;
@@ -155,7 +155,6 @@ public class GameScreen implements Screen , ContactListener{
 		stage.addActor(toWorld);
 		initWorld();
 		initMap();
-		initClock();
 		if(mainTank == null){
 			Log.e(LogTag.TAG, "no main tank");
 			return;
@@ -351,7 +350,7 @@ public class GameScreen implements Screen , ContactListener{
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
-						MapData.over = true;
+						MapData.gameover = true;
 					}
 				}
 			});
@@ -426,9 +425,9 @@ public class GameScreen implements Screen , ContactListener{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		camera.update();
+//		camera.update();
 		
-		if(MapData.win || MapData.over){
+		if(MapData.gameover){
 			stage.addActor(window);
 		}
 		
@@ -533,7 +532,7 @@ public class GameScreen implements Screen , ContactListener{
 
 	@Override
 	public void hide() {
-		MapData.over = true;
+		MapData.gameover = true;
 	}
 
 	@Override

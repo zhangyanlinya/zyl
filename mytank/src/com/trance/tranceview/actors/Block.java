@@ -82,7 +82,7 @@ public class Block extends GameActor implements Poolable{
 		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
-		this.status = Dir.S;
+//		this.status = Dir.S;
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -130,7 +130,7 @@ public class Block extends GameActor implements Poolable{
 	}
 	
 	public void move() {
-		if(MapData.win || MapData.over){
+		if(MapData.gameover){
 			return;
 		}
 
@@ -276,9 +276,6 @@ public class Block extends GameActor implements Poolable{
 	private long dirTime;
 	
 	private void randomSatus(){
-		if(status == Dir.S){
-			return;
-		}
 		long now = System.currentTimeMillis();
 		if((now - dirTime) < dirDelay){
 			return;
@@ -293,7 +290,7 @@ public class Block extends GameActor implements Poolable{
 	 * 111
 	 */
 	public void fire() {
-		if(MapData.win || MapData.over){
+		if(MapData.gameover){
 			return;
 		}
 		
@@ -367,7 +364,7 @@ public class Block extends GameActor implements Poolable{
 			batch.begin();
 		}
 		
-		if(MapData.win || MapData.over){
+		if(MapData.gameover){
 			return;
 		}
 		if (!alive) {
@@ -408,11 +405,11 @@ public class Block extends GameActor implements Poolable{
 		MapScreen.blockPool.free(this);
 		
 		if(this.type == BlockType.KING.getValue()){
-			MapData.win = true;
+			MapData.gameover = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
 		}else if(this.type == BlockType.TANK_MAIN.getValue()){
-			MapData.over = true;
+			MapData.gameover = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
 		}
