@@ -40,6 +40,7 @@ public class AssetsManager extends AssetManager{
     public void init() {
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
     	load("block/block.pack", TextureAtlas.class);
+    	load("blocks/pic.pack", TextureAtlas.class);
     	load("ui/bullet.png", Texture.class);
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
@@ -94,6 +95,14 @@ public class AssetsManager extends AssetManager{
     	AtlasRegion atlasRegion = textureAtlas.findRegion("b", value);
         return atlasRegion;
     }
+	
+	public TextureRegion getBlockTextureRegion2(int value) {
+		if(textureAtlas == null){
+			textureAtlas = this.get("blocks/pic.pack", TextureAtlas.class);
+		}
+		AtlasRegion atlasRegion = textureAtlas.findRegion("f-"+value);
+		return atlasRegion;
+	}
     
     public  TextureRegion getBulletTextureRegion(int value) {
     	String fileName ="ui/bullet.png";

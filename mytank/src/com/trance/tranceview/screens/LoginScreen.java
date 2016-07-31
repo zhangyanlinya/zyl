@@ -60,6 +60,8 @@ public class LoginScreen implements Screen{
 		assetsManager.init();
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
+		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
+				" 谁知道那玩意越烤越香……后来我就买了瓶啤酒……太感人了！[流泪][流泪][流泪]";
 		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏", Color.RED);
 		
 		//GO

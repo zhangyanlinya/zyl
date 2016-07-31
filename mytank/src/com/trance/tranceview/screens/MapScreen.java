@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
@@ -32,12 +33,14 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
+import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
 public class MapScreen implements Screen ,InputProcessor,GestureListener{
@@ -74,6 +77,7 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 	private TextInputListener listener;
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
+	private Image bg;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -96,6 +100,7 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 		//文字 
 		spriteBatch = new SpriteBatch();
 		
+		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		
 		//攻击
 		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
@@ -142,6 +147,26 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 			init();
 			init = true;
 		}
+		stage.clear();
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h ; y < stage.getHeight() ; y += h){
+				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		
+		for(int i = 0; i < 100; i++){
+			int index = RandomUtil.nextInt(5) + 1;
+			int x = RandomUtil.nextInt((int)stage.getWidth());
+			int y = RandomUtil.nextInt((int)stage.getHeight());
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+			grass.setPosition(x,y);
+			stage.addActor(grass);
+		}
+		
 		initMap();//初始化地图
 		if(isEdit()){
 			initPlayerBlock();
@@ -195,7 +220,6 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 	// 初始化关卡地图
 	public void initMap() {
 		blocks.clear();
-		stage.clear();
 		for (int i = 0; i < MapData.map.length; i++) {
 			float n = MapData.map.length - 1 - i;
 			for (int j = 0; j < MapData.map[i].length; j++) {

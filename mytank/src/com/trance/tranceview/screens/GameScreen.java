@@ -31,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
@@ -66,7 +65,6 @@ public class GameScreen implements Screen , ContactListener{
 	private Stage stage;
 	private Image toWorld;
 	private Window window;
-	private ImageButton btn_up;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Music music;
@@ -152,7 +150,6 @@ public class GameScreen implements Screen , ContactListener{
 				stage.addActor(bg);
 			}
 		}
-		stage.addActor(bg);
 		stage.addActor(toWorld);
 		initWorld();
 		initMap();
@@ -223,10 +220,10 @@ public class GameScreen implements Screen , ContactListener{
 		window.setPosition(width/2 - window.getWidth()/2, height/2 - window.getHeight()/2);
 		
 		//点赞
-		TextureRegionDrawable drawable = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.getInstance().get("ui/up.png",Texture.class)));
-		btn_up = new ImageButton(drawable);
-		btn_up.addListener(new ClickListener(){
+//		TextureRegionDrawable drawable = new TextureRegionDrawable( new TextureRegion(
+//				AssetsManager.getInstance().get("ui/up.png",Texture.class)));
+//		btn_up = new ImageButton(drawable);
+		window.addListener(new ClickListener(){
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -239,7 +236,7 @@ public class GameScreen implements Screen , ContactListener{
 				}
 			}
 		});
-		window.addActor(btn_up);
+//		window.addActor(btn_up);
     	world = WorldUtils.createWorld();
 		
 		initTouchPad();

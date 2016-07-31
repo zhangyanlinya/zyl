@@ -83,7 +83,7 @@ public class Block extends GameActor implements Poolable{
 		this.renderer = renderer;
 		this.alive = true;
 		this.status = Dir.S;
-		textureRegion = AssetsManager.getInstance().getBlockTextureRegion(type);
+		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
