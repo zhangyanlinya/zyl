@@ -14,10 +14,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -43,7 +39,7 @@ import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
-public class MapScreen implements Screen ,InputProcessor,GestureListener{
+public class MapScreen implements Screen ,InputProcessor{
 
 	private TranceGame game;
 	public static float menu_width = 0;
@@ -158,14 +154,14 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 			}
 		}
 		
-		for(int i = 0; i < 100; i++){
-			int index = RandomUtil.nextInt(5) + 1;
-			int x = RandomUtil.nextInt((int)stage.getWidth());
-			int y = RandomUtil.nextInt((int)stage.getHeight());
-			Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
-			grass.setPosition(x,y);
-			stage.addActor(grass);
-		}
+//		for(int i = 0; i < 100; i++){
+//			int index = RandomUtil.nextInt(5) + 1;
+//			int x = RandomUtil.nextInt((int)stage.getWidth());
+//			int y = RandomUtil.nextInt((int)stage.getHeight());
+//			Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+//			grass.setPosition(x,y);
+//			stage.addActor(grass);
+//		}
 		
 		initMap();//初始化地图
 		if(isEdit()){
@@ -180,8 +176,6 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
-		GestureDetector gestureHandler = new GestureDetector(this);
-		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -226,11 +220,34 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 				int type = MapData.map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
+				if(i == 0 ){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x, y + length);
+					stage.addActor(grass);
+				}else if(i == MapData.map.length-1){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x, y - length * 2);
+					stage.addActor(grass);
+				}
+				
+				if(j == 0){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x - length, y);
+					stage.addActor(grass);
+				}else if(j == MapData.map[i].length -1){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x + length, y);
+					stage.addActor(grass);
+				}
 				
 				Block block = blockPool.obtain();
 				block.setIndex(i, j);
 				if (type > 0){
-					block.init(null,type, x,y, length,length,null);
+					block.init(null,type, x, y, length,length,null);
 					stage.addActor(block);
 				}else{
 					block.setPosition(x, y);
@@ -484,58 +501,5 @@ public class MapScreen implements Screen ,InputProcessor,GestureListener{
 		if(font != null){
 			font.dispose();
 		}
-	}
-
-	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
-		initialScale = zoom;
-		return false;
-	}
-
-	@Override
-	public boolean tap(float x, float y, int count, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean longPress(float x, float y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		return false;
-	}
-
-	@Override
-	public boolean panStop(float x, float y, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public float zoom = 1.0f;
-	public float initialScale = 1.0f;
-	
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		float ratio = initialDistance / distance;
-		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 2.0f);
-		camera.zoom = zoom;
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
-			Vector2 pointer1, Vector2 pointer2) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

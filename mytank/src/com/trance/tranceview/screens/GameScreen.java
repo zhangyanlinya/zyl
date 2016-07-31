@@ -48,12 +48,14 @@ import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
+import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
@@ -370,6 +372,30 @@ public class GameScreen implements Screen , ContactListener{
 				int type = MapData.map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
+				if(i == 0 ){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x, y + length);
+					stage.addActor(grass);
+				}else if(i == MapData.map.length-1){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x, y - length * 2);
+					stage.addActor(grass);
+				}
+				
+				if(j == 0){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x - length, y);
+					stage.addActor(grass);
+				}else if(j == MapData.map[i].length -1){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					grass.setPosition(x + length, y);
+					stage.addActor(grass);
+				}
+				
 				if (type > 0){
 					Block block = MapScreen.blockPool.obtain();
 					if(type < 6){
@@ -407,7 +433,7 @@ public class GameScreen implements Screen , ContactListener{
 		}
 		
 		controldir();
-		track();
+//		track();
 		
 		spriteBatch.begin();
 		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
