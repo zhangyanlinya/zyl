@@ -350,6 +350,7 @@ public class GameScreen implements Screen , ContactListener{
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
+						Log.e(LogTag.TAG, "time over~~~~~~~~~~` ");
 						MapData.gameover = true;
 					}
 				}

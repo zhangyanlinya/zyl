@@ -82,7 +82,6 @@ public class Block extends GameActor implements Poolable{
 		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
-//		this.status = Dir.S;
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -103,6 +102,7 @@ public class Block extends GameActor implements Poolable{
 			maxhp = 40;
 			this.setColor(Color.WHITE);
 		}else if(type == BlockType.KING.getValue()){
+			good = 2;
 			hp = 60;
 			maxhp = 60;
 		}
@@ -276,6 +276,9 @@ public class Block extends GameActor implements Poolable{
 	private long dirTime;
 	
 	private void randomSatus(){
+		if(MapData.gameover){
+			return;
+		}
 		long now = System.currentTimeMillis();
 		if((now - dirTime) < dirDelay){
 			return;
