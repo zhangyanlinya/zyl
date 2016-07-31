@@ -10,7 +10,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,7 +35,6 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
-import com.trance.tranceview.controller.PerspectiveCamController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -45,7 +44,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	
 	private final static int BASE = 10;
 	private TranceGame tranceGame;
-	private PerspectiveCamera camera;
+	private OrthographicCamera camera;
 	private Stage stage;
 	private TiledMap tilemap;
 	private float WIDTH;
@@ -58,7 +57,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
-	private PerspectiveCamController controller;
 	
 	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -73,11 +71,10 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		}
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(this);
 		GestureDetector gestureHandler = new GestureDetector(this);
+		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
-//		inputMultiplexer.addProcessor(controller);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		
 	}
@@ -85,10 +82,10 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		leftX = WIDTH / 2;
-		rightX = sw - WIDTH;
-		donwY = HEIGHT - HEIGHT/4;
-		upY = sh - HEIGHT;
+		leftX = 0;
+		rightX = sw;
+		donwY = 0;
+		upY = sh;
 		
 		spriteBatch = new SpriteBatch();
 		
@@ -103,21 +100,17 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		font = FontUtil.getInstance().getFont(25, sb.toString(), Color.WHITE);;
 
-		camera = new PerspectiveCamera(176, WIDTH, HEIGHT);
+		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(sw, sh);
-		camera.position.set(0, 0, 1).nor().scl(2);
-		camera.lookAt(0, 0, 0);
-		camera.near = 1f;
-		camera.far = 100f;
+		camera.setToOrtho(false, WIDTH, HEIGHT);
+		camera.translate(sw / 2 - 480, sh / 2 - 800 );
 		stage.setCamera(camera);
-		
-//		controller = new PerspectiveCamController(camera);
 		
 		Image bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		float w = bg.getWidth();
 		float h = bg.getHeight();
-		for(float x = -w ; x < sw; x += w){//background;
-			for(float y = -h ; y < sh ; y += h){
+		for(float x = -w * 2 ; x <= sw + w; x += w){//background;
+			for(float y = -h * 4 ; y <= sh + h * 4 ; y += h){
 				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
@@ -242,8 +235,11 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		stage.draw();
 		spriteBatch.begin();
+//		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
+		
+		
 	}
 
 	@Override
@@ -309,29 +305,29 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-//		float cx = camera.position.x ;
-//		float cy = camera.position.y;
-//		if(cx < leftX ){
-//			camera.position.x = leftX;
-//			return true;
-//		}
-//		
-//		if(cy < donwY ){
-//			camera.position.y = donwY;
-//			return true;
-//		}
-//		
-//		if(cx > rightX){
-//			camera.position.x = rightX;
-//			return true;
-//		}
-//		
-//		if(cy > upY){
-//			camera.position.y = upY;
-//			return true;
-//		}
-//		
-//		camera.translate(-deltaX , deltaY,0);
+		float cx = camera.position.x ;
+		float cy = camera.position.y;
+		if(cx < leftX ){
+			camera.position.x = leftX;
+			return true;
+		}
+		
+		if(cy < donwY ){
+			camera.position.y = donwY;
+			return true;
+		}
+		
+		if(cx > rightX){
+			camera.position.x = rightX;
+			return true;
+		}
+		
+		if(cy > upY){
+			camera.position.y = upY;
+			return true;
+		}
+		
+		camera.translate(-deltaX , deltaY);
 		return true;
 	}
 
@@ -340,18 +336,18 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		return false;
 	}
 
-	public float zoom = 176f;
-	public float initialScale = 176f;
+	public float zoom = 1.0f;
+	public float initialScale = 1.0f;
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
+		// 与pinch对应，也是是一个多点触摸的手势，并且两个手指做出放大的动作
 		// Calculate pinch to zoom
 		float ratio = initialDistance / distance;
 
 		// Clamp range and set zoom
-		zoom = MathUtils.clamp(initialScale * ratio, 177f, 179f);
-		System.out.println(zoom);
-		camera.fieldOfView = zoom;
+		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 2.0f);
+		camera.zoom = zoom;
 		
 		return false;
 	}
@@ -408,6 +404,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
