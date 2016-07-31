@@ -184,7 +184,7 @@ public class GameScreen implements Screen , ContactListener{
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
-		stage = new Stage(width, height, true,spriteBatch);
+		stage = new Stage(width, height, true);
 		
 //      camera = new OrthographicCamera(); 
 //      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
@@ -425,20 +425,17 @@ public class GameScreen implements Screen , ContactListener{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-//		camera.update();
-		
 		if(MapData.gameover){
 			stage.addActor(window);
 		}
 		
 		controldir();
 //		track();
-		
-		spriteBatch.begin();
-		font.draw(spriteBatch,"倒计时:" + currTime,0,height);
-		spriteBatch.end();
 		stage.draw();
 		stage.act(delta);
+		spriteBatch.begin();
+		font.draw(spriteBatch,"倒计时:" + currTime, 10 ,height);
+		spriteBatch.end();
 		
 		//box2d
         accumulator += delta;

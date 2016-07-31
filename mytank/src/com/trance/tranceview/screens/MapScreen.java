@@ -100,7 +100,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		//攻击
 		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
-		attack.setPosition(width - attack.getWidth(), attack.getHeight());
+		attack.setPosition(width - attack.getWidth() * 2, attack.getHeight());
 		attack.addListener(new ClickListener(){
 
 			@Override
@@ -207,7 +207,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			font.draw(spriteBatch,"可拖动砖块编辑",0,height);
 		}
 		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
-		font.draw(spriteBatch,"攻击",width-200,100);
+		font.draw(spriteBatch,"攻击", width-300,100);
 		spriteBatch.end();
 	}
 	
