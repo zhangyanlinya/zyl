@@ -43,7 +43,7 @@ public class FontUtil {
 			sb.append(s);
 		}
 		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/haibao.ttf"));
+	               Gdx.files.internal("font/font.ttf"));
 		FreeTypeBitmapFontData fontData = generator.generateData(size,
 	              sb.toString(), false);
 		generator.dispose();

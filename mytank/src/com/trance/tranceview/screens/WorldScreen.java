@@ -38,6 +38,7 @@ import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
 public class WorldScreen implements Screen, GestureListener, InputProcessor {
@@ -117,6 +118,43 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			}
 		}
 		
+		//grass
+		for(int i = 0; i < 100; i++){
+			int index = RandomUtil.nextInt(5) + 1;
+			int x = RandomUtil.nextInt((int)sw);
+			int y = RandomUtil.nextInt((int)sh);
+			Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + index +".png", Texture.class));
+			grass.setPosition(x,y);
+			stage.addActor(grass);
+		}
+		for(int i = 0; i < 100; i++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)sw);
+			int y = RandomUtil.nextInt((int)sh);
+			Image grass = new Image(AssetsManager.getInstance().get("world/gra0" + index +".png", Texture.class));
+			grass.setPosition(x,y);
+			stage.addActor(grass);
+		}
+		
+		for(int i = 0; i < 50; i++){
+			int index = RandomUtil.nextInt(2) + 1;
+			int x = RandomUtil.nextInt((int)sw);
+			int y = RandomUtil.nextInt((int)sh);
+			Image grass = new Image(AssetsManager.getInstance().get("world/stone0" + index +".png", Texture.class));
+			grass.setPosition(x,y);
+			stage.addActor(grass);
+		}
+		
+		for(int i = 0; i < 500; i++){
+			int index = RandomUtil.nextInt(5) + 1;
+			int x = RandomUtil.nextInt((int)sw);
+			int y = RandomUtil.nextInt((int)sh);
+			Image grass = new Image(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+			grass.setPosition(x,y);
+			stage.addActor(grass);
+		}
+	
+		
 		for(int x = 0; x < BASE; x ++){
 			for(int y = 0 ; y < BASE; y ++){
 				PlayerDto dto = null;
@@ -137,25 +175,25 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				
 				if(x > 0 && x <= 5){
 					//tree
-					Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
-					tree.setPosition(opx + 480 + x * 5, opy - y * 5);
-					stage.addActor(tree);
+//					Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
+//					tree.setPosition(opx + 480 + x * 5, opy - y * 5);
+//					stage.addActor(tree);
 					
-					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
-					grass.setPosition(opx + 480+ (x-1) * 10, opy - (y-1) * 10);
-					stage.addActor(grass);
+//					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
+//					grass.setPosition(opx + 480+ (x-1) * 10, opy - (y-1) * 10);
+//					stage.addActor(grass);
+//					
+//					if( x < 5){
+//						Image gra = new Image(AssetsManager.getInstance().get("world/gra0" + x +".png", Texture.class));
+//						gra.setPosition(opx + 480 + x * 15, opy - y * 15);
+//						stage.addActor(gra);
+//					}
 					
-					if( x < 5){
-						Image gra = new Image(AssetsManager.getInstance().get("world/gra0" + x +".png", Texture.class));
-						gra.setPosition(opx + 480 + x * 15, opy - y * 15);
-						stage.addActor(gra);
-					}
-					
-					if( x < 3){
-						Image stone = new Image(AssetsManager.getInstance().get("world/stone0" + x +".png", Texture.class));
-						stone.setPosition(opx + 480 + x * 25, opy - y * 25);
-						stage.addActor(stone);
-					}
+//					if( x < 3){
+//						Image stone = new Image(AssetsManager.getInstance().get("world/stone0" + x +".png", Texture.class));
+//						stone.setPosition(opx + 480 + x * 25, opy - y * 25);
+//						stage.addActor(stone);
+//					}
 				}
 				
 				String key = new StringBuilder().append(x).append("_").append(y).toString();
@@ -232,13 +270,10 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	public void render(float delatime) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		
 		stage.draw();
 		spriteBatch.begin();
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
-		
-		
 	}
 
 	@Override

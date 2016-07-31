@@ -40,14 +40,11 @@ public class AssetsManager extends AssetManager{
     public void init() {
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
     	load("block/block.pack", TextureAtlas.class);
-    	load("ui/dir.png", Texture.class);
     	load("ui/bullet.png", Texture.class);
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
-    	load("ui/up.png", Texture.class);
     	load("ui/gotofight.png", Texture.class);
-//    	load("ui/loginbg.png", Texture.class);
     	
     	load("world/me.png", Texture.class);
     	load("world/enemy.png", Texture.class);

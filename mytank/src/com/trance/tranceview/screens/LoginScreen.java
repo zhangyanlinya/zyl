@@ -61,6 +61,7 @@ public class LoginScreen implements Screen{
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
 		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏", Color.RED);
+		
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
