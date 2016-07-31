@@ -103,7 +103,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(sw, sh);
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-		camera.translate(sw / 2 - 480, sh / 2 - 800 );
+		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.setCamera(camera);
 		
 		Image bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
@@ -235,7 +235,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		
 		stage.draw();
 		spriteBatch.begin();
-//		spriteBatch.draw(bg,0,0,WIDTH,HEIGHT);
 		home.draw(spriteBatch, 1);
 		spriteBatch.end();
 		
@@ -330,7 +329,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		camera.translate(-deltaX , deltaY);
 		return true;
 	}
-
+	
 	@Override
 	public boolean panStop(float x, float y, int pointer, int button) {
 		return false;
