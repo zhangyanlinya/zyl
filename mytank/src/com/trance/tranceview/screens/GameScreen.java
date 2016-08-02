@@ -374,24 +374,24 @@ public class GameScreen implements Screen , ContactListener{
 				float y = control_height + n * length;
 				if(i == 0 ){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == MapData.map.length-1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y - length * 2);
 					stage.addActor(grass);
 				}
 				
 				if(j == 0){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
 				}else if(j == MapData.map[i].length -1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}

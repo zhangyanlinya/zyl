@@ -123,7 +123,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			int index = RandomUtil.nextInt(5) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + index +".png", Texture.class));
+			Image grass = new Image(AssetsManager.getInstance().get("world/grass" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -131,7 +131,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			int index = RandomUtil.nextInt(4) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/gra0" + index +".png", Texture.class));
+			Image grass = new Image(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -140,7 +140,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			int index = RandomUtil.nextInt(2) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/stone0" + index +".png", Texture.class));
+			Image grass = new Image(AssetsManager.getInstance().get("world/stone" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -149,7 +149,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			int index = RandomUtil.nextInt(5) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+			Image grass = new Image(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -171,29 +171,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 				
 				if(x == BASE/2 && y == BASE/2){
 					location.setColor(255,0,255,1);
-				}
-				
-				if(x > 0 && x <= 5){
-					//tree
-//					Image tree = new Image(AssetsManager.getInstance().get("world/tree0" + x +".png", Texture.class));
-//					tree.setPosition(opx + 480 + x * 5, opy - y * 5);
-//					stage.addActor(tree);
-					
-//					Image grass = new Image(AssetsManager.getInstance().get("world/grass0" + x +".png", Texture.class));
-//					grass.setPosition(opx + 480+ (x-1) * 10, opy - (y-1) * 10);
-//					stage.addActor(grass);
-//					
-//					if( x < 5){
-//						Image gra = new Image(AssetsManager.getInstance().get("world/gra0" + x +".png", Texture.class));
-//						gra.setPosition(opx + 480 + x * 15, opy - y * 15);
-//						stage.addActor(gra);
-//					}
-					
-//					if( x < 3){
-//						Image stone = new Image(AssetsManager.getInstance().get("world/stone0" + x +".png", Texture.class));
-//						stone.setPosition(opx + 480 + x * 25, opy - y * 25);
-//						stage.addActor(stone);
-//					}
 				}
 				
 				String key = new StringBuilder().append(x).append("_").append(y).toString();

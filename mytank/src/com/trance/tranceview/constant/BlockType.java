@@ -35,7 +35,12 @@ public enum BlockType{
 	/**
 	 * tank_enemy
 	 */
-	TANK_ENEMY(7);
+	TANK_ENEMY(7),
+	
+	/**
+	 * CANNON
+	 */
+	CANNON(8);
 	
 	private final int value;
 	

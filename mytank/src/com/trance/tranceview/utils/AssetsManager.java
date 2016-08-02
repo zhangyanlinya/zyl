@@ -54,25 +54,25 @@ public class AssetsManager extends AssetManager{
     	load("world/f-28.png", Texture.class);
     	load("world/bg.jpg", Texture.class);
     	
-    	load("world/tree01.png", Texture.class);
-    	load("world/tree02.png", Texture.class);
-    	load("world/tree03.png", Texture.class);
-    	load("world/tree04.png", Texture.class);
-    	load("world/tree05.png", Texture.class);
+    	load("world/tree1.png", Texture.class);
+    	load("world/tree2.png", Texture.class);
+    	load("world/tree3.png", Texture.class);
+    	load("world/tree4.png", Texture.class);
+    	load("world/tree5.png", Texture.class);
     	
-    	load("world/grass01.png", Texture.class);
-    	load("world/grass02.png", Texture.class);
-    	load("world/grass03.png", Texture.class);
-    	load("world/grass04.png", Texture.class);
-    	load("world/grass05.png", Texture.class);
+    	load("world/grass1.png", Texture.class);
+    	load("world/grass2.png", Texture.class);
+    	load("world/grass3.png", Texture.class);
+    	load("world/grass4.png", Texture.class);
+    	load("world/grass5.png", Texture.class);
     	
-    	load("world/gra01.png", Texture.class);
-    	load("world/gra02.png", Texture.class);
-    	load("world/gra03.png", Texture.class);
-    	load("world/gra04.png", Texture.class);
+    	load("world/soil1.png", Texture.class);
+    	load("world/soil2.png", Texture.class);
+    	load("world/soil3.png", Texture.class);
+    	load("world/soil4.png", Texture.class);
     	
-    	load("world/stone01.png", Texture.class);
-    	load("world/stone02.png", Texture.class);
+    	load("world/stone1.png", Texture.class);
+    	load("world/stone2.png", Texture.class);
     	
     	ininSound();
     }

@@ -156,14 +156,14 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		}
 		
-//		for(int i = 0; i < 100; i++){
-//			int index = RandomUtil.nextInt(5) + 1;
-//			int x = RandomUtil.nextInt((int)stage.getWidth());
-//			int y = RandomUtil.nextInt((int)stage.getHeight());
-//			Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
-//			grass.setPosition(x,y);
-//			stage.addActor(grass);
-//		}
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
 		
 		initMap();//初始化地图
 		if(isEdit()){
@@ -224,24 +224,24 @@ public class MapScreen implements Screen ,InputProcessor{
 				float y = control_height + n * length;
 				if(i == 0 ){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == MapData.map.length-1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y - length * 2);
 					stage.addActor(grass);
 				}
 				
 				if(j == 0){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
 				}else if(j == MapData.map[i].length -1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree0" + index +".png", Texture.class));
+					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}
