@@ -106,6 +106,8 @@ public class GameScreen implements Screen , ContactListener{
 	
 	public final static Array<Block> tanks = new Array<Block>();
 	
+	public final static Array<Block> connons = new Array<Block>();
+	
 	private final Array<Body> bodies = new Array<Body>();
 	
 	private OrthographicCamera camera;
@@ -219,11 +221,6 @@ public class GameScreen implements Screen , ContactListener{
 		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
 		window = new Window("点赞",style);
 		window.setPosition(width/2 - window.getWidth()/2, height/2 - window.getHeight()/2);
-		
-		//点赞
-//		TextureRegionDrawable drawable = new TextureRegionDrawable( new TextureRegion(
-//				AssetsManager.getInstance().get("ui/up.png",Texture.class)));
-//		btn_up = new ImageButton(drawable);
 		window.addListener(new ClickListener(){
 
 			@Override
@@ -237,7 +234,6 @@ public class GameScreen implements Screen , ContactListener{
 				}
 			}
 		});
-//		window.addActor(btn_up);
     	world = WorldUtils.createWorld();
 		
 		initTouchPad();
@@ -401,6 +397,9 @@ public class GameScreen implements Screen , ContactListener{
 					if(type < 6){
 						block.init(world,type, x,y, length,length,null);
 						blocks.add(block);
+					}else if(type == 8){
+						block.init(world,type, x,y, length,length,null);
+						connons.add(block);
 					}else{
 						block.init(world,type, x,y, length,length,renderer);
 						block.move = true;
@@ -417,8 +416,13 @@ public class GameScreen implements Screen , ContactListener{
 			Block block = tanks.get(i);
 			stage.addActor(block);
 		}
-		for(int i = 0 ; i <blocks.size ;i++){
-			stage.addActor(blocks.get(i));
+		
+		for(int i = 0 ; i < blocks.size ;i++){
+			stage.addActor( blocks.get(i));
+		}
+		
+		for(int i = 0 ; i < connons.size ;i++){
+			stage.addActor( connons.get(i));
 		}
 	}
 
@@ -432,6 +436,7 @@ public class GameScreen implements Screen , ContactListener{
 		
 		controldir();
 //		track();
+		scan();
 		stage.draw();
 		stage.act(delta);
 		spriteBatch.begin();
@@ -451,6 +456,12 @@ public class GameScreen implements Screen , ContactListener{
         }
 	}
 	
+	private void scan() {
+		for(Block block :connons){
+			block.scan(mainTank);
+		}
+	}
+
 	private void controldir() {
 		if(mainTank == null){
 			return;

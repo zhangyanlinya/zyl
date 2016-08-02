@@ -82,6 +82,9 @@ public class Block extends GameActor implements Poolable{
 		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
+		if(type == 8){
+			type = 9;
+		}
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -105,6 +108,10 @@ public class Block extends GameActor implements Poolable{
 			good = 2;
 			hp = 60;
 			maxhp = 60;
+		}else if(type == BlockType.CANNON.getValue()){
+			range = 200;
+			dirDelay = 100;
+			
 		}
 //		else{//npc为敌方
 //			good = 2;
@@ -237,7 +244,7 @@ public class Block extends GameActor implements Poolable{
 	}
 	
 	/**
-	 * scan
+	 * scan array
 	 */
 	public Block scan(Array<Block> blocks){
 		Block dest = null;
@@ -250,6 +257,14 @@ public class Block extends GameActor implements Poolable{
 			}
 		}
 		return dest;
+	}
+	
+	public void scan(Block block){
+		float dst = block.dst(this.getX(), this.getY());
+		if(dst < range){
+			track(block);
+			fire();
+		}
 	}
 	
 	public void changeDir(Touchpad touchpad){
