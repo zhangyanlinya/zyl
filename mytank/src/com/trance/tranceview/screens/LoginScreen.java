@@ -32,7 +32,6 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -137,12 +136,11 @@ public class LoginScreen implements Screen{
 			PlayerDto playerDto = JSON.parseObject(pobj.toString(),
 					PlayerDto.class);
 			playerDto.setMyself(true);
-			MainActivity.player = playerDto;
 
 			Object mobj = result.get("mapdata");
 			if (mobj != null) {
 				int[][] map = JSON.parseObject(mobj.toString(), int[][].class);
-				MapData.myMap = map;
+				playerDto.setMap(map);
 			}
 
 			Object wobj = result.get("worldPlayers");
@@ -154,6 +152,8 @@ public class LoginScreen implements Screen{
 					MainActivity.worldPlayers.put(e.getKey(), value);
 				}
 			}
+			MainActivity.player = playerDto;
+			
 			Gdx.app.postRunnable(new Runnable() {
 				
 				@Override

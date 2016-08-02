@@ -56,6 +56,8 @@ public class PlayerDto implements Serializable {
 	 * myself
 	 */
 	private boolean myself;
+	
+	private int[][] map;
 
 	public long getId() {
 		return id;
@@ -136,7 +138,12 @@ public class PlayerDto implements Serializable {
 	public void setMyself(boolean myself) {
 		this.myself = myself;
 	}
-	
-	
-	
+
+	public int[][] getMap() {
+		return map;
+	}
+
+	public void setMap(int[][] map) {
+		this.map = map;
+	}
 }

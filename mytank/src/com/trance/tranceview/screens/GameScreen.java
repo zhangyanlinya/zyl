@@ -43,7 +43,7 @@ import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
-import com.trance.tranceview.MainActivity;
+import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.Bullet;
@@ -70,6 +70,7 @@ public class GameScreen implements Screen , ContactListener{
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Music music;
+	private PlayerDto playerDto;
 	
 	
 	/** 数组宽数量 */
@@ -133,6 +134,10 @@ public class GameScreen implements Screen , ContactListener{
 	
 	public GameScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
+	}
+	
+	public void setPlayerDto(PlayerDto playerDto){
+		this.playerDto = playerDto;
 	}
 	
 	@Override
@@ -225,9 +230,9 @@ public class GameScreen implements Screen , ContactListener{
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if(MapData.playerId > 0L && MainActivity.player != null && MapData.playerId != MainActivity.player.getId()){
+				if(playerDto != null){
 					Map<String,Object> params = new HashMap<String,Object>();
-					params.put("targetId", MapData.playerId);
+					params.put("targetId", playerDto.getId());
 					SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
 //					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
 //					music.play();
@@ -362,10 +367,17 @@ public class GameScreen implements Screen , ContactListener{
 	private void initMap() {
 		blocks.clear();
 		tanks.clear();
-		for (int i = 0; i < MapData.map.length; i++) {
-			float n = MapData.map.length - 1 - i;
-			for (int j = 0; j < MapData.map[i].length; j++) {
-				int type = MapData.map[i][j];
+		if(playerDto == null){
+			return;
+		}
+		int[][] map = playerDto.getMap();
+		if(map == null){
+			return;
+		}
+		for (int i = 0; i < map.length; i++) {
+			float n = map.length - 1 - i;
+			for (int j = 0; j < map[i].length; j++) {
+				int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				if(i == 0 ){
@@ -373,7 +385,7 @@ public class GameScreen implements Screen , ContactListener{
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
-				}else if(i == MapData.map.length-1){
+				}else if(i == map.length - 1){
 					int index = RandomUtil.nextInt(5) + 1;
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y - length * 2);
@@ -385,7 +397,7 @@ public class GameScreen implements Screen , ContactListener{
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
-				}else if(j == MapData.map[i].length -1){
+				}else if(j == map[i].length -1){
 					int index = RandomUtil.nextInt(5) + 1;
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x + length, y);
@@ -457,7 +469,7 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
 	private void scan() {
-		for(Block block :connons){
+		for(Block block : connons){
 			block.scan(mainTank);
 		}
 	}

@@ -196,7 +196,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							gotoHome();
 							return;
 						}
-						MapData.playerId = dto.getId();
+						
 						HashMap<String,Object> params = new HashMap<String,Object>();
 						params.put("targetId", dto.getId());
 						Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params),true);
@@ -209,11 +209,12 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 							int code = (Integer) result.get("result");
 							if (code == 0) {
 								if (result.get("mapJson") != null) {
-									MapData.map = JsonUtils.jsonString2Object(
+									int[][] map = JsonUtils.jsonString2Object(
 											result.get("mapJson").toString(),
 											int[][].class);
+									dto.setMap(map);
 								}else{
-									MapData.map = MapData.baseMap[0].clone();//原始的
+									dto.setMap(MapData.baseMap.clone());
 								}
 								MapData.other = true;
 								tranceGame.mapScreen.setPlayerDto(dto);
@@ -232,7 +233,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	}
 	
 	private void gotoHome(){
-		MapData.map = MapData.myMap;
 		MapData.other = false;
 		tranceGame.mapScreen.setPlayerDto(MainActivity.player);
 		tranceGame.setScreen(tranceGame.mapScreen);

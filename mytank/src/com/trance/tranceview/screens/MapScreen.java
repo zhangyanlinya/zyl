@@ -192,7 +192,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	private void attack(){
-		this.game.setScreen(game.gameScreen);
+		game.gameScreen.setPlayerDto(playerDto);
+		game.setScreen(game.gameScreen);
 	}
 	
 	private void toWorld(){
@@ -216,10 +217,14 @@ public class MapScreen implements Screen ,InputProcessor{
 	// 初始化关卡地图
 	public void initMap() {
 		blocks.clear();
-		for (int i = 0; i < MapData.map.length; i++) {
-			float n = MapData.map.length - 1 - i;
-			for (int j = 0; j < MapData.map[i].length; j++) {
-				int type = MapData.map[i][j];
+		if(playerDto == null){
+			return;
+		}
+		int[][] map = playerDto.getMap();
+		for (int i = 0; i < map.length; i++) {
+			float n = map.length - 1 - i;
+			for (int j = 0; j < map[i].length; j++) {
+				int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				if(i == 0 ){
@@ -227,7 +232,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
-				}else if(i == MapData.map.length-1){
+				}else if(i == map.length-1){
 					int index = RandomUtil.nextInt(5) + 1;
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y - length * 2);
@@ -239,7 +244,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
-				}else if(j == MapData.map[i].length -1){
+				}else if(j == map[i].length -1){
 					int index = RandomUtil.nextInt(5) + 1;
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x + length, y);
@@ -331,7 +336,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			a.remove();
 			blockPool.free(a);
-			MapData.map[oldi][oldj] = 0;
+			playerDto.getMap()[oldi][oldj] = 0;
 			
 			Block block = blockPool.obtain();
 			block.i = oldi;
@@ -346,7 +351,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		a.setPosition(b.getX(), b.getY());
 		a.setIndex(b.i, b.j);
-		MapData.map[b.i][b.j] = oldType; 
+		playerDto.getMap()[b.i][b.j] = oldType; 
 		
 		if(oldy == control_height/2){//增加
 			if(b.type == 0){
@@ -367,7 +372,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		//替换
 		b.setPosition(oldx, oldy);
 		b.setIndex(oldi, oldj);
-		MapData.map[oldi][oldj] = b.type;
+		playerDto.getMap()[oldi][oldj] = b.type;
 		
 		if(oldType == b.type){
 			return true; //类型一样不用上传
