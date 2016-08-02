@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.trance.tranceview.config.GameConfig;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.Dir;
@@ -37,30 +36,23 @@ public class Block extends GameActor implements Poolable{
 	public float vy;
 	//纹理区域
 	private TextureRegion textureRegion;
-	
   	//画笔吧
   	public ShapeRenderer renderer;
 	// 状态
-  	private Dir status = Dir.S;
-	// 方向
-  	public Dir dir = Dir.U;
+  	private Dir state = Dir.S;
+  	
+  	public Dir dir = Dir.D;
 	// 速度
 	public float speed = 10;
-	
 	//攻击间隔时间
 	public long fireDelay = 500;
-	
 	//攻击间隔时间
 	public long dirDelay = 1000;
-	
 	// 等级
 	public int level;
-	
 	public boolean move;
-	
 	//range 
 	public float range = 100;
-	
 	private float hw;
 	private float hh;
 	
@@ -97,7 +89,6 @@ public class Block extends GameActor implements Poolable{
 			good = 1;
 			hp = 100;
 			maxhp = 100;
-			this.setStatus(Dir.D);
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
 			good = 2;
 			hp = 40;
@@ -108,10 +99,9 @@ public class Block extends GameActor implements Poolable{
 			good = 2;
 			hp = 60;
 			maxhp = 60;
-		}else if(type == BlockType.CANNON.getValue()){
+		}else if(type == 9){
 			range = 200;
 			dirDelay = 100;
-			
 		}
 //		else{//npc为敌方
 //			good = 2;
@@ -136,16 +126,22 @@ public class Block extends GameActor implements Poolable{
 		this.j = j;
 	}
 	
+	public void setState(Dir state){
+		this.state = state;
+		if(state != Dir.S){
+			dir = state;
+		}
+	}
+	
 	public void move() {
 		if(MapData.gameover){
 			return;
 		}
-
 		body.setLinearVelocity(vx, vy);
 	}
 	
 	private void listenStatus(){
-		switch (status) {
+		switch (state) {
 		case L:
 			left();
 			break;
@@ -195,49 +191,49 @@ public class Block extends GameActor implements Poolable{
 		this.vy = 0;
 	}
 	
-	public long trackTime;
+//	public long trackTime;
 	
 	public void track(Block  block){
-		long now = System.currentTimeMillis();
-		if((now - trackTime) < 1000){
-			return;
-		}
-		trackTime = now;
+//		long now = System.currentTimeMillis();
+//		if((now - trackTime) < delay){
+//			return;
+//		}
+//		trackTime = now;
 		float x = this.getX();
 		float y = this.getY();
 		float destX = block.getX();
 		float destY = block.getY();
 		float disX = Math.abs(destX - x);
 		float disY = Math.abs(destY - y);
-		if(disX < GameConfig.trackDistance && disY < GameConfig.trackDistance){
-			return;
-		}
+//		if(disX < GameConfig.trackDistance && disY < GameConfig.trackDistance){
+//			return;
+//		}
 		if(destX < x){
 			if(y > destY){// 右上角
 				if(disX > disY){
-					status = Dir.L;
+					setState(Dir.L);
 				}else{
-					status = Dir.D;
+					setState(Dir.D);
 				}
 			}else{//右下角
 				if(disX > disY){
-					status = Dir.L;
+					setState(Dir.L);
 				}else{
-					status = Dir.U;
+					setState(Dir.U);
 				}
 			}
 		}else{
 			if(y > destY){//左上角
 				if(disX > disY){
-					status = Dir.R;
+					setState(Dir.R);
 				}else{
-					status = Dir.D;
+					setState(Dir.D);
 				}
 			}else{//左下角
 				if(disX > disY){
-					status = Dir.R;
+					setState(Dir.R);
 				}else{
-					status = Dir.U;
+					setState(Dir.U);
 				}
 			}
 		}
@@ -269,22 +265,22 @@ public class Block extends GameActor implements Poolable{
 	
 	public void changeDir(Touchpad touchpad){
 		if(!touchpad.isTouched()){
-			setStatus(Dir.S);
+			setState(Dir.S);
 			return;
 		}
 		float x = touchpad.getKnobPercentX();
 		float y = touchpad.getKnobPercentY();
 		double agl = MathUtils.atan2(y, x) * 180/ Math.PI;
 		if(agl < -45 && agl > -135){
-			setStatus(Dir.D);
+			setState(Dir.D);
 		}else if(agl >= 45 && agl < 135){
-			setStatus(Dir.U);
+			setState(Dir.U);
 		}else if(agl >= 135 || agl <= -135){
-			setStatus(Dir.L);
+			setState(Dir.L);
 		}else if(agl >= -45 && agl <= 45){
-			setStatus(Dir.R);
+			setState(Dir.R);
 		}else{
-			setStatus(Dir.S);
+			setState(Dir.S);
 		}
 	}
 	
@@ -299,7 +295,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
-		setStatus(Dir.valueOf(RandomUtil.nextInt(5)));
+		setState(Dir.valueOf(RandomUtil.nextInt(5)));
 	}
 	
 	private long time;
@@ -398,22 +394,11 @@ public class Block extends GameActor implements Poolable{
 			randomSatus();
 		}
 	}
-	
-	public Dir getStatus() {
-		return status;
-	}
-
-	public void setStatus(Dir status) {
-		this.status = status;
-		if (status != Dir.S) {// 方向没有停止状态
-			this.dir = status;
-		}
-	}
 
 	@Override
 	public void reset() {
 		hp = maxhp;
-		this.status = Dir.S;
+		this.state = Dir.S;
 	}
 	
 	@Override

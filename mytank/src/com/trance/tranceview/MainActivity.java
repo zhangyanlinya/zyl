@@ -79,7 +79,6 @@ public class MainActivity extends AndroidApplication {
         config.useAccelerometer = false;  //禁用加速计
         config.useCompass = false;		  //禁用罗盘
         config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
-//        AndroidFreeFont.Strat();		  //初始化自由文本案
 		initialize(tranceGame, config);
 		init();
 	}

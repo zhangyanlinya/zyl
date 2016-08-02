@@ -159,6 +159,17 @@ public class GameScreen implements Screen , ContactListener{
 				stage.addActor(bg);
 			}
 		}
+		
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
+		
+		
 		stage.addActor(toWorld);
 		initWorld();
 		initMap();
@@ -367,6 +378,7 @@ public class GameScreen implements Screen , ContactListener{
 	private void initMap() {
 		blocks.clear();
 		tanks.clear();
+		connons.clear();
 		if(playerDto == null){
 			return;
 		}
@@ -595,6 +607,7 @@ public class GameScreen implements Screen , ContactListener{
 		}
 		blocks.clear();
 		tanks.clear();
+		connons.clear();
 		Bullet.bulletPool.clear();
 		MapScreen.blockPool.clear();
 		
