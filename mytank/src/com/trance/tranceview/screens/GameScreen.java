@@ -151,26 +151,6 @@ public class GameScreen implements Screen , ContactListener{
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
 		initClock();
-		float w = bg.getWidth();
-		float h = bg.getHeight();
-		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h ; y < stage.getHeight() ; y += h){
-				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-				bg.setPosition(x, y);
-				stage.addActor(bg);
-			}
-		}
-		
-		for(int i = 0 ; i < 5; i ++){
-			int index = RandomUtil.nextInt(4) + 1;
-			int x = RandomUtil.nextInt((int)width);
-			int y = RandomUtil.nextInt((int)height);
-			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
-			grass.setPosition(x, y);
-			stage.addActor(grass);
-		}
-		
-		
 		stage.addActor(toWorld);
 		initWorld();
 		initMap();
@@ -199,7 +179,7 @@ public class GameScreen implements Screen , ContactListener{
 	private void init(){
 		spriteBatch = new SpriteBatch();
 		font = FontUtil.getInstance().getFont(35, "点赞倒计时：", Color.RED);
-		music = AssetsManager.getInstance().get("audio/begin.mp3");
+//		music = AssetsManager.getInstance().get("audio/begin.mp3");
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
@@ -219,6 +199,25 @@ public class GameScreen implements Screen , ContactListener{
 		renderer = new ShapeRenderer();
 		
 		bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+//		float w = bg.getWidth();
+//		float h = bg.getHeight();
+//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+//			for(float y = -h ; y < stage.getHeight() ; y += h){
+//				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+//				bg.setPosition(x, y);
+//				stage.addActor(bg);
+//			}
+//		}
+//		
+//		for(int i = 0 ; i < 5; i ++){
+//			int index = RandomUtil.nextInt(4) + 1;
+//			int x = RandomUtil.nextInt((int)width);
+//			int y = RandomUtil.nextInt((int)height);
+//			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+//			grass.setPosition(x, y);
+//			stage.addActor(grass);
+//		}
+		
 		
 		//返回家
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
@@ -257,9 +256,9 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
     private void initTouchPad() {
-    	float aspectRatio = (float) width / (float) height;
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 10f*aspectRatio, 10f);
+//    	float aspectRatio = (float) width / (float) height;
+//		camera = new OrthographicCamera();
+//		camera.setToOrtho(false, 10f*aspectRatio, 10f);
 		
 		//Create a touchpad skin	
 		touchpadSkin = new Skin();
@@ -459,6 +458,9 @@ public class GameScreen implements Screen , ContactListener{
 			stage.addActor(window);
 		}
 		
+		camera.update();
+		debugRenderer.render(world, camera.combined);//debug
+		
 		controldir();
 //		track();
 		scan();
@@ -469,8 +471,6 @@ public class GameScreen implements Screen , ContactListener{
 		spriteBatch.end();
 		
 		//box2d
-		debugRenderer.render(world, camera.combined);//debug
-		
         accumulator += delta;
         while (accumulator >= delta) {
             world.step(TIME_STEP, 6, 2);

@@ -53,7 +53,7 @@ public class Block extends GameActor implements Poolable{
 	public int level;
 	public boolean move;
 	//range 
-	public float range = 10;
+	public float range = 1000;
 	private float hw;
 	private float hh;
 	public float degrees;
@@ -128,14 +128,6 @@ public class Block extends GameActor implements Poolable{
 		this.j = j;
 	}
 	
-	public void setState(Dir state){
-//		this.state = state;
-//		if(state != Dir.S){
-//			dir = state;
-//		}
-//		vx = 0;
-//		vy = 0;
-	}
 	
 	public void move() {
 		if(MapData.gameover){
@@ -143,59 +135,6 @@ public class Block extends GameActor implements Poolable{
 		}
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
-	
-//	private void listenStatus(){
-//		switch (state) {
-//		case L:
-//			left();
-//			break;
-//		case R:
-//			right();
-//			break;
-//		case U:
-//			up();
-//			break;
-//		case D:
-//			down();
-//			break;
-//		case S:
-//			stop();
-//			break;
-//		default:
-//			break;
-//		}
-//	}
-	
-//	private void left(){
-//		setRotation(90);
-//		this.vx = -1;
-//		this.vy = 0;
-//	}
-//	
-//	private void right(){
-//		setRotation(-90);
-//		this.vx = 1;
-//		this.vy = 0;
-//	}
-//	
-//	private void up(){
-//		setRotation(0);
-//		this.vx = 0;
-//		this.vy = 1;
-//	}
-//	
-//	private void down(){
-//		setRotation(180);
-//		this.vx = 0;
-//		this.vy = -1;
-//	}
-//	
-//	private void stop(){
-//		this.vx = 0;
-//		this.vy = 0;
-//	}
-	
-//	public long trackTime;
 	
 	public void track(Block  block){
 //		long now = System.currentTimeMillis();
@@ -213,39 +152,9 @@ public class Block extends GameActor implements Poolable{
 //			return;
 //		}
 		
-		float angle = MathUtils.atan2(disY, disX) * 180/ MathUtils.PI;
-		degrees = MathUtils.radiansToDegrees * angle; //孤度
-		body.setTransform(x, y, angle);
-		
-//		if(destX < x){
-//			if(y > destY){// 右上角
-//				if(disX > disY){
-//					setState(Dir.L);
-//				}else{
-//					setState(Dir.D);
-//				}
-//			}else{//右下角
-//				if(disX > disY){
-//					setState(Dir.L);
-//				}else{
-//					setState(Dir.U);
-//				}
-//			}
-//		}else{
-//			if(y > destY){//左上角
-//				if(disX > disY){
-//					setState(Dir.R);
-//				}else{
-//					setState(Dir.D);
-//				}
-//			}else{//左下角
-//				if(disX > disY){
-//					setState(Dir.R);
-//				}else{
-//					setState(Dir.U);
-//				}
-//			}
-//		}
+		float angle = MathUtils.atan2(disX, disY) * 180/ MathUtils.PI;
+		degrees = -MathUtils.degreesToRadians * angle; //孤度
+		body.setTransform(body.getPosition(), degrees);
 	}
 	
 	/**
@@ -273,30 +182,18 @@ public class Block extends GameActor implements Poolable{
 	}
 	
 	public void changeDir(Touchpad touchpad){
-		if(!touchpad.isTouched()){
-			vx = 0;
-			vy = 0;
-			return;
-		}
+//		if(!touchpad.isTouched()){
+//			vx = 0;
+//			vy = 0;
+//			return;
+//		}
 		float x = touchpad.getKnobPercentX();
 		float y = touchpad.getKnobPercentY();
 		vx = x;
 		vy = y;
-		float angle = MathUtils.atan2(y, x) * 180/ MathUtils.PI;
-		this.degrees = MathUtils.radiansToDegrees * angle;
-//		body.setTransform(this.getX() * GameScreen.WORLD_TO_BOX ,this.getY() * GameScreen.WORLD_TO_BOX, angle);
-		
-//		if(agl < -45 && agl > -135){
-//			setState(Dir.D);
-//		}else if(agl >= 45 && agl < 135){
-//			setState(Dir.U);
-//		}else if(agl >= 135 || agl <= -135){
-//			setState(Dir.L);
-//		}else if(agl >= -45 && agl <= 45){
-//			setState(Dir.R);
-//		}else{
-//			setState(Dir.S);
-//		}
+		float angle = MathUtils.atan2(x, y) * 180/ MathUtils.PI;
+		degrees = -MathUtils.degreesToRadians * angle;
+		body.setTransform(body.getPosition(), degrees);
 	}
 	
 	private long dirTime;
@@ -310,7 +207,6 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
-//		setState(Dir.valueOf(RandomUtil.nextInt(5)));
 	}
 	
 	private long time;
@@ -359,7 +255,7 @@ public class Block extends GameActor implements Poolable{
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		if(body != null){
 //			if(type < BlockType.TANK_MAIN.getValue()){
-			    degrees = MathUtils.radiansToDegrees * body.getAngle();
+			float degrees = MathUtils.radiansToDegrees * body.getAngle();
 				setRotation(degrees);
 //			}
 			setRotation(degrees);
@@ -405,16 +301,15 @@ public class Block extends GameActor implements Poolable{
 		if(move){
 			move();
 		}
-		if (type == BlockType.TANK_ENEMY.getValue()) {
-			fire();
+//		if (type == BlockType.TANK_ENEMY.getValue()) {
+//			fire();
 //			randomSatus();
-		}
+//		}
 	}
 
 	@Override
 	public void reset() {
 		hp = maxhp;
-//		this.state = Dir.S;
 	}
 	
 	@Override

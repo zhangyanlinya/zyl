@@ -74,7 +74,7 @@ public class AssetsManager extends AssetManager{
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
     	
-    	ininSound();
+//    	ininSound();
     }
     
     /**

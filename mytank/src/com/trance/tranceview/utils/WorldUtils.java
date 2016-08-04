@@ -57,22 +57,32 @@ public class WorldUtils {
         edge.set(new Vector2(width, height), new Vector2(x, height));
         body.createFixture(boxShapeDef);
         edge.dispose();
-//        body.setAwake(true);
+//        body.setAwake(false);
         return body;
         
     }
     public static Body createBlock(World world, int type,float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
-    	if(type == BlockType.KING.getValue() || type == BlockType.WATER.getValue() || type == BlockType.STEEL.getValue()){
+    	boolean sleep = false;
+    	if(type == BlockType.KING.getValue() 
+    			||type == BlockType.WATER.getValue() 
+    			||type == BlockType.WALL.getValue() 
+//    			||type == BlockType.TANK_MAIN.getValue() 
+    			||type == 9 
+    			||type == BlockType.STEEL.getValue()){
     		bodyDef.type = BodyType.StaticBody;
+//    		bodyDef.fixedRotation = true;
+    		sleep = true;
     	}
+    	
     	bodyDef.fixedRotation = true;
-//    	bodyDef.linearDamping = 0.1f;
+//    	bodyDef.linearDamping = 1f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
-    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2 - 2) * GameScreen.WORLD_TO_BOX);
+    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
+    	body.setAwake(sleep);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
     	f.density = 2f;//夹具的密度
@@ -87,16 +97,6 @@ public class WorldUtils {
     	}
     	
     	body.createFixture(f);//刚体创建夹具.
-    	
-//    	BodyDef gbodyDef = new BodyDef();  
-//        Body grounpBody = world.createBody(gbodyDef); 
-//    	RevoluteJointDef joinDef = new RevoluteJointDef();
-//    	joinDef.initialize(grounpBody, body,  new Vector2((x + width/2) * GameScreen.WORLD_TO_BOX,(y + height/ 2) * GameScreen.WORLD_TO_BOX));
-//    	joinDef.enableMotor = true;
-//    	joinDef.motorSpeed = MathUtils.PI/4;
-//    	joinDef.maxMotorTorque = 1;
-//    	world.createJoint(joinDef);
-    	
     	shape.dispose();
     	return body;
     }
@@ -104,7 +104,7 @@ public class WorldUtils {
     public static Body createBullet(World world, float x, float y,float width,float height,float rotation) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
-    	bodyDef.fixedRotation  = true;
+//    	bodyDef.fixedRotation  = true;
     	PolygonShape shape = new PolygonShape();
     	
     	float hx = width/2 * GameScreen.WORLD_TO_BOX;

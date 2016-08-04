@@ -22,7 +22,7 @@ public class Bullet extends GameActor{
 	public Body body;
 	public int type;
 	public Block block;
-	public float speed = 3;//
+	public float speed = 10;//
 //	private Dir dir;
 //	public float angle;
 	private float hw;
@@ -46,7 +46,6 @@ public class Bullet extends GameActor{
 		this.alive = true;
 		this.type  = type;
 		this.block = block;
-//		this.dir = block.dir;
 		this.degrees = block.degrees;
 		
 		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
@@ -59,8 +58,11 @@ public class Bullet extends GameActor{
 //		case U:
 //			angle = 0;
 //			impulseY = 1;
-//			x = x + block.getWidth()/2;
-//			y = y + block.getHeight();
+//			x = x + block.vx;
+//			y = y + block.vy;
+		x = x + block.getWidth()/2;
+		y = y + block.getHeight();
+		y += block.getHeight()/4;
 //			y += block.getHeight()/4;
 //			break;
 //		case D:
@@ -92,14 +94,20 @@ public class Bullet extends GameActor{
 		orgX = x;
 		orgY = y;
 		this.setPosition(x, y);
-		this.setRotation(degrees);
+		
 		this.setWidth(width);
 		this.setHeight(height);
 		this.hw = width/2;
 		this.hh = height/2;
 		
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
-		body.applyLinearImpulse(block.vx * speed,  block.vy* speed, x, y, true);
+		
+//		body.setTransform(body.getPosition(), degrees);
+//		this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
+		System.out.println(block.vx * speed+"  ----  "+ block.vy* speed);
+		body.applyLinearImpulse(block.vx * speed, block.vy* speed, x, y, true);
+		
+//		body.setLinearVelocity(block.vx * speed,  block.vy* speed);
 		body.setUserData(this);
 		
 	}
