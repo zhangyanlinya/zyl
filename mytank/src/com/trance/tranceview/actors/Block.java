@@ -53,7 +53,7 @@ public class Block extends GameActor implements Poolable{
 	public int level;
 	public boolean move;
 	//range 
-	public float range = 1000;
+	public float range = 500;
 	private float hw;
 	private float hh;
 	public float degrees;

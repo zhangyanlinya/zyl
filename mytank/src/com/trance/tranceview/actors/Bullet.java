@@ -22,7 +22,7 @@ public class Bullet extends GameActor{
 	public Body body;
 	public int type;
 	public Block block;
-	public float speed = 10;//
+	public float speed = 6;//
 //	private Dir dir;
 //	public float angle;
 	private float hw;
@@ -60,9 +60,9 @@ public class Bullet extends GameActor{
 //			impulseY = 1;
 //			x = x + block.vx;
 //			y = y + block.vy;
-		x = x + block.getWidth()/2;
-		y = y + block.getHeight();
-		y += block.getHeight()/4;
+//		x = x + block.getWidth()/2;
+//		y = y + block.getHeight();
+//		y += block.getHeight()/4;
 //			y += block.getHeight()/4;
 //			break;
 //		case D:
@@ -105,9 +105,9 @@ public class Bullet extends GameActor{
 //		body.setTransform(body.getPosition(), degrees);
 //		this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 		System.out.println(block.vx * speed+"  ----  "+ block.vy* speed);
-		body.applyLinearImpulse(block.vx * speed, block.vy* speed, x, y, true);
-		
-//		body.setLinearVelocity(block.vx * speed,  block.vy* speed);
+//		body.applyLinearImpulse(block.vx * speed, block.vy* speed,
+//				body.getWorldCenter().x * block.vx * hw , body.getWorldCenter().y * block.vy * hh, true);
+		body.setLinearVelocity(block.vx * speed,  block.vy* speed);
 		body.setUserData(this);
 		
 	}
