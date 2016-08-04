@@ -16,6 +16,7 @@
 
 package com.trance.tranceview.utils;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.screens.GameScreen;
 
@@ -35,7 +37,7 @@ public class WorldUtils {
 
     public static Body createBorder(World world,float x, float y, float width, float height) {
     	// Create ball body and shape
-    	x = x  * GameScreen.WORLD_TO_BOX;
+    	x = x * GameScreen.WORLD_TO_BOX;
     	y = y * GameScreen.WORLD_TO_BOX;
         width=width* GameScreen.WORLD_TO_BOX;
         height=height* GameScreen.WORLD_TO_BOX;
@@ -55,6 +57,7 @@ public class WorldUtils {
         edge.set(new Vector2(width, height), new Vector2(x, height));
         body.createFixture(boxShapeDef);
         edge.dispose();
+//        body.setAwake(true);
         return body;
         
     }
@@ -84,6 +87,16 @@ public class WorldUtils {
     	}
     	
     	body.createFixture(f);//刚体创建夹具.
+    	
+//    	BodyDef gbodyDef = new BodyDef();  
+//        Body grounpBody = world.createBody(gbodyDef); 
+//    	RevoluteJointDef joinDef = new RevoluteJointDef();
+//    	joinDef.initialize(grounpBody, body,  new Vector2((x + width/2) * GameScreen.WORLD_TO_BOX,(y + height/ 2) * GameScreen.WORLD_TO_BOX));
+//    	joinDef.enableMotor = true;
+//    	joinDef.motorSpeed = MathUtils.PI/4;
+//    	joinDef.maxMotorTorque = 1;
+//    	world.createJoint(joinDef);
+    	
     	shape.dispose();
     	return body;
     }
@@ -94,16 +107,10 @@ public class WorldUtils {
     	bodyDef.fixedRotation  = true;
     	PolygonShape shape = new PolygonShape();
     	
-    	float hx = 0;
-    	float hy = 0;
-    	if(rotation == 0 ||rotation == 180){
-    		hx = width/2 * GameScreen.WORLD_TO_BOX;
-    		hy = height/2 * GameScreen.WORLD_TO_BOX;
-    	}else{
-    		hx = height/2 * GameScreen.WORLD_TO_BOX;
-        	hy = width/2 * GameScreen.WORLD_TO_BOX;
-    	}
+    	float hx = width/2 * GameScreen.WORLD_TO_BOX;
+    	float hy = height/2 * GameScreen.WORLD_TO_BOX;
     	shape.setAsBox(hx,hy);
+    	shape.setRadius(rotation);//角度
     	bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();

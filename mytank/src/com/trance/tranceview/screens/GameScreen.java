@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -100,8 +101,8 @@ public class GameScreen implements Screen , ContactListener{
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
-//    private OrthographicCamera camera;
-//    private Box2DDebugRenderer debugRenderer;
+    
+    private Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<Block> blocks = new Array<Block>();
 	
@@ -204,10 +205,10 @@ public class GameScreen implements Screen , ContactListener{
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width, height, true);
 		
-//      camera = new OrthographicCamera(); 
-//      camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-//      camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
-//		debugRenderer = new Box2DDebugRenderer(); 
+        camera = new OrthographicCamera(); 
+        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+		debugRenderer = new Box2DDebugRenderer(); 
 		
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
@@ -468,6 +469,8 @@ public class GameScreen implements Screen , ContactListener{
 		spriteBatch.end();
 		
 		//box2d
+		debugRenderer.render(world, camera.combined);//debug
+		
         accumulator += delta;
         while (accumulator >= delta) {
             world.step(TIME_STEP, 6, 2);

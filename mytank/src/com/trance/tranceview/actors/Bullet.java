@@ -23,13 +23,14 @@ public class Bullet extends GameActor{
 	public int type;
 	public Block block;
 	public float speed = 3;//
-	private Dir dir;
-	public float rotation;
+//	private Dir dir;
+//	public float angle;
 	private float hw;
 	private float hh;
 	
 	private float orgX;
 	private float orgY;
+	private float degrees;
 	
 	//纹理区域
 	private TextureRegion textureRegion;
@@ -45,44 +46,45 @@ public class Bullet extends GameActor{
 		this.alive = true;
 		this.type  = type;
 		this.block = block;
-		this.dir = block.dir;
+//		this.dir = block.dir;
+		this.degrees = block.degrees;
 		
 		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
 		role = 1;
 		good = block.good;
-		float impulseX = 0;
-		float impulseY = 0;
-		rotation = 0;
-		switch(dir){
-		case U:
-			rotation = 0;
-			impulseY = speed;
-			x = x + block.getWidth()/2;
-			y = y + block.getHeight();
-			y += block.getHeight()/4;
-			break;
-		case D:
-			rotation = 180;
-			impulseY = -speed;
-			x = x + block.getWidth()/2;
-			y -= block.getHeight()/4;
-			break;
-		case L:
-			rotation = 90;
-			impulseX = -speed;
-			y = y + block.getHeight()/2;
-			x -= block.getWidth()/4;
-			break;
-		case R:
-			rotation = -90;
-			impulseX = speed;
-			x = x + block.getWidth();
-			y = y + block.getHeight()/2;
-			x += block.getWidth()/4;
-			break;
-		default:
-			break;
-		}
+//		float impulseX = 0;
+//		float impulseY = 0;
+//		angle = 0;
+//		switch(dir){
+//		case U:
+//			angle = 0;
+//			impulseY = 1;
+//			x = x + block.getWidth()/2;
+//			y = y + block.getHeight();
+//			y += block.getHeight()/4;
+//			break;
+//		case D:
+//			angle = 180;
+//			impulseY = -1;
+//			x = x + block.getWidth()/2;
+//			y -= block.getHeight()/4;
+//			break;
+//		case L:
+//			angle = 90;
+//			impulseX = -1;
+//			y = y + block.getHeight()/2;
+//			x -= block.getWidth()/4;
+//			break;
+//		case R:
+//			angle = -90;
+//			impulseX = 1;
+//			x = x + block.getWidth();
+//			y = y + block.getHeight()/2;
+//			x += block.getWidth()/4;
+//			break;
+//		default:
+//			break;
+//		}
 		if(width == 0 && height == 0){
 			width = textureRegion.getRegionWidth();
 			height = textureRegion.getRegionHeight();
@@ -90,14 +92,14 @@ public class Bullet extends GameActor{
 		orgX = x;
 		orgY = y;
 		this.setPosition(x, y);
-		this.setRotation(rotation);
+		this.setRotation(degrees);
 		this.setWidth(width);
 		this.setHeight(height);
 		this.hw = width/2;
 		this.hh = height/2;
 		
-		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,rotation);
-		body.applyLinearImpulse(impulseX, impulseY, x, y, true);
+		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
+		body.applyLinearImpulse(block.vx * speed,  block.vy* speed, x, y, true);
 		body.setUserData(this);
 		
 	}
@@ -106,7 +108,7 @@ public class Bullet extends GameActor{
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		float x = body.getPosition().x  * GameScreen.BOX_TO_WORLD - hw;
 		float y = body.getPosition().y  * GameScreen.BOX_TO_WORLD - hh;
-		this.setRotation(rotation + MathUtils.radiansToDegrees * body.getAngle());
+//		this.setRotation(angle + MathUtils.radiansToDegrees * body.getAngle());
 		batch.draw(textureRegion, x, y, hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
