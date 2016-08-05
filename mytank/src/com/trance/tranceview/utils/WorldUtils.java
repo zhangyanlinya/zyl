@@ -64,7 +64,6 @@ public class WorldUtils {
     public static Body createBlock(World world, int type,float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
-    	boolean sleep = false;
     	if(type == BlockType.KING.getValue() 
     			||type == BlockType.WATER.getValue() 
     			||type == BlockType.WALL.getValue() 
@@ -73,7 +72,6 @@ public class WorldUtils {
     			||type == BlockType.STEEL.getValue()){
     		bodyDef.type = BodyType.StaticBody;
 //    		bodyDef.fixedRotation = true;
-    		sleep = true;
     	}
     	
     	bodyDef.fixedRotation = true;
@@ -82,7 +80,6 @@ public class WorldUtils {
     	PolygonShape shape = new PolygonShape();
     	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
-    	body.setAwake(sleep);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
     	f.density = 2f;//夹具的密度
@@ -104,8 +101,8 @@ public class WorldUtils {
     public static Body createBullet(World world, float x, float y,float width,float height,float rotation) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
-    	bodyDef.fixedRotation  = true;
-    	bodyDef.bullet = true;
+//    	bodyDef.fixedRotation  = true;
+//    	bodyDef.bullet = true;
     	PolygonShape shape = new PolygonShape();
     	
     	float hx = width/2 * GameScreen.WORLD_TO_BOX;

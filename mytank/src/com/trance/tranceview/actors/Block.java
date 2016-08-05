@@ -152,7 +152,7 @@ public class Block extends GameActor implements Poolable{
 //			return;
 //		}
 		
-		float angle = MathUtils.atan2(disX, disY) * 180/ MathUtils.PI;
+		float angle = MathUtils.atan2(disX, disY) * MathUtils.radiansToDegrees;
 		degrees = -MathUtils.degreesToRadians * angle; //孤度
 		body.setTransform(body.getPosition(), degrees);
 	}
@@ -180,20 +180,40 @@ public class Block extends GameActor implements Poolable{
 			fire();
 		}
 	}
-	
 	public void changeDir(Touchpad touchpad){
-//		if(!touchpad.isTouched()){
-//			vx = 0;
-//			vy = 0;
-//			return;
-//		}
+		if(!touchpad.isTouched()){
+			vx = 0;
+			vy = 0;
+			return;
+		}
 		float x = touchpad.getKnobPercentX();
 		float y = touchpad.getKnobPercentY();
+		if(x == 0 && y == 0){
+			return;
+		}
 		vx = x;
 		vy = y;
-		float angle = MathUtils.atan2(x, y) * 180/ MathUtils.PI;
-		degrees = -MathUtils.degreesToRadians * angle;
+		degrees = - MathUtils.atan2(vx, vy);
 		body.setTransform(body.getPosition(), degrees);
+//		naturalRotation(degrees);
+	}
+	
+	/**
+	 * Natural rotation
+	 * @param degrees  need to ratotion;
+	 */
+	private void naturalRotation(float degrees){
+		float dt = 1.0f / 60.0f;
+		float nextAngle = body.getAngle() + body.getAngularVelocity() *dt;
+		float totalRotation = degrees - nextAngle;
+		float DEGTORAD = MathUtils.degreesToRadians;
+		while ( totalRotation < -180 * DEGTORAD ) totalRotation += 360 * DEGTORAD;
+		while ( totalRotation >  180 * DEGTORAD ) totalRotation -= 360 * DEGTORAD;
+		float desiredAngularVelocity = totalRotation / dt;
+		float change = 1 * DEGTORAD; //allow 1 degree rotation per time step
+		desiredAngularVelocity = Math.min(change, Math.max(-change, desiredAngularVelocity));
+		float impulse = body.getInertia() * desiredAngularVelocity;// disregard time factor
+		body.applyAngularImpulse(impulse ,true);
 	}
 	
 	private long dirTime;
