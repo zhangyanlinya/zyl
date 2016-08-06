@@ -101,7 +101,7 @@ public class WorldUtils {
     public static Body createBullet(World world, float x, float y,float width,float height,float rotation) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
-//    	bodyDef.fixedRotation  = true;
+    	bodyDef.fixedRotation  = true;
 //    	bodyDef.bullet = true;
     	PolygonShape shape = new PolygonShape();
     	
@@ -109,7 +109,7 @@ public class WorldUtils {
     	float hy = height/2 * GameScreen.WORLD_TO_BOX;
     	
     	shape.setAsBox(hx,hy);
-    	shape.setRadius(rotation);//角度
+//    	shape.setRadius(rotation);//角度
     	bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();

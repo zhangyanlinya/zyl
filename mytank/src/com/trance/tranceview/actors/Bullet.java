@@ -57,12 +57,16 @@ public class Bullet extends GameActor{
 			height = textureRegion.getRegionHeight();
 		}
 		
-		float radius = block.getHeight();
+		//center
+		x += block.getWidth()/2;
+		y += block.getHeight()/2;		
+		
+		float radius = block.getHeight() + width;
 		float sin = -MathUtils.sin(degrees);
 		float cos =  MathUtils.cos(degrees);
 //		System.out.println("cos:" + cos +" sin :" + sin);
-		x = sin * radius + block.getX() + block.getWidth()/2;
-		y = cos * radius + block.getY() + block.getHeight()/2;
+		x += sin * radius;
+		y += cos * radius;
 		orgX = x;
 		orgY = y;
 		this.setPosition(x, y);
@@ -102,12 +106,10 @@ public class Bullet extends GameActor{
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
 		if(outOfScreen(x, y)){
-			System.out.println("超过了屏幕");
 			dead();
-		}else
-		// over range
-		if(outofRange(x,y)){
-			System.out.println("超过了射程");
+		}
+		
+		if(outofRange(x,y)){ // out of range
 			dead();
 		}
 	}
