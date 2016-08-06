@@ -146,14 +146,13 @@ public class Block extends GameActor implements Poolable{
 		float y = this.getY();
 		float destX = block.getX();
 		float destY = block.getY();
-		float disX = Math.abs(destX - x);
-		float disY = Math.abs(destY - y);
+		float disX = destX - x;
+		float disY = destY - y;
 //		if(disX < GameConfig.trackDistance && disY < GameConfig.trackDistance){
 //			return;
 //		}
 		
-		float angle = MathUtils.atan2(disX, disY) * MathUtils.radiansToDegrees;
-		degrees = -MathUtils.degreesToRadians * angle; //孤度
+		degrees = - MathUtils.atan2(disX, disY);
 		body.setTransform(body.getPosition(), degrees);
 	}
 	

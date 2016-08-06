@@ -109,7 +109,6 @@ public class WorldUtils {
     	float hy = height/2 * GameScreen.WORLD_TO_BOX;
     	
     	shape.setAsBox(hx,hy);
-//    	shape.setRadius(rotation);//角度
     	bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
