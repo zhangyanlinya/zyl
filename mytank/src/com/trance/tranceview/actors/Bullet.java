@@ -3,11 +3,9 @@ package com.trance.tranceview.actors;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-import com.trance.tranceview.constant.Dir;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.utils.AssetsManager;
@@ -24,8 +22,6 @@ public class Bullet extends GameActor{
 	public int type;
 	public Block block;
 	public float speed = 3;//
-//	private Dir dir;
-//	public float angle;
 	private float hw;
 	private float hh;
 	

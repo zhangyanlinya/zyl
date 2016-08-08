@@ -11,10 +11,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.trance.tranceview.config.GameConfig;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
-import com.trance.tranceview.constant.Dir;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.MapScreen;
@@ -39,10 +37,6 @@ public class Block extends GameActor implements Poolable{
 	private TextureRegion textureRegion;
   	//画笔吧
   	public ShapeRenderer renderer;
-	// 状态
-//  	private Dir state = Dir.S;
-  	
-//  	public Dir dir = Dir.D;
 	// 速度
 	public float speed = 10;
 	//攻击间隔时间
@@ -227,6 +221,10 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
+		degrees  = RandomUtil.nextInt(360);
+		vx = -MathUtils.sin(degrees);
+		vy =  MathUtils.cos(degrees);
+		body.setTransform(body.getPosition(), degrees);
 	}
 	
 	private long time;
@@ -317,14 +315,13 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		
-//		listenStatus();
 		if(move){
 			move();
 		}
-//		if (type == BlockType.TANK_ENEMY.getValue()) {
-//			fire();
-//			randomSatus();
-//		}
+		if (type == BlockType.TANK_ENEMY.getValue()) {
+			fire();
+			randomSatus();
+		}
 	}
 
 	@Override
