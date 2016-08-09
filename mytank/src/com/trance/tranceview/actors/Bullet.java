@@ -74,7 +74,16 @@ public class Bullet extends GameActor{
 		this.hh = height/2;
 				
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
-		body.setTransform(body.getPosition(), degrees);
+//		body.setAngularVelocity(0);
+//		body.setTransform(body.getPosition(), degrees);
+		
+//		body.setAngularVelocity(0);
+		//让物体逐渐改变，只要在每一帧更新中限制角度的变更即可：
+//		float totalRotation = degrees - body.getAngle();
+//		float change = 1 * MathUtils.degreesToRadians; //allow 1 degree rotation per time step
+//		float newAngle = body.getAngle() + Math.min( change, Math.max(-change, totalRotation));
+//		body.setTransform(body.getPosition(), newAngle);
+		
 		body.applyLinearImpulse(sin * speed,  cos * speed,
 				body.getWorldCenter().x, body.getWorldCenter().y, true);
 //		body.setLinearVelocity(sin * speed,  cos * speed);

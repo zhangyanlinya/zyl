@@ -119,35 +119,35 @@ public class AssetsManager extends AssetManager{
         return textureRegion;
     }
     
-    public  TextureRegion getControlTextureRegion(ControlType value) {
+    public Texture getControlTextureRegion(ControlType value) {
 //    	Texture dirs = get("ui/controls.png", Texture.class);
 //    	TextureRegion[] regions = TextureRegion.split(dirs, 64 ,64 )[0];
     	
-    	TextureRegion textureRegion = null;
+    	Texture texture = null;
     	String fileName = null;
     	switch(value){
     	case GOTOFIGHT:
     		fileName = "ui/gotofight.png";
-    		textureRegion = new TextureRegion(get(fileName, Texture.class));
+    		texture = get(fileName, Texture.class);
     		break;
     	case ATTACK:
     		fileName = "ui/attack.png";
-    		textureRegion = new TextureRegion(get(fileName, Texture.class));
+    		texture = get(fileName, Texture.class);
     		break;
     	case WORLD:
     		fileName = "ui/to_world.png";
-    		textureRegion = new TextureRegion(get(fileName, Texture.class));
+    		texture = get(fileName, Texture.class);
     		break;
     	case HOME:
     		fileName = "ui/to_home.png";
-    		textureRegion = new TextureRegion(get(fileName, Texture.class));
+    		texture = get(fileName, Texture.class);
     		break;
 		default:
 			fileName ="ui/dir.png"; 
-			textureRegion = new TextureRegion(get(fileName, Texture.class));
+			texture = get(fileName, Texture.class);
 			break;
     	}
-        return textureRegion;
+        return texture;
     }
 
     public void dispose() {

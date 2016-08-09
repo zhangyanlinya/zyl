@@ -377,12 +377,12 @@ public class GameScreen implements Screen , ContactListener{
 			return;
 		}
 		
-		bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w ; x < stage.getWidth(); x += w){//background;
 			for(float y = -h ; y < stage.getHeight() ; y += h){
-				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
 			}
@@ -472,11 +472,11 @@ public class GameScreen implements Screen , ContactListener{
 		}
 		
 		//debug---
-//		camera.update();
-//		debugRenderer.render(world, camera.combined);
+		camera.update();
+		debugRenderer.render(world, camera.combined);
 		//debug---
 		
-		controldir();
+//		controldir();
 //		track();
 		scan();
 		stage.draw();

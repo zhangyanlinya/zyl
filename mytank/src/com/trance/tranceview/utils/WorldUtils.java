@@ -74,7 +74,7 @@ public class WorldUtils {
 //    		bodyDef.fixedRotation = true;
     	}
     	
-    	bodyDef.fixedRotation = true;
+//    	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 1f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	PolygonShape shape = new PolygonShape();
