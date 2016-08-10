@@ -220,7 +220,7 @@ public class Block extends GameActor implements Poolable{
 //		float deg = body.getAngle() * MathUtils.radiansToDegrees ;
 		System.out.println("rotation: " + getRotation());
 		System.out.println("degrees: " + degrees);
-		if(degrees != 0){
+		if(degrees == getRotation()){
 			diring = false;
 			return;
 		}
@@ -320,6 +320,7 @@ public class Block extends GameActor implements Poolable{
 			float degrees = MathUtils.radiansToDegrees * body.getAngle();
 				setRotation(degrees);
 //			}
+			System.out.println("Block draw() degrees:" + degrees);
 			setRotation(degrees);
 			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
