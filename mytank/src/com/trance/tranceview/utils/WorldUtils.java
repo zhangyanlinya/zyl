@@ -16,16 +16,15 @@
 
 package com.trance.tranceview.utils;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.screens.GameScreen;
 
@@ -67,18 +66,17 @@ public class WorldUtils {
     	if(type == BlockType.KING.getValue() 
     			||type == BlockType.WATER.getValue() 
     			||type == BlockType.WALL.getValue() 
-//    			||type == BlockType.TANK_MAIN.getValue() 
     			||type == 9 
     			||type == BlockType.STEEL.getValue()){
     		bodyDef.type = BodyType.StaticBody;
-//    		bodyDef.fixedRotation = true;
     	}
     	
-//    	bodyDef.fixedRotation = true;
+    	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 1f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
-    	PolygonShape shape = new PolygonShape();
-    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
+    	CircleShape shape = new CircleShape();
+//    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 2) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -100,7 +98,7 @@ public class WorldUtils {
     
     public static Body createBullet(World world, float x, float y,float width,float height,float rotation) {
     	BodyDef bodyDef = new BodyDef();
-    	bodyDef.type = BodyType.DynamicBody;
+    	bodyDef.type = BodyType.KinematicBody;
     	bodyDef.fixedRotation  = true;
 //    	bodyDef.bullet = true;
     	PolygonShape shape = new PolygonShape();

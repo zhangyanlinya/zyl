@@ -21,7 +21,7 @@ public class Bullet extends GameActor{
 	public Body body;
 	public int type;
 	public Block block;
-	public float speed = 3;//
+	public float speed = 5;//
 	private float hw;
 	private float hh;
 	
@@ -58,7 +58,7 @@ public class Bullet extends GameActor{
 		y += block.getHeight()/2;		
 		
 		//radius;
-		float radius = block.getHeight() + width;
+		float radius = block.getHeight() + 1;
 		float sin = -MathUtils.sin(degrees);
 		float cos =  MathUtils.cos(degrees);
 //		System.out.println("cos:" + cos +" sin :" + sin);
@@ -75,7 +75,7 @@ public class Bullet extends GameActor{
 				
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
 //		body.setAngularVelocity(0);
-//		body.setTransform(body.getPosition(), degrees);
+		body.setTransform(body.getPosition(), degrees);
 		
 //		body.setAngularVelocity(0);
 		//让物体逐渐改变，只要在每一帧更新中限制角度的变更即可：
@@ -84,9 +84,9 @@ public class Bullet extends GameActor{
 //		float newAngle = body.getAngle() + Math.min( change, Math.max(-change, totalRotation));
 //		body.setTransform(body.getPosition(), newAngle);
 		
-		body.applyLinearImpulse(sin * speed,  cos * speed,
-				body.getWorldCenter().x, body.getWorldCenter().y, true);
-//		body.setLinearVelocity(sin * speed,  cos * speed);
+//		body.applyLinearImpulse(sin * speed,  cos * speed,
+//				body.getWorldCenter().x, body.getWorldCenter().y, true);
+		body.setLinearVelocity(sin * speed,  cos * speed);
 		body.setUserData(this);
 			
 	}

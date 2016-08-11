@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -33,17 +34,11 @@ public class Block extends GameActor implements Poolable{
 	public int j;
 	private float vx;
 	private float vy;
-	//纹理区域
 	private TextureRegion textureRegion;
-  	//画笔吧
   	public ShapeRenderer renderer;
-	// 速度
 	public float speed = 10;
-	//攻击间隔时间
 	public long fireDelay = 500;
-	//攻击间隔时间
 	public long dirDelay = 10000;
-	// 等级
 	public int level;
 	public boolean move;
 	//range 
@@ -151,9 +146,8 @@ public class Block extends GameActor implements Poolable{
 //			return;
 //		}
 		
-//		degrees = - MathUtils.atan2(disX, disY);
-//		body.setAngularVelocity(0);
-//		body.setTransform(body.getPosition(), degrees);
+		degrees = - MathUtils.atan2(disX, disY);
+		body.setTransform(body.getPosition(), degrees);
 	}
 	
 	/**
@@ -180,21 +174,21 @@ public class Block extends GameActor implements Poolable{
 		}
 	}
 	public void changeDir(Touchpad touchpad){
-//		if(!touchpad.isTouched()){
-//			vx = 0;
-//			vy = 0;
-//			return;
-//		}
-//		float x = touchpad.getKnobPercentX();
-//		float y = touchpad.getKnobPercentY();
-//		if(x == 0 && y == 0){
-//			return;
-//		}
-//		vx = x;
-//		vy = y;
-//		degrees = - MathUtils.atan2(vx, vy);
+		if(!touchpad.isTouched()){
+			vx = 0;
+			vy = 0;
+			return;
+		}
+		float x = touchpad.getKnobPercentX();
+		float y = touchpad.getKnobPercentY();
+		if(x == 0 && y == 0){
+			return;
+		}
+		vx = x;
+		vy = y;
+		degrees = - MathUtils.atan2(vx, vy);
 		
-//		body.setTransform(body.getPosition(), degrees);
+		body.setTransform(body.getPosition(), degrees);
 //		System.out.println(degrees);
 //		changeDir(degrees);
 		
@@ -218,12 +212,22 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 //		float deg = body.getAngle() * MathUtils.radiansToDegrees ;
-		System.out.println("rotation: " + getRotation());
+		System.out.println("angle: " + body.getAngle());
 		System.out.println("degrees: " + degrees);
-		if(degrees == getRotation()){
+		System.out.println("body.getTransform().getPosition().x: " + body.getTransform().getPosition().x);
+		System.out.println("body.getTransform().getPosition().y: " + body.getTransform().getPosition().y);
+		System.out.println("=====================");
+	
+		if(body.getInertia() == 0){
 			diring = false;
 			return;
 		}
+		
+		
+//		if(degrees == 0){
+//			diring = false;
+//			return;
+//		}
 		diring = true;
 		naturalRotation(degrees);
 	}
@@ -262,8 +266,10 @@ public class Block extends GameActor implements Poolable{
 		this.vy =  MathUtils.cos(degrees);
 		System.out.println(vx +" #### "+ vy);
 //		body.setAngularVelocity(0);
-//		body.setTransform(body.getPosition(), degrees);
+		body.setTransform(body.getPosition(), degrees);
 //		changeDir(degrees);
+		
+//		body.applyForceToCenter(vx, vy, false);
 		
 	}
 	
@@ -360,7 +366,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		
-		changing();
+//		changing();
 		
 		if(move){
 			move();
