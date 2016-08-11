@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -124,10 +123,17 @@ public class Block extends GameActor implements Poolable{
 		if(MapData.gameover){
 			return;
 		}
-		if(diring){
+		
+		if(body == null){
 			return;
 		}
-//		System.out.println(vx +"---" + vy);
+		
+		float degrees = MathUtils.radiansToDegrees * body.getAngle();
+		setRotation(degrees);
+		
+		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
+		setPosition(x,y);
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	
@@ -148,8 +154,8 @@ public class Block extends GameActor implements Poolable{
 //		}
 		
 		degrees = - MathUtils.atan2(disX, disY);
-		setRotation(degrees);
-//		body.setTransform(body.getPosition(), degrees);
+		setRotation(degrees * MathUtils.radiansToDegrees);
+//		body.setTransform(body.getPosition(), degrees);//会出现致命的错误 不要用这个
 //		naturalRotation(degrees);
 		
 	}
@@ -197,19 +203,6 @@ public class Block extends GameActor implements Poolable{
 //		naturalRotation(degrees);
 		
 	}
-	
-//	private void changeDir(float degrees){
-//		float deg = body.getAngle() * MathUtils.radiansToDegrees ;
-//		System.out.println("deg: " + deg);
-//		System.out.println("degrees: " + degrees);
-//		if(deg == degrees){
-//			System.out.println("可以移动了。。");
-//			diring = false;
-//			return;
-//		}
-//		diring = true;
-//		naturalRotation(degrees);
-//	}
 	
 	public void changing(){
 		if(MapData.gameover){
@@ -268,12 +261,8 @@ public class Block extends GameActor implements Poolable{
 		degrees  = RandomUtil.betweenValue(-180, 180);
 		this.vx = -MathUtils.sin(degrees);
 		this.vy =  MathUtils.cos(degrees);
-//		System.out.println(vx +" #### "+ vy);
-//		body.setAngularVelocity(0);
 		body.setTransform(body.getPosition(), degrees);
-//		changeDir(degrees);
 		
-//		body.applyForceToCenter(vx, vy, false);
 //		naturalRotation(degrees);
 		
 	}
@@ -326,18 +315,6 @@ public class Block extends GameActor implements Poolable{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		if(body != null){
-			if(type != 8 && type != 9){
-				float degrees = MathUtils.radiansToDegrees * body.getAngle();
-					setRotation(degrees);
-			}
-//			System.out.println("Block draw() degrees:" + degrees);
-//			setRotation(degrees);
-			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
-			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
-			setPosition(x,y);
-		}
-		
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
@@ -370,8 +347,6 @@ public class Block extends GameActor implements Poolable{
 		if (!alive) {
 			return;
 		}
-		
-//		changing();
 		
 		if(move){
 			move();
