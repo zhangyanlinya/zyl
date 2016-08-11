@@ -21,7 +21,7 @@ public class Bullet extends GameActor{
 	public Body body;
 	public int type;
 	public Block block;
-	public float speed = 5;//
+	public float speed = 10;//
 	private float hw;
 	private float hh;
 	
@@ -74,7 +74,6 @@ public class Bullet extends GameActor{
 		this.hh = height/2;
 				
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
-//		body.setAngularVelocity(0);
 		body.setTransform(body.getPosition(), degrees);
 		
 //		body.setAngularVelocity(0);

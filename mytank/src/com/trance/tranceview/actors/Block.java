@@ -36,7 +36,7 @@ public class Block extends GameActor implements Poolable{
 	private float vy;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
-	public float speed = 10;
+	public float speed = 5;
 	public long fireDelay = 500;
 	public long dirDelay = 10000;
 	public int level;
@@ -94,6 +94,7 @@ public class Block extends GameActor implements Poolable{
 		}else if(type == 9){
 			range = 200;
 			dirDelay = 100;
+			move = false;
 		}
 //		else{
 //			good = 2;
@@ -147,7 +148,10 @@ public class Block extends GameActor implements Poolable{
 //		}
 		
 		degrees = - MathUtils.atan2(disX, disY);
-		body.setTransform(body.getPosition(), degrees);
+		setRotation(degrees);
+//		body.setTransform(body.getPosition(), degrees);
+//		naturalRotation(degrees);
+		
 	}
 	
 	/**
@@ -187,10 +191,10 @@ public class Block extends GameActor implements Poolable{
 		vx = x;
 		vy = y;
 		degrees = - MathUtils.atan2(vx, vy);
-		
 		body.setTransform(body.getPosition(), degrees);
 //		System.out.println(degrees);
 //		changeDir(degrees);
+//		naturalRotation(degrees);
 		
 	}
 	
@@ -264,12 +268,13 @@ public class Block extends GameActor implements Poolable{
 		degrees  = RandomUtil.betweenValue(-180, 180);
 		this.vx = -MathUtils.sin(degrees);
 		this.vy =  MathUtils.cos(degrees);
-		System.out.println(vx +" #### "+ vy);
+//		System.out.println(vx +" #### "+ vy);
 //		body.setAngularVelocity(0);
 		body.setTransform(body.getPosition(), degrees);
 //		changeDir(degrees);
 		
 //		body.applyForceToCenter(vx, vy, false);
+//		naturalRotation(degrees);
 		
 	}
 	
@@ -322,12 +327,12 @@ public class Block extends GameActor implements Poolable{
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		if(body != null){
-//			if(type < BlockType.TANK_MAIN.getValue()){
-			float degrees = MathUtils.radiansToDegrees * body.getAngle();
-				setRotation(degrees);
-//			}
-			System.out.println("Block draw() degrees:" + degrees);
-			setRotation(degrees);
+			if(type != 8 && type != 9){
+				float degrees = MathUtils.radiansToDegrees * body.getAngle();
+					setRotation(degrees);
+			}
+//			System.out.println("Block draw() degrees:" + degrees);
+//			setRotation(degrees);
 			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 			setPosition(x,y);
