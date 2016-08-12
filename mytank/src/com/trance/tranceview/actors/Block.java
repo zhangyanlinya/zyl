@@ -77,8 +77,8 @@ public class Block extends GameActor implements Poolable{
 		if(type == BlockType.TANK_MAIN.getValue()){
 			this.setColor(Color.RED);
 			good = 1;
-			hp = 10000;
-			maxhp = 10000;
+			hp = 1000;
+			maxhp = 1000;
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
 			good = 2;
 			hp = 40;
@@ -205,7 +205,7 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
-		degrees  = RandomUtil.betweenValue(-180, 180);
+		degrees = RandomUtil.betweenValue(-180, 180);
 		this.vx = -MathUtils.sin(degrees);
 		this.vy =  MathUtils.cos(degrees);
 		setRotation(degrees * MathUtils.radiansToDegrees);

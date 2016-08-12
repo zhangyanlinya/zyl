@@ -28,7 +28,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -197,10 +196,10 @@ public class GameScreen implements Screen , ContactListener{
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width, height, true);
 		
-        camera = new OrthographicCamera(); 
-        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
-		debugRenderer = new Box2DDebugRenderer(); 
+//        camera = new OrthographicCamera(); 
+//        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+//        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+//		debugRenderer = new Box2DDebugRenderer(); 
 		
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
@@ -377,25 +376,25 @@ public class GameScreen implements Screen , ContactListener{
 			return;
 		}
 		
-//		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//		float w = bg.getWidth();
-//		float h = bg.getHeight();
-//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-//			for(float y = -h ; y < stage.getHeight() ; y += h){
-//				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//				bg.setPosition(x, y);
-//				stage.addActor(bg);
-//			}
-//		}
-//		
-//		for(int i = 0 ; i < 5; i ++){
-//			int index = RandomUtil.nextInt(4) + 1;
-//			int x = RandomUtil.nextInt((int)width);
-//			int y = RandomUtil.nextInt((int)height);
-//			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
-//			grass.setPosition(x, y);
-//			stage.addActor(grass);
-//		}
+		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h ; y < stage.getHeight() ; y += h){
+				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
 		
 		
 		
@@ -472,8 +471,8 @@ public class GameScreen implements Screen , ContactListener{
 		}
 		
 		//debug---
-		camera.update();
-		debugRenderer.render(world, camera.combined);
+//		camera.update();
+//		debugRenderer.render(world, camera.combined);
 		//debug---
 		
 		controldir();
