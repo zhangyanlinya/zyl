@@ -1,6 +1,8 @@
 package com.trance.trancetank.modules.player.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * PlayerDto对象
@@ -58,6 +60,8 @@ public class PlayerDto implements Serializable {
 	private boolean myself;
 	
 	private int[][] map;
+	
+	private List<ArmyDto> armys = new ArrayList<ArmyDto>();
 
 	public long getId() {
 		return id;
@@ -117,16 +121,10 @@ public class PlayerDto implements Serializable {
 		this.server = server;
 	}
 
-	/**
-	 * @return the up
-	 */
 	public long getUp() {
 		return up;
 	}
 
-	/**
-	 * @param up the up to set
-	 */
 	public void setUp(long up) {
 		this.up = up;
 	}
@@ -146,4 +144,14 @@ public class PlayerDto implements Serializable {
 	public void setMap(int[][] map) {
 		this.map = map;
 	}
+
+	public List<ArmyDto> getArmys() {
+		return armys;
+	}
+
+	public void setArmys(List<ArmyDto> armys) {
+		this.armys = armys;
+	}
+	
+	
 }

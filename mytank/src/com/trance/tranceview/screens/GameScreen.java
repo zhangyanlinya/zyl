@@ -1,10 +1,13 @@
 package com.trance.tranceview.screens;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
@@ -44,6 +47,7 @@ import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
@@ -121,6 +125,7 @@ public class GameScreen implements Screen , ContactListener{
 	private Texture blockTexture;
 	private Image fireImage;
 	private Image bg;
+	private List<ArmyDto> armys = new ArrayList<ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -242,6 +247,31 @@ public class GameScreen implements Screen , ContactListener{
 		});
     	world = WorldUtils.createWorld();
 		initTouchPad();
+	}
+	
+	private static float SIDE =100;//width/8
+	
+	private void renderArmy(SpriteBatch batch){
+		if(armys == null || armys.isEmpty()){
+			return;
+		}
+		
+		for(int i = 0; i < armys.size(); i++){
+			ArmyDto dto = armys.get(i);
+			switch (dto.getType()){
+			case TANK:
+				TextureRegion region = AssetsManager.getInstance().getBlockTextureRegion2(7);
+				batch.draw(region, SIDE * i, height);
+				break;
+			case FAT:
+				
+				break;
+				//TODO 
+			default:
+				break;
+			
+			}
+		}
 	}
 	
     private void initTouchPad() {
