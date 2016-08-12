@@ -45,7 +45,6 @@ public class Block extends GameActor implements Poolable{
 	private float hw;
 	private float hh;
 	public float degrees;
-	private boolean diring;
 	
 	/**
 	 * 初始化
@@ -128,9 +127,6 @@ public class Block extends GameActor implements Poolable{
 			return;
 		}
 		
-		float degrees = MathUtils.radiansToDegrees * body.getAngle();
-		setRotation(degrees);
-		
 		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 		setPosition(x,y);
@@ -155,9 +151,6 @@ public class Block extends GameActor implements Poolable{
 		
 		degrees = - MathUtils.atan2(disX, disY);
 		setRotation(degrees * MathUtils.radiansToDegrees);
-//		body.setTransform(body.getPosition(), degrees);//会出现致命的错误 不要用这个
-//		naturalRotation(degrees);
-		
 	}
 	
 	/**
@@ -197,55 +190,9 @@ public class Block extends GameActor implements Poolable{
 		vx = x;
 		vy = y;
 		degrees = - MathUtils.atan2(vx, vy);
-		body.setTransform(body.getPosition(), degrees);
-//		System.out.println(degrees);
-//		changeDir(degrees);
-//		naturalRotation(degrees);
-		
+		setRotation(degrees * MathUtils.radiansToDegrees);
 	}
 	
-	public void changing(){
-		if(MapData.gameover){
-			return;
-		}
-//		float deg = body.getAngle() * MathUtils.radiansToDegrees ;
-		System.out.println("angle: " + body.getAngle());
-		System.out.println("degrees: " + degrees);
-		System.out.println("body.getTransform().getPosition().x: " + body.getTransform().getPosition().x);
-		System.out.println("body.getTransform().getPosition().y: " + body.getTransform().getPosition().y);
-		System.out.println("=====================");
-	
-		if(body.getInertia() == 0){
-			diring = false;
-			return;
-		}
-		
-		
-//		if(degrees == 0){
-//			diring = false;
-//			return;
-//		}
-		diring = true;
-		naturalRotation(degrees);
-	}
-	
-	/**
-	 * Natural rotation
-	 * @param degrees  need to ratotion;
-	 */
-	private void naturalRotation(float degrees){
-		float dt = 1.0f /1.0f;
-		float nextAngle = body.getAngle() + body.getAngularVelocity() * dt;
-		float totalRotation = degrees - nextAngle;
-		float DEGTORAD = MathUtils.degreesToRadians;
-		while ( totalRotation < -180 * DEGTORAD ) totalRotation += 360 * DEGTORAD;
-		while ( totalRotation >  180 * DEGTORAD ) totalRotation -= 360 * DEGTORAD;
-		float desiredAngularVelocity = totalRotation / dt;
-		float change = 1 * DEGTORAD; //allow 1 degree rotation per time step
-		desiredAngularVelocity = Math.min(change, Math.max(-change, desiredAngularVelocity));
-		float impulse = body.getInertia() * desiredAngularVelocity;// disregard time factor
-		body.applyAngularImpulse(impulse ,true);
-	}
 	
 	private long dirTime;
 	
@@ -261,10 +208,7 @@ public class Block extends GameActor implements Poolable{
 		degrees  = RandomUtil.betweenValue(-180, 180);
 		this.vx = -MathUtils.sin(degrees);
 		this.vy =  MathUtils.cos(degrees);
-		body.setTransform(body.getPosition(), degrees);
-		
-//		naturalRotation(degrees);
-		
+		setRotation(degrees * MathUtils.radiansToDegrees);
 	}
 	
 	private long time;
@@ -278,10 +222,6 @@ public class Block extends GameActor implements Poolable{
 		}
 		
 		if (!alive) {
-			return;
-		}
-		
-		if(diring){
 			return;
 		}
 		
