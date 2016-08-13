@@ -21,7 +21,7 @@ public class Bullet extends GameActor{
 	public Body body;
 	public int type;
 	public Block block;
-	public float speed = 10;//
+	public float speed = 2;//
 	private float hw;
 	private float hh;
 	
@@ -74,9 +74,9 @@ public class Bullet extends GameActor{
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
 		body.setTransform(body.getPosition(), degrees);
 		
-//		body.applyLinearImpulse(sin * speed,  cos * speed,
-//				body.getWorldCenter().x, body.getWorldCenter().y, true);
-		body.setLinearVelocity(sin * speed,  cos * speed);
+		body.applyLinearImpulse(sin * speed,  cos * speed,
+				body.getWorldCenter().x, body.getWorldCenter().y, true);
+//		body.setLinearVelocity(sin * speed,  cos * speed);
 		body.setUserData(this);
 			
 	}

@@ -1,5 +1,7 @@
 package com.trance.tranceview.actors;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -35,13 +38,13 @@ public class Block extends GameActor implements Poolable{
 	private float vy;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
-	public float speed = 5;
-	public long fireDelay = 500;
+	public float speed = 3;
+	public long fireDelay = 1000;
 	public long dirDelay = 10000;
 	public int level;
 	public boolean move;
 	//range 
-	public float range = 500;
+	public float range = 200;
 	private float hw;
 	private float hh;
 	public float degrees;
@@ -80,7 +83,7 @@ public class Block extends GameActor implements Poolable{
 			hp = 1000;
 			maxhp = 1000;
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
-			good = 2;
+			good = 1;
 			hp = 40;
 			atk = 20;
 			maxhp = 40;
@@ -90,13 +93,15 @@ public class Block extends GameActor implements Poolable{
 			hp = 60;
 			maxhp = 60;
 		}else if(type == 9){
+			hp = 150;
+			maxhp = 150;
 			range = 200;
 			dirDelay = 100;
 			move = false;
 		}
-//		else{
-//			good = 2;
-//		}
+		else{
+			good = 2;
+		}
 		
 		if(type == BlockType.STEEL.getValue()){
 			this.maxhp = 500;
@@ -130,8 +135,14 @@ public class Block extends GameActor implements Poolable{
 		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 		setPosition(x,y);
+		
 		body.setLinearVelocity(vx * speed, vy * speed);
+		
+//		if(destX == x && destY == y){
+//			fireing = true;
+//		}
 	}
+	
 	
 	public void track(Block  block){
 //		long now = System.currentTimeMillis();
@@ -161,25 +172,61 @@ public class Block extends GameActor implements Poolable{
 		float min = 0;
 		for(int i = 0; i < blocks.size; i++){
 			Block block = blocks.get(i);
-			float dst = block.dst(this.getX(), this.getY());
+			if(!block.alive){
+				blocks.removeValue(block, true);
+				continue;
+			}
+			
+			if(block.type == BlockType.GRASS.getValue()){
+				continue;
+			}
+			
+			float dst = block.dst(this.getX() + this.getWidth()/2, this.getY() + this.getHeight()/2);
 			if(min == 0 || dst < min){
+				min = dst;
 				dest = block;
 			}
 		}
+		if(dest == null){
+			return null;
+		}
+		moveTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+		if(min < range){
+			stop();
+			fire();
+		}
+//		scan(dest);
 		return dest;
 	}
 	
 	public void scan(Block block){
 		float dst = block.dst(this.getX(), this.getY());
+		moveTo(block.getX(), block.getY());
 		if(dst < range){
-			track(block);
+//			track(block);
 			fire();
 		}
 	}
+	
+//	private boolean fireing = true;
+	private float destX;
+	private float destY;
+	
+	public void moveTo(float destX, float destY){
+		float disX = destX - (this.getX() + hw);
+		float disY = destY - (this.getY() + hh);
+		degrees = - MathUtils.atan2(disX, disY);
+		vx = -MathUtils.sin(degrees);
+		vy =  MathUtils.cos(degrees);
+		setRotation(degrees * MathUtils.radiansToDegrees);
+//		fireing = false;
+	}
+	
 	public void changeDir(Touchpad touchpad){
 		if(!touchpad.isTouched()){
 			vx = 0;
 			vy = 0;
+//			fireing = true;
 			return;
 		}
 		float x = touchpad.getKnobPercentX();
@@ -187,10 +234,7 @@ public class Block extends GameActor implements Poolable{
 		if(x == 0 && y == 0){
 			return;
 		}
-		vx = x;
-		vy = y;
-		degrees = - MathUtils.atan2(vx, vy);
-		setRotation(degrees * MathUtils.radiansToDegrees);
+		moveTo(x,y);
 	}
 	
 	
@@ -206,8 +250,8 @@ public class Block extends GameActor implements Poolable{
 		}
 		dirTime = now + RandomUtil.nextInt(1000);
 		degrees = RandomUtil.betweenValue(-180, 180);
-		this.vx = -MathUtils.sin(degrees);
-		this.vy =  MathUtils.cos(degrees);
+		vx = -MathUtils.sin(degrees);
+		vy =  MathUtils.cos(degrees);
 		setRotation(degrees * MathUtils.radiansToDegrees);
 	}
 	
@@ -238,6 +282,7 @@ public class Block extends GameActor implements Poolable{
 		if( body == null){
 			return;
 		}
+		
 		Bullet bullet = Bullet.bulletPool.obtain();
 		bullet.init(body.getWorld(),BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
@@ -291,10 +336,31 @@ public class Block extends GameActor implements Poolable{
 		if(move){
 			move();
 		}
-		if (type == BlockType.TANK_ENEMY.getValue()) {
-			fire();
-			randomSatus();
+		
+		if(outOfScreen(this.getX(), this.getY())){
+			stop();
 		}
+	}
+	
+	private void stop(){
+		vx = 0;
+		vy = 0;
+	}
+
+	private boolean outOfScreen(float x, float y) {
+		if(x < 0 ){
+			return true;
+		}
+		if(x > GameScreen.width){
+			return true;
+		}
+		if(y < GameScreen.control_height ){
+			return true;
+		}
+		if(y > GameScreen.height){
+			return true;
+		}
+		return false;
 	}
 
 	@Override

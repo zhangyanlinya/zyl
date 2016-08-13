@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -31,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -48,6 +50,7 @@ import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
+import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Block;
@@ -58,13 +61,14 @@ import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
-public class GameScreen implements Screen , ContactListener{
+public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private TranceGame tranceGame;
 	public static int width;
@@ -101,7 +105,7 @@ public class GameScreen implements Screen , ContactListener{
     private ShapeRenderer renderer;
     private final float TIME_STEP = 1 / 50f;;
     private float accumulator = 0f;
-    private Block mainTank;
+//    private Block mainTank;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -125,7 +129,7 @@ public class GameScreen implements Screen , ContactListener{
 	private Texture blockTexture;
 	private Image fireImage;
 	private Image bg;
-	private List<ArmyDto> armys = new ArrayList<ArmyDto>();
+	private Map<ArmyType,ArmyDto> armys = new HashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -169,26 +173,34 @@ public class GameScreen implements Screen , ContactListener{
 		initClock();
 		initWorld();
 		initMap();
-		if(mainTank == null){
-			Log.e(LogTag.TAG, "no main tank");
-			return;
-		}
+//		if(mainTank == null){
+//			Log.e(LogTag.TAG, "no main tank");
+//			return;
+//		}
 		
-		fireImage.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				mainTank.fire();
-			}
-			
-		});
+		armys.clear();
+		ArmyDto army = new ArmyDto();
+		army.setAmout(5);
+		army.setType(ArmyType.TANK);
+		armys.put(ArmyType.TANK,army);
 		
-		stage.addActor(toWorld);
-		stage.addActor(fireImage);
-		stage.addActor(touchpad);
+//		fireImage.addListener(new ClickListener(){
+//
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				mainTank.fire();
+//			}
+//			
+//		});
+		
+//		stage.addActor(toWorld);
+//		stage.addActor(fireImage);
+//		stage.addActor(touchpad);
+		initArmy();
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
+		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
@@ -211,7 +223,7 @@ public class GameScreen implements Screen , ContactListener{
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width     = (width - game_width)/2;
-		control_height = height - game_height -length;//再减少一格
+		control_height = height - game_height -length * 2;//再减少2格
 		renderer = new ShapeRenderer();
 		
 		//返回家
@@ -246,22 +258,28 @@ public class GameScreen implements Screen , ContactListener{
 			}
 		});
     	world = WorldUtils.createWorld();
-		initTouchPad();
+//		initTouchPad();
 	}
 	
-	private static float SIDE =100;//width/8
 	
-	private void renderArmy(SpriteBatch batch){
+	private static float SIDE =12;
+	private ArmyType chooseType;
+	private void initArmy(){
 		if(armys == null || armys.isEmpty()){
 			return;
 		}
 		
-		for(int i = 0; i < armys.size(); i++){
-			ArmyDto dto = armys.get(i);
-			switch (dto.getType()){
+		for(ArmyType type : armys.keySet()){
+			if(chooseType == null){
+				chooseType = type;//初始默认第一个
+			}
+			Image actor = null;
+			switch (type){
 			case TANK:
-				TextureRegion region = AssetsManager.getInstance().getBlockTextureRegion2(7);
-				batch.draw(region, SIDE * i, height);
+				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(7));
+				actor.setBounds(100, 100, 100, 100);
+				stage.addActor(actor);
+				actor.setName(type.getId() + "");
 				break;
 			case FAT:
 				
@@ -269,8 +287,19 @@ public class GameScreen implements Screen , ContactListener{
 				//TODO 
 			default:
 				break;
-			
 			}
+			
+			actor.addListener(new ClickListener(){
+
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					Actor actor = event.getListenerActor();
+					String name = actor.getName();
+					chooseType =  ArmyType.valueOf(Integer.valueOf(name));
+				}
+			});
+			
 		}
 	}
 	
@@ -344,7 +373,7 @@ public class GameScreen implements Screen , ContactListener{
 		        		if(b!= null && b.role == 0){
 		        			Block block = (Block)b;
 		        			if(block.type == BlockType.WATER.getValue()){
-				        		return false;
+//				        		return false;
 				        	}
 		        		}
 		        	}
@@ -359,7 +388,7 @@ public class GameScreen implements Screen , ContactListener{
 		        		if(a!= null && a.role == 0){
 		        			Block block = (Block)a;
 		        			if(block.type == BlockType.WATER.getValue()){
-				        		return false;
+//				        		return false;
 				        	}
 		        		}
 		        	}
@@ -470,9 +499,9 @@ public class GameScreen implements Screen , ContactListener{
 						block.init(world,type, x,y, length,length,renderer);
 						block.move = true;
 						tanks.add(block);
-						if(type == BlockType.TANK_MAIN.getValue()){
-							this.mainTank = block;
-						}
+//						if(type == BlockType.TANK_MAIN.getValue()){
+//							this.mainTank = block;
+//						}
 					}
 				}
 			}
@@ -505,7 +534,7 @@ public class GameScreen implements Screen , ContactListener{
 //		debugRenderer.render(world, camera.combined);
 		//debug---
 		
-		controldir();
+//		controldir();
 //		track();
 		scan();
 		stage.draw();
@@ -528,25 +557,29 @@ public class GameScreen implements Screen , ContactListener{
 	}
 	
 	private void scan() {
-		for(Block block : connons){
-			block.scan(mainTank);
+//		for(Block block : connons){
+//			block.scan(tanks);
+//		}
+		
+		for(Block block : tanks){
+			block.scan(blocks);
 		}
 	}
 
-	private void controldir() {
-		if(mainTank == null){
-			return;
-		}
-		mainTank.changeDir(touchpad);
-	}
+//	private void controldir() {
+//		if(mainTank == null){
+//			return;
+//		}
+//		mainTank.changeDir(touchpad);
+//	}
 	
-	private void track(){
-		for(Block block :tanks){
-			if(block.type == BlockType.TANK_ENEMY.getValue()){
-				block.track(mainTank);
-			}
-		}
-	}
+//	private void track(){
+//		for(Block block :tanks){
+//			if(block.type == BlockType.TANK_ENEMY.getValue()){
+//				block.track(mainTank);
+//			}
+//		}
+//	}
 
 	@Override
     public void beginContact(Contact contact) {
@@ -606,6 +639,34 @@ public class GameScreen implements Screen , ContactListener{
     }
 	
 	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		screenY = height - screenY;
+//		if(screenY < 0){
+//			return true;
+//		}
+//		
+//		Actor a = stage.hit(screenX, screenY, true);
+//		if(a != null){
+//			
+//		}
+		
+		if(screenY > control_height){
+			ArmyDto army = armys.get(chooseType);
+			if(army != null && !army.isGo()){
+				for(int i = 0 ; i < army.getAmout(); i++){
+					Block block = MapScreen.blockPool.obtain();
+					block.init(world,7, screenX + i * length , screenY, length,length,renderer);
+					block.move = true;
+					tanks.add(block);
+					stage.addActor(block);
+				}
+				army.setGo(true);
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public void resize(int width, int height) {
 		
 	}
@@ -657,8 +718,9 @@ public class GameScreen implements Screen , ContactListener{
 		connons.clear();
 		Bullet.bulletPool.clear();
 		MapScreen.blockPool.clear();
-		
+		if(blockTexture != null)
 		blockTexture.dispose();
+		if(blockTexture != null)
 		touchpadSkin.dispose();
 	}
 	

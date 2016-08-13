@@ -76,7 +76,7 @@ public class WorldUtils {
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
-    	shape.setRadius((width/ 2 - 2) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 4) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -104,8 +104,8 @@ public class WorldUtils {
 //    	PolygonShape shape = new PolygonShape();
     	CircleShape shape = new CircleShape();
     	
-    	float hx = width/2 * GameScreen.WORLD_TO_BOX;
-    	float hy = height/2 * GameScreen.WORLD_TO_BOX;
+//    	float hx = width/2 * GameScreen.WORLD_TO_BOX;
+//    	float hy = height/2 * GameScreen.WORLD_TO_BOX;
     	
 //    	shape.setAsBox(hx,hy);
     	shape.setRadius(width/2 * GameScreen.WORLD_TO_BOX);

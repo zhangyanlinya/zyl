@@ -294,17 +294,19 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		screenY = height - screenY;
 		if(screenY < 0){
-			return true;
+			return false;
 		}
-		a =  (Block) stage.hit(screenX, screenY, true);
-		if(a != null){
-			Block b = (Block)a;
-			oldx = b.getX();
-			oldy = b.getY();
-			oldi = b.i;
-			oldj = b.j;
-			oldType = b.type;
+		Actor actor =  stage.hit(screenX, screenY, true);
+		if(actor == null || !(actor instanceof Block)){
+			return false;
 		}
+		a = (Block) actor;
+		Block b = (Block)a;
+		oldx = b.getX();
+		oldy = b.getY();
+		oldi = b.i;
+		oldj = b.j;
+		oldType = b.type;
 		return true;
 	}
 
