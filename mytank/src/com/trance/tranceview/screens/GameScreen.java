@@ -183,6 +183,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		army.setAmout(5);
 		army.setType(ArmyType.TANK);
 		armys.put(ArmyType.TANK,army);
+		ArmyDto army2 = new ArmyDto();
+		army2.setAmout(1);
+		army2.setType(ArmyType.FAT);
+		armys.put(ArmyType.FAT,army2);
 		
 //		fireImage.addListener(new ClickListener(){
 //
@@ -262,7 +266,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	
-	private static float SIDE =12;
 	private ArmyType chooseType;
 	private void initArmy(){
 		if(armys == null || armys.isEmpty()){
@@ -278,17 +281,16 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			case TANK:
 				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(7));
 				actor.setBounds(100, 100, 100, 100);
-				stage.addActor(actor);
-				actor.setName(type.getId() + "");
 				break;
 			case FAT:
-				
+				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(6));
+				actor.setBounds(200, 100, 100, 100);
 				break;
 				//TODO 
 			default:
 				break;
 			}
-			
+			actor.setName(type.getId() + "");
 			actor.addListener(new ClickListener(){
 
 
@@ -299,6 +301,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 					chooseType =  ArmyType.valueOf(Integer.valueOf(name));
 				}
 			});
+			stage.addActor(actor);
 			
 		}
 	}
@@ -494,6 +497,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 						blocks.add(block);
 					}else if(type == 8){
 						block.init(world,type, x,y, length,length,null);
+						blocks.add(block);
 						connons.add(block);
 					}else{
 						block.init(world,type, x,y, length,length,renderer);
@@ -557,9 +561,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	private void scan() {
-//		for(Block block : connons){
-//			block.scan(tanks);
-//		}
+		for(Block block : connons){
+			block.scan(tanks);
+		}
 		
 		for(Block block : tanks){
 			block.scan(blocks);
@@ -655,7 +659,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(army != null && !army.isGo()){
 				for(int i = 0 ; i < army.getAmout(); i++){
 					Block block = MapScreen.blockPool.obtain();
-					block.init(world,7, screenX + i * length , screenY, length,length,renderer);
+					int type = 7;
+					if(chooseType == ArmyType.FAT){
+						type = 6;
+					}
+					
+					block.init(world,type, screenX + i * length , screenY, length,length,renderer);
 					block.move = true;
 					tanks.add(block);
 					stage.addActor(block);

@@ -1,6 +1,5 @@
 package com.trance.trancetank.modules.player.model;
 
-import com.trance.tranceview.constant.BlockType;
 
 public enum ArmyType {
 	TANK(1),

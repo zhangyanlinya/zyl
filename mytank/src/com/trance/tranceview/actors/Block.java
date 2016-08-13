@@ -1,7 +1,5 @@
 package com.trance.tranceview.actors;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -20,7 +17,6 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.MapScreen;
 import com.trance.tranceview.utils.AssetsManager;
-import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
@@ -95,7 +91,7 @@ public class Block extends GameActor implements Poolable{
 		}else if(type == 9){
 			hp = 150;
 			maxhp = 150;
-			range = 200;
+			range = 350;
 			dirDelay = 100;
 			move = false;
 		}
@@ -135,12 +131,7 @@ public class Block extends GameActor implements Poolable{
 		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 		setPosition(x,y);
-		
 		body.setLinearVelocity(vx * speed, vy * speed);
-		
-//		if(destX == x && destY == y){
-//			fireing = true;
-//		}
 	}
 	
 	
@@ -195,7 +186,6 @@ public class Block extends GameActor implements Poolable{
 			stop();
 			fire();
 		}
-//		scan(dest);
 		return dest;
 	}
 	
@@ -203,30 +193,23 @@ public class Block extends GameActor implements Poolable{
 		float dst = block.dst(this.getX(), this.getY());
 		moveTo(block.getX(), block.getY());
 		if(dst < range){
-//			track(block);
 			fire();
 		}
 	}
 	
-//	private boolean fireing = true;
-	private float destX;
-	private float destY;
-	
 	public void moveTo(float destX, float destY){
 		float disX = destX - (this.getX() + hw);
 		float disY = destY - (this.getY() + hh);
-		degrees = - MathUtils.atan2(disX, disY);
+		degrees = -MathUtils.atan2(disX, disY);
 		vx = -MathUtils.sin(degrees);
 		vy =  MathUtils.cos(degrees);
 		setRotation(degrees * MathUtils.radiansToDegrees);
-//		fireing = false;
 	}
 	
 	public void changeDir(Touchpad touchpad){
 		if(!touchpad.isTouched()){
 			vx = 0;
 			vy = 0;
-//			fireing = true;
 			return;
 		}
 		float x = touchpad.getKnobPercentX();
@@ -237,26 +220,7 @@ public class Block extends GameActor implements Poolable{
 		moveTo(x,y);
 	}
 	
-	
-	private long dirTime;
-	
-	private void randomSatus(){
-		if(MapData.gameover){
-			return;
-		}
-		long now = System.currentTimeMillis();
-		if((now - dirTime) < dirDelay){
-			return;
-		}
-		dirTime = now + RandomUtil.nextInt(1000);
-		degrees = RandomUtil.betweenValue(-180, 180);
-		vx = -MathUtils.sin(degrees);
-		vy =  MathUtils.cos(degrees);
-		setRotation(degrees * MathUtils.radiansToDegrees);
-	}
-	
 	private long time;
-	
 	/**
 	 * 111
 	 */
