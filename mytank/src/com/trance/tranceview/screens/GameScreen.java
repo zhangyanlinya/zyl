@@ -1,10 +1,7 @@
 package com.trance.tranceview.screens;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -61,7 +58,6 @@ import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.RandomUtil;
@@ -217,10 +213,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width, height, true);
 		
-//        camera = new OrthographicCamera(); 
-//        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-//        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
-//		debugRenderer = new Box2DDebugRenderer(); 
+        camera = new OrthographicCamera(); 
+        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
+        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+		debugRenderer = new Box2DDebugRenderer(); 
 		
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
@@ -280,11 +276,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			switch (type){
 			case TANK:
 				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(7));
-				actor.setBounds(100, 100, 100, 100);
+				actor.setBounds(100, 100, 80, 80);
 				break;
 			case FAT:
 				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(6));
-				actor.setBounds(200, 100, 100, 100);
+				actor.setBounds(200, 100, 80, 80);
 				break;
 				//TODO 
 			default:
@@ -438,25 +434,25 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return;
 		}
 		
-		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-		float w = bg.getWidth();
-		float h = bg.getHeight();
-		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h ; y < stage.getHeight() ; y += h){
-				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-				bg.setPosition(x, y);
-				stage.addActor(bg);
-			}
-		}
-		
-		for(int i = 0 ; i < 5; i ++){
-			int index = RandomUtil.nextInt(4) + 1;
-			int x = RandomUtil.nextInt((int)width);
-			int y = RandomUtil.nextInt((int)height);
-			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
-			grass.setPosition(x, y);
-			stage.addActor(grass);
-		}
+//		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+//		float w = bg.getWidth();
+//		float h = bg.getHeight();
+//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+//			for(float y = -h ; y < stage.getHeight() ; y += h){
+//				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+//				bg.setPosition(x, y);
+//				stage.addActor(bg);
+//			}
+//		}
+//		
+//		for(int i = 0 ; i < 5; i ++){
+//			int index = RandomUtil.nextInt(4) + 1;
+//			int x = RandomUtil.nextInt((int)width);
+//			int y = RandomUtil.nextInt((int)height);
+//			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+//			grass.setPosition(x, y);
+//			stage.addActor(grass);
+//		}
 		
 		
 		
@@ -503,9 +499,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 						block.init(world,type, x,y, length,length,renderer);
 						block.move = true;
 						tanks.add(block);
-//						if(type == BlockType.TANK_MAIN.getValue()){
-//							this.mainTank = block;
-//						}
 					}
 				}
 			}
@@ -534,8 +527,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		//debug---
-//		camera.update();
-//		debugRenderer.render(world, camera.combined);
+		camera.update();
+		debugRenderer.render(world, camera.combined);
 		//debug---
 		
 //		controldir();
@@ -569,21 +562,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			block.scan(blocks);
 		}
 	}
-
-//	private void controldir() {
-//		if(mainTank == null){
-//			return;
-//		}
-//		mainTank.changeDir(touchpad);
-//	}
-	
-//	private void track(){
-//		for(Block block :tanks){
-//			if(block.type == BlockType.TANK_ENEMY.getValue()){
-//				block.track(mainTank);
-//			}
-//		}
-//	}
 
 	@Override
     public void beginContact(Contact contact) {
@@ -645,32 +623,25 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenY = height - screenY;
-//		if(screenY < 0){
-//			return true;
-//		}
-//		
-//		Actor a = stage.hit(screenX, screenY, true);
-//		if(a != null){
-//			
-//		}
-		
 		if(screenY > control_height){
-			ArmyDto army = armys.get(chooseType);
-			if(army != null && !army.isGo()){
-				for(int i = 0 ; i < army.getAmout(); i++){
-					Block block = MapScreen.blockPool.obtain();
-					int type = 7;
-					if(chooseType == ArmyType.FAT){
-						type = 6;
-					}
-					
-					block.init(world,type, screenX + i * length , screenY, length,length,renderer);
-					block.move = true;
-					tanks.add(block);
-					stage.addActor(block);
+			return false;
+		}
+		
+		ArmyDto army = armys.get(chooseType);
+		if(army != null && !army.isGo()){
+			for(int i = 0 ; i < army.getAmout(); i++){
+				Block block = MapScreen.blockPool.obtain();
+				int type = 7;
+				if(chooseType == ArmyType.FAT){
+					type = 6;
 				}
-				army.setGo(true);
+				
+				block.init(world,type, screenX + i * length , screenY, length,length,renderer);
+				block.move = true;
+				tanks.add(block);
+				stage.addActor(block);
 			}
+			army.setGo(true);
 		}
 		return true;
 	}

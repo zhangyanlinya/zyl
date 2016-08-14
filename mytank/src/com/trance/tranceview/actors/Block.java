@@ -78,6 +78,7 @@ public class Block extends GameActor implements Poolable{
 			good = 1;
 			hp = 1000;
 			maxhp = 1000;
+			range = 120;
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
 			good = 1;
 			hp = 40;
@@ -134,27 +135,6 @@ public class Block extends GameActor implements Poolable{
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	
-	
-	public void track(Block  block){
-//		long now = System.currentTimeMillis();
-//		if((now - trackTime) < delay){
-//			return;
-//		}
-//		trackTime = now;
-		float x = this.getX();
-		float y = this.getY();
-		float destX = block.getX();
-		float destY = block.getY();
-		float disX = destX - x;
-		float disY = destY - y;
-//		if(disX < GameConfig.trackDistance && disY < GameConfig.trackDistance){
-//			return;
-//		}
-		
-		degrees = - MathUtils.atan2(disX, disY);
-		setRotation(degrees * MathUtils.radiansToDegrees);
-	}
-	
 	/**
 	 * scan array
 	 */
@@ -181,23 +161,23 @@ public class Block extends GameActor implements Poolable{
 		if(dest == null){
 			return null;
 		}
-		moveTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
-		if(min < range){
-			stop();
-			fire();
+		if(move){
+			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+			if(min < range){
+				stop();
+				fire();
+			}
+		}else{
+			if(min < range){
+				faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+				fire();
+			}
 		}
+		
 		return dest;
 	}
 	
-	public void scan(Block block){
-		float dst = block.dst(this.getX(), this.getY());
-		moveTo(block.getX(), block.getY());
-		if(dst < range){
-			fire();
-		}
-	}
-	
-	public void moveTo(float destX, float destY){
+	public void faceTo(float destX, float destY){
 		float disX = destX - (this.getX() + hw);
 		float disY = destY - (this.getY() + hh);
 		degrees = -MathUtils.atan2(disX, disY);
@@ -217,7 +197,7 @@ public class Block extends GameActor implements Poolable{
 		if(x == 0 && y == 0){
 			return;
 		}
-		moveTo(x,y);
+		faceTo(x,y);
 	}
 	
 	private long time;

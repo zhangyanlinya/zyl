@@ -47,8 +47,8 @@ public class WorldUtils {
     	EdgeShape edge = new EdgeShape();
         FixtureDef boxShapeDef = new FixtureDef();
         boxShapeDef.shape = edge;
-        edge.set(new Vector2(x, y), new Vector2(width, y));
-        body.createFixture(boxShapeDef);
+//        edge.set(new Vector2(x, y), new Vector2(width, y));
+//        body.createFixture(boxShapeDef);
         edge.set(new Vector2(x, y), new Vector2(x, height));
         body.createFixture(boxShapeDef);
         edge.set(new Vector2(width, y), new Vector2(width, height));

@@ -34,7 +34,7 @@ public class ClientHandler extends IoHandlerAdapter {
 	public void sessionCreated(IoSession session) throws Exception {
 		Log.e(LogTag.TAG, "-IoSession实例:" + session.toString());
 		// 设置IoSession闲置时间，参数单位是秒
-		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 300);
+		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 180);
 	}
 	 
 	 /**

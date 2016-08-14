@@ -89,9 +89,9 @@ public class Bullet extends GameActor{
 		batch.draw(textureRegion, x, y, hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
-		if(outOfScreen(x, y)){
-			dead();
-		}
+//		if(outOfScreen(x, y)){
+//			dead();
+//		}
 		
 		if(outofRange(x,y)){ // out of range
 			dead();
