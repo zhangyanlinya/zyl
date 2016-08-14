@@ -1,6 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -125,7 +126,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private Texture blockTexture;
 	private Image fireImage;
 	private Image bg;
-	private Map<ArmyType,ArmyDto> armys = new HashMap<ArmyType,ArmyDto>();
+	private Map<ArmyType,ArmyDto> armys = new LinkedHashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -369,11 +370,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			        		return false;
 			        	}
 		        	}else if(a.role == 1){
-		        		if(b!= null && b.role == 0){
-		        			Block block = (Block)b;
-		        			if(block.type == BlockType.WATER.getValue()){
-//				        		return false;
-				        	}
+		        		if(b!= null && b.good == a.good){
+		        			return false;
 		        		}
 		        	}
 		        }
@@ -384,11 +382,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			        		return false;
 			        	}
 		        	}else if(b.role == 1){
-		        		if(a!= null && a.role == 0){
-		        			Block block = (Block)a;
-		        			if(block.type == BlockType.WATER.getValue()){
-//				        		return false;
-				        	}
+		        		if(a!= null && a.good == b.good){
+		        			return false;
 		        		}
 		        	}
 		        }
@@ -643,6 +638,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 			army.setGo(true);
 		}
+		
+		//next chooseType
+		for(ArmyDto dto : armys.values()){
+			if(dto.isGo()){
+				continue;
+			}
+			chooseType = dto.getType();
+		}
+		
 		return true;
 	}
 
