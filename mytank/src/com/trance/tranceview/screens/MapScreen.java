@@ -269,10 +269,10 @@ public class MapScreen implements Screen ,InputProcessor{
 	 */
 	private void initPlayerBlock() {
 		float x = 0;
-		for(int i = 1; i< 9; i++){// 8== 类型数量-1
-//			if(i==5){//总部过滤掉先
-//				continue;
-//			}
+		for(int i = 1; i < 10; i++){
+			if(i==8){//没有8
+				continue;
+			}
 			Block block = blockPool.obtain();
 			x = i * length;
 			block.init(null,i, x,control_height/2, length,length,null);

@@ -71,7 +71,6 @@ public class Block extends GameActor implements Poolable{
 		
 		this.role = 0;
 		if(type == BlockType.TANK_MAIN.getValue()){
-			this.setColor(Color.RED);
 			good = 1;
 			hp = 1000;
 			maxhp = 1000;
@@ -81,12 +80,11 @@ public class Block extends GameActor implements Poolable{
 			hp = 40;
 			atk = 20;
 			maxhp = 40;
-			this.setColor(Color.WHITE);
 		}else if(type == BlockType.KING.getValue()){
 			good = 2;
 			hp = 60;
 			maxhp = 60;
-		}else if(type == 9){
+		}else if(type == BlockType.CANNON.getValue()){
 			hp = 150;
 			maxhp = 150;
 			range = 350;

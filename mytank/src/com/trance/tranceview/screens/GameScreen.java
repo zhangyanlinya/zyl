@@ -102,7 +102,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     private ShapeRenderer renderer;
     private final float TIME_STEP = 1 / 50f;;
     private float accumulator = 0f;
-//    private Block mainTank;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -126,6 +125,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	 */
 	private final static int TOTAL_TIME = 2 * 60;
 	private Action[] sAction;
+	
 	/**
 	 * 当前时间
 	 */
@@ -163,10 +163,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		initClock();
 		initWorld();
 		initMap();
-//		if(mainTank == null){
-//			Log.e(LogTag.TAG, "no main tank");
-//			return;
-//		}
 		
 		armys.clear();
 		ArmyDto army = new ArmyDto();
@@ -273,7 +269,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			actor.setName(type.getId() + "");
 			actor.addListener(new ClickListener(){
 
-
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					Actor actor = event.getListenerActor();
@@ -355,7 +350,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
-						Log.e(LogTag.TAG, "time over~~~~~~~~~~` ");
 						MapData.gameover = true;
 					}
 				}
@@ -434,7 +428,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if (type > 0){
 					Block block = MapScreen.blockPool.obtain();
-					if(type == 9){
+					if(type == BlockType.CANNON.getValue()){
 						block.init(world,type, x,y, length,length,null);
 						blocks.add(block);
 						connons.add(block);
