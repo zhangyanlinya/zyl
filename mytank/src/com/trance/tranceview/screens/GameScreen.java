@@ -118,13 +118,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private final Array<Body> bodies = new Array<Body>();
 	
 	private OrthographicCamera camera;
-	private Touchpad touchpad;
-	private TouchpadStyle touchpadStyle;
-	private Skin touchpadSkin;
-	private Drawable touchBackground;
-	private Drawable touchKnob;
-	private Texture blockTexture;
-	private Image fireImage;
 	private Image bg;
 	private Map<ArmyType,ArmyDto> armys = new LinkedHashMap<ArmyType,ArmyDto>();
 
@@ -185,18 +178,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		army2.setType(ArmyType.FAT);
 		armys.put(ArmyType.FAT,army2);
 		
-//		fireImage.addListener(new ClickListener(){
-//
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				mainTank.fire();
-//			}
-//			
-//		});
 		
 //		stage.addActor(toWorld);
-//		stage.addActor(fireImage);
-//		stage.addActor(touchpad);
 		initArmy();
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
@@ -301,38 +284,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			stage.addActor(actor);
 			
 		}
-	}
-	
-    private void initTouchPad() {
-//    	float aspectRatio = (float) width / (float) height;
-//		camera = new OrthographicCamera();
-//		camera.setToOrtho(false, 10f*aspectRatio, 10f);
-		
-		//Create a touchpad skin	
-		touchpadSkin = new Skin();
-		//Set background image
-		touchpadSkin.add("touchBackground", new Texture("game/touchBackground.png"));
-		//Set knob image
-		touchpadSkin.add("touchKnob", new Texture("game/touchKnob.png"));
-		//Create TouchPad Style
-		touchpadStyle = new TouchpadStyle();
-		//Create Drawable's from TouchPad skin
-		touchBackground = touchpadSkin.getDrawable("touchBackground");
-		touchKnob = touchpadSkin.getDrawable("touchKnob");
-		//Apply the Drawables to the TouchPad Style
-		touchpadStyle.background = touchBackground;
-		touchpadStyle.knob = touchKnob;
-		//Create new TouchPad with the created style
-		touchpad = new Touchpad(10, touchpadStyle);
-		//setBounds(x,y,width,height)
-		touchpad.setBounds(100, 100, 300, 300);
-		
-		blockTexture = new Texture(Gdx.files.internal("game/block.png"));
-//		fireSprite = new Sprite(blockTexture);
-		fireImage = new Image(blockTexture);
-		//Set position to centre of the screen
-		int side = width / 8;
-		fireImage.setBounds(width/2 + side * 2 , control_height/2 - side/2, side - side/4, side - side/4);
 	}
 
 	//DestoryBody
@@ -483,33 +434,17 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if (type > 0){
 					Block block = MapScreen.blockPool.obtain();
-					if(type < 6){
-						block.init(world,type, x,y, length,length,null);
-						blocks.add(block);
-					}else if(type == 8){
+					if(type == 9){
 						block.init(world,type, x,y, length,length,null);
 						blocks.add(block);
 						connons.add(block);
 					}else{
-						block.init(world,type, x,y, length,length,renderer);
-						block.move = true;
-						tanks.add(block);
+						block.init(world,type, x,y, length,length,null);
+						blocks.add(block);
 					}
+					stage.addActor(block);
 				}
 			}
-		}
-		//目的为了图层顺序
-		for(int i = 0 ; i <tanks.size ;i++){
-			Block block = tanks.get(i);
-			stage.addActor(block);
-		}
-		
-		for(int i = 0 ; i < blocks.size ;i++){
-			stage.addActor( blocks.get(i));
-		}
-		
-		for(int i = 0 ; i < connons.size ;i++){
-			stage.addActor( connons.get(i));
 		}
 	}
 
@@ -532,8 +467,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		stage.draw();
 		stage.act(delta);
 		spriteBatch.begin();
-		font.draw(spriteBatch,"倒计时:" + currTime, 10 ,height);
+		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
 		spriteBatch.end();
+		
+		checkGameOver();
 		
 		//box2d
         accumulator += delta;
@@ -548,6 +485,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
         }
 	}
 	
+	private void checkGameOver() {
+		if(armys.isEmpty() && tanks.size <= 0){
+			MapData.gameover = true;
+		}
+	}
+
 	private void scan() {
 		for(Block block : connons){
 			block.scan(tanks);
@@ -622,8 +565,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return false;
 		}
 		
-		ArmyDto army = armys.get(chooseType);
-		if(army != null && !army.isGo()){
+		ArmyDto army = armys.remove(chooseType);
+		if(army != null){
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Block block = MapScreen.blockPool.obtain();
 				int type = 7;
@@ -636,14 +579,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				tanks.add(block);
 				stage.addActor(block);
 			}
-			army.setGo(true);
+//			army.setGo(true);
 		}
 		
 		//next chooseType
 		for(ArmyDto dto : armys.values()){
-			if(dto.isGo()){
-				continue;
-			}
 			chooseType = dto.getType();
 		}
 		
@@ -693,7 +633,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		renderer.dispose();
-//		debugRenderer.dispose();
+		if(debugRenderer != null)
+		debugRenderer.dispose();
+		
 		if(world != null){
 			world.dispose();
 		}
@@ -702,10 +644,5 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		connons.clear();
 		Bullet.bulletPool.clear();
 		MapScreen.blockPool.clear();
-		if(blockTexture != null)
-		blockTexture.dispose();
-		if(blockTexture != null)
-		touchpadSkin.dispose();
 	}
-	
 }

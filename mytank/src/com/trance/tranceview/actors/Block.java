@@ -63,9 +63,6 @@ public class Block extends GameActor implements Poolable{
 		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
-		if(type == 8){
-			type = 9;
-		}
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -186,21 +183,8 @@ public class Block extends GameActor implements Poolable{
 		setRotation(degrees * MathUtils.radiansToDegrees);
 	}
 	
-	public void changeDir(Touchpad touchpad){
-		if(!touchpad.isTouched()){
-			vx = 0;
-			vy = 0;
-			return;
-		}
-		float x = touchpad.getKnobPercentX();
-		float y = touchpad.getKnobPercentY();
-		if(x == 0 && y == 0){
-			return;
-		}
-		faceTo(x,y);
-	}
-	
 	private long time;
+	
 	/**
 	 * 111
 	 */
@@ -319,10 +303,6 @@ public class Block extends GameActor implements Poolable{
 		MapScreen.blockPool.free(this);
 		
 		if(this.type == BlockType.KING.getValue()){
-			MapData.gameover = true;
-//			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-//			music.play();
-		}else if(this.type == BlockType.TANK_MAIN.getValue()){
 			MapData.gameover = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();

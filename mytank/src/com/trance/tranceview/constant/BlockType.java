@@ -40,7 +40,7 @@ public enum BlockType{
 	/**
 	 * CANNON
 	 */
-	CANNON(8);
+	CANNON(9);
 	
 	private final int value;
 	

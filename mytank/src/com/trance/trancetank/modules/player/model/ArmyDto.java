@@ -4,7 +4,6 @@ public class ArmyDto {
 	
 	private ArmyType type;
 	private int amout;
-	private boolean go;
 	
 	public ArmyType getType() {
 		return type;
@@ -18,11 +17,4 @@ public class ArmyDto {
 	public void setAmout(int amout) {
 		this.amout = amout;
 	}
-	public boolean isGo() {
-		return go;
-	}
-	public void setGo(boolean go) {
-		this.go = go;
-	}
-	
 }

@@ -296,7 +296,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(screenY < 0){
 			return false;
 		}
-		Actor actor =  stage.hit(screenX, screenY, true);
+		Actor actor = stage.hit(screenX, screenY, true);
 		if(actor == null || !(actor instanceof Block)){
 			return false;
 		}
