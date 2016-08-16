@@ -15,10 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -35,13 +32,14 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
-public class WorldScreen implements Screen, GestureListener, InputProcessor {
+public class WorldScreen implements Screen, InputProcessor {
 	
 	private final static int BASE = 10;
 	private TranceGame tranceGame;
@@ -72,9 +70,10 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 		}
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		GestureDetector gestureHandler = new GestureDetector(this);
-		inputMultiplexer.addProcessor(this);
+		GestureController controller = new GestureController(camera, 0, sw, 0, sh);
+		GestureDetector gestureHandler = new GestureDetector(controller);
 		inputMultiplexer.addProcessor(gestureHandler);
+		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		
@@ -83,10 +82,7 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		leftX = 0;
-		rightX = sw;
-		donwY = 0;
-		upY = sh;
+		
 		
 		spriteBatch = new SpriteBatch();
 		
@@ -286,87 +282,6 @@ public class WorldScreen implements Screen, GestureListener, InputProcessor {
 			music.dispose();
 		}
 		worldImages.clear();
-	}
-
-	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
-		initialScale = zoom;
-		return false;
-	}
-
-	@Override
-	public boolean tap(float x, float y, int count, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean longPress(float x, float y) {
-		return false;
-	}
-
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		return false;
-	}
-
-	private float leftX;
-	private float rightX;
-	private float donwY;
-	private float upY;
-	
-	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		float cx = camera.position.x ;
-		float cy = camera.position.y;
-		if(cx < leftX ){
-			camera.position.x = leftX;
-			return true;
-		}
-		
-		if(cy < donwY ){
-			camera.position.y = donwY;
-			return true;
-		}
-		
-		if(cx > rightX){
-			camera.position.x = rightX;
-			return true;
-		}
-		
-		if(cy > upY){
-			camera.position.y = upY;
-			return true;
-		}
-		
-		camera.translate(-deltaX , deltaY);
-		return true;
-	}
-	
-	@Override
-	public boolean panStop(float x, float y, int pointer, int button) {
-		return false;
-	}
-
-	public float zoom = 1.0f;
-	public float initialScale = 1.0f;
-
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		// 与pinch对应，也是是一个多点触摸的手势，并且两个手指做出放大的动作
-		// Calculate pinch to zoom
-		float ratio = initialDistance / distance;
-
-		// Clamp range and set zoom
-		zoom = MathUtils.clamp(initialScale * ratio, 0.5f, 2.0f);
-		camera.zoom = zoom;
-		
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
-			Vector2 pointer1, Vector2 pointer2) {
-		return false;
 	}
 
 	@Override

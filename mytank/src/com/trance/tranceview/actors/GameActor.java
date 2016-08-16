@@ -27,7 +27,6 @@ public abstract class GameActor extends Actor{
 
 	public float range = 200;
 	public boolean move;
-//	public boolean scan;
 	
 	public float vx;
 	public float vy;

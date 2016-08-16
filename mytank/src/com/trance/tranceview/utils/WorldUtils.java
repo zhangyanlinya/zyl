@@ -62,15 +62,7 @@ public class WorldUtils {
     }
     public static Body createBlock(World world, int type,float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
-    	bodyDef.type = BodyType.DynamicBody;
-    	if(type == BlockType.KING.getValue() 
-    			||type == BlockType.WATER.getValue() 
-    			||type == BlockType.WALL.getValue() 
-    			||type == 9 
-    			||type == BlockType.STEEL.getValue()){
-    		bodyDef.type = BodyType.StaticBody;
-    	}
-    	
+    	bodyDef.type = BodyType.StaticBody;
     	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 1f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
@@ -83,14 +75,6 @@ public class WorldUtils {
     	f.density = 2f;//夹具的密度
     	f.friction = 1f;//夹具的摩擦力
     	f.restitution = 0f; //弹力
-    	if(type < BlockType.TANK_MAIN.getValue()){
-    		f.filter.categoryBits = 2;
-        	f.filter.maskBits = 4;
-    	}else{
-    		f.filter.categoryBits = 4;
-        	f.filter.maskBits = 4;
-    	}
-    	
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;
@@ -132,7 +116,7 @@ public class WorldUtils {
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
-    	shape.setRadius((width/ 2 - 4) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 6) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
