@@ -59,17 +59,14 @@ public class Block extends GameActor implements Poolable{
 		
 		this.role = 0;
 		if(type == BlockType.TANK_MAIN.getValue()){
-			camp = 1;
 			hp = 1000;
 			maxhp = 1000;
 			range = 120;
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
-			camp = 1;
 			hp = 40;
 			atk = 20;
 			maxhp = 40;
 		}else if(type == BlockType.KING.getValue()){
-			camp = 2;
 			hp = 60;
 			maxhp = 60;
 		}else if(type == BlockType.CANNON.getValue()){
@@ -78,9 +75,6 @@ public class Block extends GameActor implements Poolable{
 			range = 350;
 			dirDelay = 100;
 			scan = true;
-		}
-		else{
-			camp = 2;
 		}
 		
 		if(type == BlockType.STEEL.getValue()){

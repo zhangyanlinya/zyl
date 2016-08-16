@@ -102,6 +102,7 @@ public abstract class GameActor extends Actor{
 		if(dest == null){
 			return null;
 		}
+		
 		if(scan){
 			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
 			if(min < range){
