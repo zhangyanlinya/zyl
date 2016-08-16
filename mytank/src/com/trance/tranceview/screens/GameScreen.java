@@ -545,7 +545,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenY = height - screenY;
-		if(screenY > control_height){
+		if(screenY > control_height && screenX > 0 && screenX < width && screenY < height){
 			return false;
 		}
 		
