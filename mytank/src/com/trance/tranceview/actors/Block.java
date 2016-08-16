@@ -5,17 +5,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
+import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.screens.MapScreen;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.WorldUtils;
 
@@ -26,6 +25,7 @@ import com.trance.tranceview.utils.WorldUtils;
  */
 public class Block extends GameActor implements Poolable{
 	
+	public final static Pool<Block> blockPool = new BlockPool();
 	public Body body;
 	public int type;
 	public int i;
@@ -39,6 +39,8 @@ public class Block extends GameActor implements Poolable{
 	public long dirDelay = 10000;
 	public int level;
 	public boolean move;
+	private boolean scan;
+	
 	//range 
 	public float range = 200;
 	private float hw;
@@ -53,14 +55,10 @@ public class Block extends GameActor implements Poolable{
 	 * @param width
 	 * @param height
 	 */
+	
 	public void init(World world,int type, float x , float y,float width,float height,ShapeRenderer renderer){
+		super.init(x, y, width, height);
 		this.type = type;
-		this.setX(x);
-		this.setY(y);
-		this.setWidth(width);
-		this.setHeight(height);
-		this.hw = width/2;
-		this.hh = height/2;
 		this.renderer = renderer;
 		this.alive = true;
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
@@ -71,17 +69,17 @@ public class Block extends GameActor implements Poolable{
 		
 		this.role = 0;
 		if(type == BlockType.TANK_MAIN.getValue()){
-			good = 1;
+			camp = 1;
 			hp = 1000;
 			maxhp = 1000;
 			range = 120;
 		}else if(type == BlockType.TANK_ENEMY.getValue()){
-			good = 1;
+			camp = 1;
 			hp = 40;
 			atk = 20;
 			maxhp = 40;
 		}else if(type == BlockType.KING.getValue()){
-			good = 2;
+			camp = 2;
 			hp = 60;
 			maxhp = 60;
 		}else if(type == BlockType.CANNON.getValue()){
@@ -89,10 +87,10 @@ public class Block extends GameActor implements Poolable{
 			maxhp = 150;
 			range = 350;
 			dirDelay = 100;
-			move = false;
+			scan = true;
 		}
 		else{
-			good = 2;
+			camp = 2;
 		}
 		
 		if(type == BlockType.STEEL.getValue()){
@@ -130,62 +128,8 @@ public class Block extends GameActor implements Poolable{
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	
-	/**
-	 * scan array
-	 */
-	public Block scan(Array<Block> blocks){
-		Block dest = null;
-		float min = 0;
-		for(int i = 0; i < blocks.size; i++){
-			Block block = blocks.get(i);
-			if(!block.alive){
-				blocks.removeValue(block, true);
-				continue;
-			}
-			
-			if(block.type == BlockType.GRASS.getValue()){
-				continue;
-			}
-			
-			float dst = block.dst(this.getX() + this.getWidth()/2, this.getY() + this.getHeight()/2);
-			if(min == 0 || dst < min){
-				min = dst;
-				dest = block;
-			}
-		}
-		if(dest == null){
-			return null;
-		}
-		if(move){
-			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
-			if(min < range){
-				stop();
-				fire();
-			}
-		}else{
-			if(min < range){
-				faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
-				fire();
-			}
-		}
-		
-		return dest;
-	}
-	
-	public void faceTo(float destX, float destY){
-		float disX = destX - (this.getX() + hw);
-		float disY = destY - (this.getY() + hh);
-		degrees = -MathUtils.atan2(disX, disY);
-		vx = -MathUtils.sin(degrees);
-		vy =  MathUtils.cos(degrees);
-		setRotation(degrees * MathUtils.radiansToDegrees);
-	}
-	
 	private long time;
 	
-	/**
-	 * 111
-	 */
 	public void fire() {
 		if(MapData.gameover){
 			return;
@@ -201,28 +145,16 @@ public class Block extends GameActor implements Poolable{
 		}
 		time = now;
 		
-		if(good == 1){//自己的坦克才发出声音
-//			Sound sound = AssetsManager.getInstance().get("audio/barrett.wav");
-//			sound.play();
-		}
 		if( body == null){
 			return;
 		}
 		
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(),BulletType.COMMON.getValue(), this, getX(), getY(), 0,
+		bullet.init(BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 	}
 
-	/** @param x The x-component of the other vector
-	 * @param y The y-component of the other vector
-	 * @return the distance between this and the other vector */
-	public float dst (float x, float y) {
-		final float x_d = x - getX();
-		final float y_d = y - getY();
-		return (float)Math.sqrt(x_d * x_d + y_d * y_d);
-	}
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
@@ -262,33 +194,8 @@ public class Block extends GameActor implements Poolable{
 		if(move){
 			move();
 		}
-		
-		if(outOfScreen(this.getX(), this.getY())){
-			stop();
-		}
 	}
 	
-	private void stop(){
-		vx = 0;
-		vy = 0;
-	}
-
-	private boolean outOfScreen(float x, float y) {
-		if(x < 0 ){
-			return true;
-		}
-		if(x > GameScreen.width){
-			return true;
-		}
-		if(y < GameScreen.control_height ){
-			return true;
-		}
-		if(y > GameScreen.height){
-			return true;
-		}
-		return false;
-	}
-
 	@Override
 	public void reset() {
 		hp = maxhp;
@@ -297,8 +204,8 @@ public class Block extends GameActor implements Poolable{
 	@Override
 	public void dead() {
 		alive = false;
-		this.remove();
-		MapScreen.blockPool.free(this);
+		remove();
+		blockPool.free(this);
 		
 		if(this.type == BlockType.KING.getValue()){
 			MapData.gameover = true;

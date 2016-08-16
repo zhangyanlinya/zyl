@@ -25,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.screens.GameScreen;
 
@@ -76,7 +77,7 @@ public class WorldUtils {
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
-    	shape.setRadius((width/ 4) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 4) * GameScreen.WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -118,6 +119,27 @@ public class WorldUtils {
     	f.restitution = 0.1f;//反弹
 		f.filter.categoryBits = 4;
 		f.filter.maskBits = 4;
+    	body.createFixture(f);//刚体创建夹具.
+    	shape.dispose();
+    	return body;
+    }
+
+	public static Body createArmy(World world, ArmyType type, float x, float y,
+			float width, float height) {
+    	BodyDef bodyDef = new BodyDef();
+    	bodyDef.type = BodyType.DynamicBody;
+    	bodyDef.fixedRotation = true;
+//    	bodyDef.linearDamping = 1f;
+    	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
+    	CircleShape shape = new CircleShape();
+//    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 4) * GameScreen.WORLD_TO_BOX);
+    	Body body = world.createBody(bodyDef);
+    	FixtureDef f = new FixtureDef();
+    	f.shape = shape;//夹具的形状
+    	f.density = 2f;//夹具的密度
+    	f.friction = 1f;//夹具的摩擦力
+    	f.restitution = 0f; //弹力
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;

@@ -1,6 +1,12 @@
 package com.trance.tranceview.actors;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+import com.trance.tranceview.constant.BulletType;
+import com.trance.tranceview.mapdata.MapData;
 
 public abstract class GameActor extends Actor{
 	/**
@@ -11,16 +17,35 @@ public abstract class GameActor extends Actor{
 	/**
 	 *  1 -正方  2-反方  0- npc 
 	 */
-	public int good;
+	public int camp;
+	
+	public float degrees;
 
-	// 当前生命值
 	public float hp = 20;
-	// 生命上限
 	public float maxhp = 20;
-	// 攻击力
 	public int atk = 10 ;
 	
 	public boolean alive = true;
+
+	public float range;
+	public boolean scan;
+	
+	public float vx;
+	public float vy;
+	public float hw;
+	public float hh;
+	
+	
+	public void init(float x, float y, float width,
+			float height) {
+		this.setX(x);
+		this.setY(y);
+		this.setWidth(width);
+		this.setHeight(height);
+		this.hw = width/2;
+		this.hh = height/2;
+		this.alive = true;
+	}
 	
 	/**
 	 * 受到攻击
@@ -33,7 +58,65 @@ public abstract class GameActor extends Actor{
 			dead();
 		}
 	}
+	
+	public void stop() {
+		vx = 0;
+		vy = 0;
+		
+	}
 
 	public abstract void dead();
-	
+
+	public void faceTo(float destX, float destY) {
+		float disX = destX - (this.getX() + hw);
+		float disY = destY - (this.getY() + hh);
+		degrees = -MathUtils.atan2(disX, disY);
+		vx = -MathUtils.sin(degrees);
+		vy =  MathUtils.cos(degrees);
+		setRotation(degrees * MathUtils.radiansToDegrees);
+	}
+
+	public float dst(float x, float y) {
+		final float x_d = x - getX();
+		final float y_d = y - getY();
+		return (float)Math.sqrt(x_d * x_d + y_d * y_d);
+	}
+
+	public GameActor scan(Array<GameActor> actors) {
+		GameActor dest = null;
+		float min = 0;
+		for(int i = 0; i < actors.size; i++){
+			GameActor actor = actors.get(i);
+			if(!actor.alive){
+				actors.removeValue(actor, true);
+				continue;
+			}
+			
+			
+			float dst = actor.dst(this.getX() + this.getWidth()/2, this.getY() + this.getHeight()/2);
+			if(min == 0 || dst < min){
+				min = dst;
+				dest = actor;
+			}
+		}
+		if(dest == null){
+			return null;
+		}
+		if(scan){
+			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+			if(min < range){
+				stop();
+				fire();
+			}
+		}else{
+			if(min < range){
+				faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+				fire();
+			}
+		}
+		
+		return dest;
+	}
+
+	protected abstract void fire();
 }

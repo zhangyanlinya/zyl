@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
@@ -20,7 +19,7 @@ public class Bullet extends GameActor{
 	
 	public Body body;
 	public int type;
-	public Block block;
+	public GameActor gameActor;
 	public float speed = 2;//
 	private float hw;
 	private float hh;
@@ -37,26 +36,24 @@ public class Bullet extends GameActor{
 	public Bullet() {}
 	
 	//初始化
-	public void init(World world,int type,Block block, float x, float y,float width, float height){
+	public void init(int type, GameActor gameActor, float x, float y,float width, float height){
+		this.scan = false;
 		this.alive = true;
 		this.type  = type;
-		this.block = block;
-		this.degrees = block.degrees;
+		this.gameActor = gameActor;
+		this.degrees = gameActor.degrees;
 		
 		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
 		role = 1;
-		good = block.good;
+		camp = gameActor.camp;
 		if(width == 0 && height == 0){
 			width = textureRegion.getRegionWidth();
 			height = textureRegion.getRegionHeight();
 		}
 		
-		//center
-		x += block.getWidth()/2;
-		y += block.getHeight()/2;		
-		
 		//radius;
-		float radius = block.getHeight() + 1;
+		float radius = gameActor.getHeight() > gameActor.getWidth() ? gameActor.getHeight(): gameActor.getWidth();
+		radius += 1;
 		float sin = -MathUtils.sin(degrees);
 		float cos =  MathUtils.cos(degrees);
 //		System.out.println("cos:" + cos +" sin :" + sin);
@@ -71,7 +68,7 @@ public class Bullet extends GameActor{
 		this.hw = width/2;
 		this.hh = height/2;
 				
-		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
+		body = WorldUtils.createBullet(body.getWorld(),x, y,width,height,degrees);
 		body.setTransform(body.getPosition(), degrees);
 		
 		body.applyLinearImpulse(sin * speed,  cos * speed,
@@ -89,9 +86,6 @@ public class Bullet extends GameActor{
 		batch.draw(textureRegion, x, y, hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
-//		if(outOfScreen(x, y)){
-//			dead();
-//		}
 		
 		if(outofRange(x,y)){ // out of range
 			dead();
@@ -102,28 +96,12 @@ public class Bullet extends GameActor{
 		final float x_d = x - orgX;
 		final float y_d = y - orgY;
 		float dst = (float)Math.sqrt(x_d * x_d + y_d * y_d);
-		if(dst > block.range){
+		if(dst > gameActor.range){
 			return true;
 		}
 		return false;
 	}
 
-	//是否跑出边界
-	private boolean outOfScreen(float x ,float y) {
-		if(x < 0 ){
-			return true;
-		}
-		if(x > GameScreen.width){
-			return true;
-		}
-		if(y < GameScreen.control_height ){
-			return true;
-		}
-		if(y > GameScreen.height){
-			return true;
-		}
-		return false;
-	}
 	
 	
 	@Override
@@ -131,6 +109,11 @@ public class Bullet extends GameActor{
 		this.alive = false;
 		this.remove();
 		bulletPool.free(this);
+	}
+
+	@Override
+	protected void fire() {
+		
 	}
 }
 	

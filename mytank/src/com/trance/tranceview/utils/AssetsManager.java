@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.ControlType;
 
@@ -107,6 +108,14 @@ public class AssetsManager extends AssetManager{
 		AtlasRegion atlasRegion = textureAtlas2.findRegion("f-"+value);
 		return atlasRegion;
 	}
+	
+	public TextureRegion getArmyTextureRegion(ArmyType type) {
+		int test = 6;
+		if(type == ArmyType.TANK){
+			test = 7;
+		}
+		return getBlockTextureRegion(test);
+	}
     
     public  TextureRegion getBulletTextureRegion(int value) {
     	String fileName ="ui/bullet.png";
@@ -159,4 +168,6 @@ public class AssetsManager extends AssetManager{
     		textureAtlas2.dispose();
     	}
     }
+
+
 }

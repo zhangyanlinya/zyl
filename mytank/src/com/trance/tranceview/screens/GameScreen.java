@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -35,9 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -51,13 +46,13 @@ import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
-import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -108,11 +103,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     
     private Box2DDebugRenderer debugRenderer;
 	
-	public final static Array<Block> blocks = new Array<Block>();
+	public final static Array<GameActor> blocks = new Array<GameActor>();
 	
-	public final static Array<Block> tanks = new Array<Block>();
+	public final static Array<GameActor> tanks = new Array<GameActor>();
 	
-	public final static Array<Block> connons = new Array<Block>();
+	public final static Array<GameActor> connons = new Array<GameActor>();
 	
 	private final Array<Body> bodies = new Array<Body>();
 	
@@ -316,7 +311,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			        		return false;
 			        	}
 		        	}else if(a.role == 1){
-		        		if(b!= null && b.good == a.good){
+		        		if(b!= null && b.camp == a.camp){
 		        			return false;
 		        		}
 		        	}
@@ -328,7 +323,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			        		return false;
 			        	}
 		        	}else if(b.role == 1){
-		        		if(a!= null && a.good == b.good){
+		        		if(a!= null && a.camp == b.camp){
 		        			return false;
 		        		}
 		        	}
@@ -427,7 +422,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				}
 				
 				if (type > 0){
-					Block block = MapScreen.blockPool.obtain();
+					Block block = Block.blockPool.obtain();
 					if(type == BlockType.CANNON.getValue()){
 						block.init(world,type, x,y, length,length,null);
 						blocks.add(block);
@@ -486,11 +481,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 
 	private void scan() {
-		for(Block block : connons){
+		for(GameActor block : connons){
 			block.scan(tanks);
 		}
 		
-		for(Block block : tanks){
+		for(GameActor block : tanks){
 			block.scan(blocks);
 		}
 	}
@@ -520,7 +515,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
         }
 
         if(a.role != b.role){//角色不一样
-			if (a.good != b.good) {//敌对的
+			if (a.camp != b.camp) {//敌对的
 				if (a.role == 1) {
 					b.byAttack(a);
 				} else {
@@ -562,23 +557,16 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		ArmyDto army = armys.remove(chooseType);
 		if(army != null){
 			for(int i = 0 ; i < army.getAmout(); i++){
-				Block block = MapScreen.blockPool.obtain();
-				int type = 7;
-				if(chooseType == ArmyType.FAT){
-					type = 6;
-				}
-				
-				block.init(world,type, screenX + i * length , screenY, length,length,renderer);
-				block.move = true;
+				Army block = Army.armyPool.obtain();
+				block.init(world,army.getType(), screenX + i * length , screenY, length,length,renderer);
 				tanks.add(block);
 				stage.addActor(block);
 			}
-//			army.setGo(true);
 		}
 		
 		//next chooseType
-		for(ArmyDto dto : armys.values()){
-			chooseType = dto.getType();
+		if(!armys.isEmpty()){
+			chooseType = armys.keySet().iterator().next();
 		}
 		
 		return true;
@@ -596,12 +584,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 
 	@Override
 	public void pause() {
-		
+		System.out.println("gameScreen pause!");
 	}
 
 	@Override
 	public void resume() {
-		
+		System.out.println("gameScreen resume!");
 	}
 
 	@Override
@@ -637,6 +625,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		tanks.clear();
 		connons.clear();
 		Bullet.bulletPool.clear();
-		MapScreen.blockPool.clear();
+		Block.blockPool.clear();
 	}
 }

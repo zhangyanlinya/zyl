@@ -68,7 +68,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image toWorld;
 	private Image rename;
 	public final static Array<Block> blocks = new Array<Block>();
-	public final static Pool<Block> blockPool = new BlockPool();
 	private boolean init;
 	private TextInputListener listener;
 	private PlayerDto playerDto;
@@ -188,7 +187,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	 * @return
 	 */
 	private boolean isEdit(){
-		return(!MapData.other);//是自己的地图 且处于网络状态
+		return(playerDto.isMyself());//是自己的地图 且处于网络状态
 	}
 	
 	private void attack(){
@@ -251,7 +250,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					stage.addActor(grass);
 				}
 				
-				Block block = blockPool.obtain();
+				Block block = Block.blockPool.obtain();
 				block.setIndex(i, j);
 				if (type > 0){
 					block.init(null,type, x, y, length,length,null);
@@ -273,7 +272,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			if(i==8){//没有8
 				continue;
 			}
-			Block block = blockPool.obtain();
+			Block block = Block.blockPool.obtain();
 			x = i * length;
 			block.init(null,i, x,control_height/2, length,length,null);
 			stage.addActor(block);
@@ -337,10 +336,10 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 			
 			a.remove();
-			blockPool.free(a);
+			Block.blockPool.free(a);
 			playerDto.getMap()[oldi][oldj] = 0;
 			
-			Block block = blockPool.obtain();
+			Block block = Block.blockPool.obtain();
 			block.i = oldi;
 			block.j = oldj;
 			block.setPosition(oldx, oldy);
@@ -361,8 +360,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			}else{
 				b.remove();
 			}
-			blockPool.free(b);
-			Block block = blockPool.obtain();
+			Block.blockPool.free(b);
+			Block block = Block.blockPool.obtain();
 			block.init(null,oldType, oldx, oldy, length, length,null);
 			stage.addActor(block);
 			StringBuilder to = new StringBuilder();
