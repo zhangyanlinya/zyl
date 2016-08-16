@@ -101,8 +101,6 @@ public class Bullet extends GameActor{
 		}
 		return false;
 	}
-
-	
 	
 	@Override
 	public void dead() {
@@ -113,6 +111,11 @@ public class Bullet extends GameActor{
 
 	@Override
 	protected void fire() {
+		
+	}
+
+	@Override
+	protected void move() {
 		
 	}
 }

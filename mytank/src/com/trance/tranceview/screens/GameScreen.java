@@ -105,7 +105,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	public final static Array<GameActor> blocks = new Array<GameActor>();
 	
-	public final static Array<GameActor> tanks = new Array<GameActor>();
+	public final static Array<GameActor> armys = new Array<GameActor>();
 	
 	public final static Array<GameActor> connons = new Array<GameActor>();
 	
@@ -113,7 +113,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private Map<ArmyType,ArmyDto> armys = new LinkedHashMap<ArmyType,ArmyDto>();
+	private Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -159,15 +159,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		initWorld();
 		initMap();
 		
-		armys.clear();
+		armyDtos.clear();
 		ArmyDto army = new ArmyDto();
 		army.setAmout(5);
 		army.setType(ArmyType.TANK);
-		armys.put(ArmyType.TANK,army);
+		armyDtos.put(ArmyType.TANK,army);
 		ArmyDto army2 = new ArmyDto();
 		army2.setAmout(1);
 		army2.setType(ArmyType.FAT);
-		armys.put(ArmyType.FAT,army2);
+		armyDtos.put(ArmyType.FAT,army2);
 		
 		
 //		stage.addActor(toWorld);
@@ -233,17 +233,17 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 		});
     	world = WorldUtils.createWorld();
-//		initTouchPad();
 	}
 	
 	
 	private ArmyType chooseType;
 	private void initArmy(){
-		if(armys == null || armys.isEmpty()){
+		armys.clear();
+		if(armyDtos == null || armyDtos.isEmpty()){
 			return;
 		}
 		
-		for(ArmyType type : armys.keySet()){
+		for(ArmyType type : armyDtos.keySet()){
 			if(chooseType == null){
 				chooseType = type;//初始默认第一个
 			}
@@ -359,7 +359,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	//
 	private void initMap() {
 		blocks.clear();
-		tanks.clear();
 		connons.clear();
 		if(playerDto == null){
 			return;
@@ -475,18 +474,18 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	private void checkGameOver() {
-		if(armys.isEmpty() && tanks.size <= 0){
+		if(armyDtos.isEmpty() && armys.size <= 0){
 			MapData.gameover = true;
 		}
 	}
 
 	private void scan() {
 		for(GameActor block : connons){
-			block.scan(tanks);
+			block.scan(armys);
 		}
 		
-		for(GameActor block : tanks){
-			block.scan(blocks);
+		for(GameActor army : armys){
+			army.scan(blocks);
 		}
 	}
 
@@ -554,19 +553,19 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return false;
 		}
 		
-		ArmyDto army = armys.remove(chooseType);
+		ArmyDto army = armyDtos.remove(chooseType);
 		if(army != null){
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
 				block.init(world,army.getType(), screenX + i * length , screenY, length,length,renderer);
-				tanks.add(block);
+				armys.add(block);
 				stage.addActor(block);
 			}
 		}
 		
 		//next chooseType
-		if(!armys.isEmpty()){
-			chooseType = armys.keySet().iterator().next();
+		if(!armyDtos.isEmpty()){
+			chooseType = armyDtos.keySet().iterator().next();
 		}
 		
 		return true;
@@ -622,7 +621,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			world.dispose();
 		}
 		blocks.clear();
-		tanks.clear();
+		armys.clear();
 		connons.clear();
 		Bullet.bulletPool.clear();
 		Block.blockPool.clear();

@@ -44,7 +44,8 @@ public class Army extends GameActor implements Poolable{
 		this.type = type;
 		this.renderer = renderer;
 		this.alive = true;
-		move = true;
+		this.move = true;
+		this.scan = true;
 		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());

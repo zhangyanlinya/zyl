@@ -113,6 +113,7 @@ public class Block extends GameActor implements Poolable{
 	}
 	
 	
+	@Override
 	public void move() {
 		if(MapData.gameover){
 			return;

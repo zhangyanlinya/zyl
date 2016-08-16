@@ -1,12 +1,8 @@
 package com.trance.tranceview.actors;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.trance.tranceview.constant.BulletType;
-import com.trance.tranceview.mapdata.MapData;
 
 public abstract class GameActor extends Actor{
 	/**
@@ -28,6 +24,7 @@ public abstract class GameActor extends Actor{
 	public boolean alive = true;
 
 	public float range;
+	public boolean move;
 	public boolean scan;
 	
 	public float vx;
@@ -119,4 +116,6 @@ public abstract class GameActor extends Actor{
 	}
 
 	protected abstract void fire();
+
+	protected abstract void move();
 }
