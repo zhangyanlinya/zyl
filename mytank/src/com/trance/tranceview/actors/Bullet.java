@@ -35,7 +35,6 @@ public class Bullet extends GameActor{
 	
 	//初始化
 	public void init(World world, int type, GameActor gameActor, float x, float y,float width, float height){
-		this.scan = false;
 		this.alive = true;
 		this.type  = type;
 		this.gameActor = gameActor;

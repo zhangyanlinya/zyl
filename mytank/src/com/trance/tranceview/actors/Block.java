@@ -74,7 +74,6 @@ public class Block extends GameActor implements Poolable{
 			maxhp = 150;
 			range = 350;
 			dirDelay = 100;
-			scan = true;
 		}
 		
 		if(type == BlockType.STEEL.getValue()){

@@ -13,7 +13,7 @@ public abstract class GameActor extends Actor{
 	public int role;
 	
 	/**
-	 *  1 -正方  2-反方  0- npc 
+	 *  1 -防守  2-进攻  0- npc 
 	 */
 	public int camp;
 	
@@ -27,7 +27,7 @@ public abstract class GameActor extends Actor{
 
 	public float range = 200;
 	public boolean move;
-	public boolean scan;
+//	public boolean scan;
 	
 	public float vx;
 	public float vy;
@@ -103,7 +103,7 @@ public abstract class GameActor extends Actor{
 			return null;
 		}
 		
-		if(scan){
+		if(camp == 2){
 			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
 			if(min < range){
 				stop();
