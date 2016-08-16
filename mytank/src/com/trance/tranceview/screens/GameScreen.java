@@ -322,7 +322,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 		});
         
-        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+//        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
     }
 	
 	private void initClock() {
