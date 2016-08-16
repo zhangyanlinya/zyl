@@ -305,24 +305,14 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		        GameActor a =(GameActor) bodyA.getUserData();
 		        GameActor b =(GameActor) bodyB.getUserData();
 		        if(a != null){
-		        	if(a.role == 0){
-			        	Block block = (Block)a;
-			        	if(block.type == BlockType.GRASS.getValue()){
-			        		return false;
-			        	}
-		        	}else if(a.role == 1){
+		        	if(a.role == 1){
 		        		if(b!= null && b.camp == a.camp){
 		        			return false;
 		        		}
 		        	}
 		        }
 		        if(b != null ){
-		        	if( b.role == 0){
-			        	Block block = (Block)b;
-			        	if(block.type == BlockType.GRASS.getValue()){
-			        		return false;
-			        	}
-		        	}else if(b.role == 1){
+		        	if(b.role == 1){
 		        		if(a!= null && a.camp == b.camp){
 		        			return false;
 		        		}

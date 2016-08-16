@@ -23,21 +23,15 @@ public class Army extends GameActor implements Poolable{
 	public final static Pool<Army> armyPool = new ArmyPool();
 	public Body body;
 	private ArmyType type;
-	private float vx;
-	private float vy;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 1000;
 	public long dirDelay = 10000;
 	public int level;
-	public boolean move;
 	
 	//range 
 	public float range = 200;
-	private float hw;
-	private float hh;
-	public float degrees;
 	
 	public void init(World world,ArmyType type, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
@@ -46,6 +40,7 @@ public class Army extends GameActor implements Poolable{
 		this.alive = true;
 		this.move = true;
 		this.scan = true;
+		this.camp = 2;
 		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -100,7 +95,7 @@ public class Army extends GameActor implements Poolable{
 		}
 		
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(BulletType.COMMON.getValue(), this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 	}

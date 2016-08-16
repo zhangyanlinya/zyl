@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
@@ -21,12 +22,9 @@ public class Bullet extends GameActor{
 	public int type;
 	public GameActor gameActor;
 	public float speed = 2;//
-	private float hw;
-	private float hh;
 	
 	private float orgX;
 	private float orgY;
-	private float degrees;
 	
 	//纹理区域
 	private TextureRegion textureRegion;
@@ -36,20 +34,23 @@ public class Bullet extends GameActor{
 	public Bullet() {}
 	
 	//初始化
-	public void init(int type, GameActor gameActor, float x, float y,float width, float height){
+	public void init(World world, int type, GameActor gameActor, float x, float y,float width, float height){
 		this.scan = false;
 		this.alive = true;
 		this.type  = type;
 		this.gameActor = gameActor;
 		this.degrees = gameActor.degrees;
-		
+		this.role = 1;
 		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
-		role = 1;
+		
 		camp = gameActor.camp;
 		if(width == 0 && height == 0){
 			width = textureRegion.getRegionWidth();
 			height = textureRegion.getRegionHeight();
 		}
+		
+		x += gameActor.getWidth()/2;
+		y += gameActor.getHeight()/2;	
 		
 		//radius;
 		float radius = gameActor.getHeight() > gameActor.getWidth() ? gameActor.getHeight(): gameActor.getWidth();
@@ -68,7 +69,7 @@ public class Bullet extends GameActor{
 		this.hw = width/2;
 		this.hh = height/2;
 				
-		body = WorldUtils.createBullet(body.getWorld(),x, y,width,height,degrees);
+		body = WorldUtils.createBullet(world, x, y,width,height,degrees);
 		body.setTransform(body.getPosition(), degrees);
 		
 		body.applyLinearImpulse(sin * speed,  cos * speed,

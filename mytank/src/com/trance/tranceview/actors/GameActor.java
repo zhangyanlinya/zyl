@@ -1,10 +1,12 @@
 package com.trance.tranceview.actors;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
 public abstract class GameActor extends Actor{
+	
 	/**
 	 * 0 - 静态  或坦克  1- 子弹
 	 */
@@ -23,7 +25,7 @@ public abstract class GameActor extends Actor{
 	
 	public boolean alive = true;
 
-	public float range;
+	public float range = 200;
 	public boolean move;
 	public boolean scan;
 	
@@ -63,7 +65,8 @@ public abstract class GameActor extends Actor{
 	}
 
 	public abstract void dead();
-
+	
+	
 	public void faceTo(float destX, float destY) {
 		float disX = destX - (this.getX() + hw);
 		float disY = destY - (this.getY() + hh);
@@ -118,4 +121,9 @@ public abstract class GameActor extends Actor{
 	protected abstract void fire();
 
 	protected abstract void move();
+	
+	@Override
+	public void draw(SpriteBatch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+	}
 }

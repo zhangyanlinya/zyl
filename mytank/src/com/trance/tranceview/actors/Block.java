@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.trance.tranceview.constant.BlockType;
@@ -30,22 +29,12 @@ public class Block extends GameActor implements Poolable{
 	public int type;
 	public int i;
 	public int j;
-	private float vx;
-	private float vy;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 1000;
 	public long dirDelay = 10000;
 	public int level;
-	public boolean move;
-	private boolean scan;
-	
-	//range 
-	public float range = 200;
-	private float hw;
-	private float hh;
-	public float degrees;
 	
 	/**
 	 * 初始化
@@ -61,6 +50,7 @@ public class Block extends GameActor implements Poolable{
 		this.type = type;
 		this.renderer = renderer;
 		this.alive = true;
+		this.camp = 1;
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -151,7 +141,7 @@ public class Block extends GameActor implements Poolable{
 		}
 		
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(BulletType.COMMON.getValue(), this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 	}
