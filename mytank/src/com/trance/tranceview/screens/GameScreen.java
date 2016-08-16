@@ -194,9 +194,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		stage = new Stage(width, height, true);
 		
         camera = new OrthographicCamera(); 
-        camera.setToOrtho(false, width* WORLD_TO_BOX, height * WORLD_TO_BOX);
-        camera.position.set(width/2 *WORLD_TO_BOX, height/2 * WORLD_TO_BOX, 0);
+        camera.setToOrtho(false, width, height);
+        camera.position.set(width/2 , height/2 , 0);
 		debugRenderer = new Box2DDebugRenderer(); 
+		stage.setCamera(camera);
 		
 		
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
