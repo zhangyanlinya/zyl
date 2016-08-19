@@ -44,7 +44,6 @@ public class Block extends GameActor implements Poolable{
 	 * @param width
 	 * @param height
 	 */
-	
 	public void init(World world,int type, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.type = type;

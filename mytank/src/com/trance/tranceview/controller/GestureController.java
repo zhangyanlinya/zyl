@@ -14,6 +14,7 @@ public class GestureController extends GestureAdapter implements GestureListener
 	private float rightX;
 	private float donwY;
 	private float upY;
+	private boolean canUpdate = true;
 
 	public GestureController(OrthographicCamera camera, float leftX, float rightX, float donwY,float upY) {
 		this.camera = camera;
@@ -31,6 +32,9 @@ public class GestureController extends GestureAdapter implements GestureListener
 	
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		if(!canUpdate){
+			return false;
+		}
 		float cx = camera.position.x ;
 		float cy = camera.position.y;
 		if(cx < leftX ){
@@ -59,6 +63,9 @@ public class GestureController extends GestureAdapter implements GestureListener
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
+		if(!canUpdate){
+			return false;
+		}
 		// 与pinch对应，也是是一个多点触摸的手势，并且两个手指做出放大的动作
 		// Calculate pinch to zoom
 		float ratio = initialDistance / distance;
@@ -69,4 +76,12 @@ public class GestureController extends GestureAdapter implements GestureListener
 		return false;
 	}
 
+	public boolean isCanUpdate() {
+		return canUpdate;
+	}
+
+	public void setCanUpdate(boolean canUpdate) {
+		this.canUpdate = canUpdate;
+	}
+	
 }

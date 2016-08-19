@@ -97,7 +97,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	
     private World world;
-    private ShapeRenderer renderer;
+    private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;;
     private float accumulator = 0f;
     
@@ -206,7 +206,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length * 2;//再减少2格
-		renderer = new ShapeRenderer();
+		shapeRenderer = new ShapeRenderer();
 		
 		//返回家
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
@@ -393,6 +393,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
+				
 				if(i == 0 ){
 					int index = RandomUtil.nextInt(5) + 1;
 					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
@@ -420,7 +421,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				if (type > 0){
 					Block block = Block.blockPool.obtain();
 					if(type == BlockType.CANNON.getValue()){
-						block.init(world,type, x,y, length,length,null);
+						block.init(world,type, x, y, length,length,null);
 						blocks.add(block);
 						connons.add(block);
 					}else{
@@ -454,6 +455,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		spriteBatch.begin();
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
 		spriteBatch.end();
+		
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		
 		checkGameOver();
 		
@@ -558,7 +561,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(army != null){
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world,army.getType(), x + i * length , y, length,length,renderer);
+				block.init(world,army.getType(), x + i * length , y, length,length,shapeRenderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
@@ -614,7 +617,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			font.dispose();
 		}
 		
-		renderer.dispose();
+		shapeRenderer.dispose();
 		if(debugRenderer != null)
 		debugRenderer.dispose();
 		

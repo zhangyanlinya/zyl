@@ -15,13 +15,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
@@ -34,7 +34,6 @@ import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -75,6 +74,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
 	private Image bg;
+	private GestureController controller;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -179,7 +179,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
-		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		GestureDetector gestureHandler = new GestureDetector(controller);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
@@ -296,14 +296,22 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(!isEdit()){
 			return false;
 		}
-		screenY = height - screenY;
-		if(screenY < 0){
+		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
+		camera.unproject(vector3); // 坐标转化  
+		float x = vector3.x;
+		float y = vector3.y;
+		
+//		screenY = height - screenY;
+		if(y < 0){
 			return false;
 		}
-		Actor actor = stage.hit(screenX, screenY, true);
+		
+		Actor actor = stage.hit(x, y, true);
 		if(actor == null || !(actor instanceof Block)){
 			return false;
 		}
+		controller.setCanUpdate(false);
+		
 		a = (Block) actor;
 		Block b = (Block)a;
 		oldx = b.getX();
@@ -319,17 +327,22 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(a == null){
 			return true;
 		}
+		controller.setCanUpdate(true);
+		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
+		camera.unproject(vector3); // 坐标转化  
+		float x = vector3.x;
+		float y = vector3.y;
 		
-		screenY = height - screenY;
-		if(screenY < 0){
+//		screenY = height - screenY;
+		if(y < 0){
 			return true;
 		}
 		
 		//校正
-		screenX -= a.getWidth()/2;
-		screenY -= a.getHeight()/2;	
+		x -= a.getWidth()/2;
+		y -= a.getHeight()/2;	
 		
-		Block b = compute(screenX,screenY,a);
+		Block b = compute(x,y,a);
 		if(b == null){//移除
 			if(oldy == control_height/2 ){//原始的不移除 
 				a.setPosition(oldx, oldy);
@@ -396,12 +409,16 @@ public class MapScreen implements Screen ,InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if(a != null){
-			screenY = height - screenY;
-			if(screenY < 0){
+			Vector3 vector3 = new Vector3(screenX, screenY, 0);  
+			camera.unproject(vector3); // 坐标转化  
+			float x = vector3.x;
+			float y = vector3.y;
+//			screenY = height - screenY;
+			if(y < 0){
 				return true;
 			}
-			float x = screenX - a.getWidth()/2;
-			float y = screenY - a.getHeight()/2;
+			x = x - a.getWidth()/2;
+			y = y - a.getHeight()/2;
 			a.setPosition(x, y);
 		}
 		return true;
@@ -481,8 +498,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	@Override
 	public void resize(int width, int height) {
-		Gdx.app.log(" #### mapsrceen resize()", width + " == " +height);
-		stage.setViewport(width, height, true);
+		
 	}
 
 	@Override
