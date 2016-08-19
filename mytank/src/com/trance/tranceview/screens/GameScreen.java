@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -191,7 +192,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
-		stage = new Stage(width, height, true);
+		stage = new Stage(width * 2, height * 2, true);
 		
         camera = new OrthographicCamera(); 
         camera.setToOrtho(false, width, height);
@@ -541,19 +542,23 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
     }
-	
+    
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		screenY = height - screenY;
-		if(screenY > control_height && screenX > 0 && screenX < width && screenY < height){
+//		screenY = height - screenY;
+		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
+		camera.unproject(vector3); // 坐标转化  
+		float x = vector3.x;
+		float y = vector3.y;
+		if(x > -length  && x < width +length && y > control_height - length  && y < height + height){
 			return false;
-		}
+	    }
 		
 		ArmyDto army = armyDtos.remove(chooseType);
 		if(army != null){
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world,army.getType(), screenX + i * length , screenY, length,length,renderer);
+				block.init(world,army.getType(), x + i * length , y, length,length,renderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
