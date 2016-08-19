@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,6 +32,7 @@ import com.trance.tranceview.actors.Block;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BlockPool;
 import com.trance.tranceview.textinput.RenameInputListener;
@@ -177,6 +179,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
+		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+		GestureDetector gestureHandler = new GestureDetector(controller);
+		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -476,6 +481,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	@Override
 	public void resize(int width, int height) {
+		Gdx.app.log(" #### mapsrceen resize()", width + " == " +height);
+		stage.setViewport(width, height, true);
 	}
 
 	@Override

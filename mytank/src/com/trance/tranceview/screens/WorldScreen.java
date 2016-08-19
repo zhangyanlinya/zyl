@@ -212,7 +212,6 @@ public class WorldScreen implements Screen, InputProcessor {
 								}else{
 									dto.setMap(MapData.baseMap.clone());
 								}
-								MapData.other = true;
 								tranceGame.mapScreen.setPlayerDto(dto);
 								tranceGame.setScreen(tranceGame.mapScreen);
 							}
@@ -229,7 +228,6 @@ public class WorldScreen implements Screen, InputProcessor {
 	}
 	
 	private void gotoHome(){
-		MapData.other = false;
 		tranceGame.mapScreen.setPlayerDto(MainActivity.player);
 		tranceGame.setScreen(tranceGame.mapScreen);
 	}

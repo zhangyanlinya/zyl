@@ -41,11 +41,6 @@ public class MapData extends Application {
 		{ 0, 1, 0, 1, 0, 1, 1, 1, 6, 1, 0, 1, 0, 0, 1, 1 }
 	};
 
-	/**
-	 * 是否处于游戏编辑界面
-	 */
-	public static boolean other = false;
-
 	
 	/**
 	 * game over
