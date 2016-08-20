@@ -197,7 +197,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
         camera = new OrthographicCamera(); 
         camera.setToOrtho(false, width, height);
         camera.position.set(width/2 , height/2 , 0);
-		debugRenderer = new Box2DDebugRenderer(); 
+//		debugRenderer = new Box2DDebugRenderer(); 
 		stage.setCamera(camera);
 		
 		
@@ -365,25 +365,25 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return;
 		}
 		
-//		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//		float w = bg.getWidth();
-//		float h = bg.getHeight();
-//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-//			for(float y = -h ; y < stage.getHeight() ; y += h){
-//				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//				bg.setPosition(x, y);
-//				stage.addActor(bg);
-//			}
-//		}
-//		
-//		for(int i = 0 ; i < 5; i ++){
-//			int index = RandomUtil.nextInt(4) + 1;
-//			int x = RandomUtil.nextInt((int)width);
-//			int y = RandomUtil.nextInt((int)height);
-//			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
-//			grass.setPosition(x, y);
-//			stage.addActor(grass);
-//		}
+		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h ; y < stage.getHeight() ; y += h){
+				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
 		
 		
 		
@@ -443,8 +443,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		//debug---
-		camera.update();
-		debugRenderer.render(world, camera.combined);
+//		camera.update();
+//		debugRenderer.render(world, camera.combined);
 		//debug---
 		
 //		controldir();
@@ -553,7 +553,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
-		if(x > -length  && x < width +length && y > control_height - length  && y < height + height){
+		if(x > -length  && x < width + length && y > control_height - length  && y < height + height){
 			return false;
 	    }
 		
