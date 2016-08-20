@@ -289,7 +289,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private float oldy;
 	private int oldi;
 	private int oldj;
-	private int oldType;
+	private int oldValue;
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -318,7 +318,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		oldy = b.getY();
 		oldi = b.i;
 		oldj = b.j;
-		oldType = b.type;
+		oldValue = b.value;
 		return true;
 	}
 
@@ -370,20 +370,20 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		a.setPosition(b.getX(), b.getY());
 		a.setIndex(b.i, b.j);
-		playerDto.getMap()[b.i][b.j] = oldType; 
+		playerDto.getMap()[b.i][b.j] = oldValue; 
 		
 		if(oldy == control_height/2){//增加
-			if(b.type == 0){
+			if(b.value == 0){
 				blocks.removeValue(b, false);
 			}else{
 				b.remove();
 			}
 			Block.blockPool.free(b);
 			Block block = Block.blockPool.obtain();
-			block.init(null,oldType, oldx, oldy, length, length,null);
+			block.init(null,oldValue, oldx, oldy, length, length,null);
 			stage.addActor(block);
 			StringBuilder to = new StringBuilder();
-			to.append(b.i).append("|").append(b.j).append("|").append(b.type);
+			to.append(b.i).append("|").append(b.j).append("|").append(b.value);
 			saveMaptoServer(1,null,to.toString());
 			return true;
 		}
@@ -391,16 +391,16 @@ public class MapScreen implements Screen ,InputProcessor{
 		//替换
 		b.setPosition(oldx, oldy);
 		b.setIndex(oldi, oldj);
-		playerDto.getMap()[oldi][oldj] = b.type;
+		playerDto.getMap()[oldi][oldj] = b.value;
 		
-		if(oldType == b.type){
+		if(oldValue == b.value){
 			return true; //类型一样不用上传
 		}
 		
 		StringBuilder from = new StringBuilder();
-		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
+		from.append(oldi).append("|").append(oldj).append("|").append(oldValue);
 		StringBuilder to = new StringBuilder();
-		to.append(a.i).append("|").append(a.j).append("|").append(b.type);
+		to.append(a.i).append("|").append(a.j).append("|").append(b.value);
 		saveMaptoServer(1,from.toString(),to.toString());
 		return true;
 	}
