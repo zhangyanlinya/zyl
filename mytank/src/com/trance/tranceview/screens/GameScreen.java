@@ -250,24 +250,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return;
 		}
 		
+		int index = 0;
 		for(ArmyType type : armyDtos.keySet()){
 			if(chooseType == null){
 				chooseType = type;//初始默认第一个
 			}
-			Image actor = null;
-			switch (type){
-			case TANK:
-				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(7));
-				actor.setBounds(100, 100, 80, 80);
-				break;
-			case FAT:
-				actor = new Image(AssetsManager.getInstance().getBlockTextureRegion2(6));
-				actor.setBounds(200, 100, 80, 80);
-				break;
-				//TODO 
-			default:
-				break;
-			}
+			index ++;
+			Image actor = new Image(AssetsManager.getInstance().getArmyTextureRegion(type));
+			actor.setBounds(100 * index, 100, 80, 80);
+		
 			actor.setName(type.getId() + "");
 			actor.addListener(new ClickListener(){
 

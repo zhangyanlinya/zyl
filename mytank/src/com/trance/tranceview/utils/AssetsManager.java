@@ -99,9 +99,6 @@ public class AssetsManager extends AssetManager{
     }
 	
 	public TextureRegion getBlockTextureRegion2(int value) {
-		if(value == 5 || value == 6 || value == 7){
-			return getBlockTextureRegion(value);
-		}
 		if(textureAtlas2 == null){
 			textureAtlas2 = this.get("blocks/pic.pack", TextureAtlas.class);
 		}
