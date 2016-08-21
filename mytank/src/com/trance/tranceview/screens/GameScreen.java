@@ -246,30 +246,33 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
+		keepArmys.clear();
 		if(armyDtos == null || armyDtos.isEmpty()){
 			return;
 		}
 		
-		int index = 0;
+//		int index = 0;
 		for(ArmyType type : armyDtos.keySet()){
 			if(chooseType == null){
 				chooseType = type;//初始默认第一个
 			}
-			index ++;
-			Image actor = new Image(AssetsManager.getInstance().getArmyTextureRegion(type));
-			actor.setBounds(100 * index, 100, 80, 80);
-		
-			actor.setName(type.getId() + "");
-			actor.addListener(new ClickListener(){
-
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					Actor actor = event.getListenerActor();
-					String name = actor.getName();
-					chooseType =  ArmyType.valueOf(Integer.valueOf(name));
-				}
-			});
-			stage.addActor(actor);
+//			index ++;
+//			Image actor = new Image(AssetsManager.getInstance().getArmyTextureRegion(type));
+//			actor.setBounds(100 * index, 100, 80, 80);
+//		
+//			actor.setName(type.getId() + "");
+//			actor.addListener(new ClickListener(){
+//
+//				@Override
+//				public void clicked(InputEvent event, float x, float y) {
+//					Actor actor = event.getListenerActor();
+//					String name = actor.getName();
+//					chooseType =  ArmyType.valueOf(Integer.valueOf(name));
+//				}
+//			});
+//			stage.addActor(actor);
+			
+			keepArmys.add(AssetsManager.getInstance().getArmyTextureRegion(type));
 			
 		}
 	}
@@ -424,7 +427,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 		}
 	}
-
+	
+	private Array<TextureRegion> keepArmys = new Array<TextureRegion>();
+	
+	private void renderKeepArmys(SpriteBatch batch){
+		for(int i = 0 ; i < keepArmys.size ; i++){
+			batch.draw(keepArmys.get(i), i * 100, 0, 100,100);
+		}
+	}
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -443,12 +454,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		scan();
 		stage.draw();
 		stage.act(delta);
+		
 		spriteBatch.begin();
+		renderKeepArmys(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
 		spriteBatch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		
 		checkGameOver();
 		
 		//box2d
@@ -544,9 +556,17 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
-		if(x > -length  && x < width + length && y > control_height - length  && y < height + height){
+		if(x > -length * 2  && x < width + length * 2 
+				&& y > control_height - length * 2  && y < height + length * 2){
 			return false;
 	    }
+		
+		Actor actor = stage.hit(x, y, true);
+		if(actor != null){
+			return false;
+		}
+		
+//		if(x < 0 && )
 		
 		ArmyDto army = armyDtos.remove(chooseType);
 		if(army != null){
@@ -615,10 +635,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(world != null){
 			world.dispose();
 		}
+		bodies.clear();
+		
 		blocks.clear();
 		armys.clear();
 		connons.clear();
 		Bullet.bulletPool.clear();
 		Block.blockPool.clear();
+		
 	}
 }
