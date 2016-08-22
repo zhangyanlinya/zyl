@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -249,7 +250,17 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(armyDtos == null || armyDtos.isEmpty()){
 			return;
 		}
-		chooseType = armyDtos.get(0).getType();
+		
+		int i = 0;
+		for(ArmyDto dto : armyDtos.values()){
+			if(i == 0){
+				chooseType = dto.getType();
+			}
+			i++;
+			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
+			Rectangle rect = new Rectangle(i * 100, 0, 100, 100);//TODO
+			dto.setRect(rect);
+		}
 	}
 
 	//DestoryBody
@@ -403,11 +414,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 	}
 	
-//	private Array<TextureRegion> keepArmys = new Array<TextureRegion>();
-	
 	private void renderKeepArmys(SpriteBatch batch){
-		for(int i = 0 ; i < armyDtos.size() ; i++){
-			batch.draw(armyDtos.get(i).getRegion(), i * 100, 0, 100,100);
+		int i = 0;
+		for(ArmyDto dto : armyDtos.values()){
+			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
+			i ++;
 		}
 	}
 	
@@ -535,21 +546,17 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     
     private ArmyType hitKeepArmy(float x, float y){
     	for(ArmyDto dto : armyDtos.values()){
-    		if(contains(dto.getRegion(), x, y)){
+    		if(dto.getRect().contains(x, y)){
     			return dto.getType();
     		}
     	}
     	return null;
     }
     
-	private boolean contains (TextureRegion region,float x, float y) {
-		return region.getRegionX() <= x && region.getRegionX() + region.getRegionWidth() >= x && region.getRegionY() <= y && region.getRegionY() + region.getRegionHeight() >= y;
-	}
-    
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
-		camera.unproject(vector3); // 坐标转化  
+		camera.unproject(vector3); // coordinate convert
 		float x = vector3.x;
 		float y = vector3.y;
 		if(x > -length * 2  && x < width + length * 2 
@@ -557,9 +564,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return false;
 	    }
 		
+		screenY = height - screenY;//y top to down
 		ArmyType type = hitKeepArmy(screenX, screenY);
 		if(type != null){
 			chooseType = type;	
+			return false;
 		}
 		
 		Actor actor = stage.hit(x, y, true);
@@ -605,6 +614,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public void pause() {
 		System.out.println("gameScreen pause!");
+		for(GameActor army: armys){
+			army.stop();
+		}
 	}
 
 	@Override
