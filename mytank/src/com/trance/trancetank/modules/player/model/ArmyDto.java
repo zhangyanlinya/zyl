@@ -1,9 +1,13 @@
 package com.trance.trancetank.modules.player.model;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 public class ArmyDto {
 	
 	private ArmyType type;
 	private int amout;
+	private TextureRegion region;
+	private boolean go;
 	
 	public ArmyType getType() {
 		return type;
@@ -17,4 +21,17 @@ public class ArmyDto {
 	public void setAmout(int amout) {
 		this.amout = amout;
 	}
+	public TextureRegion getRegion() {
+		return region;
+	}
+	public void setRegion(TextureRegion region) {
+		this.region = region;
+	}
+	public boolean isGo() {
+		return go;
+	}
+	public void setGo(boolean go) {
+		this.go = go;
+	}
+	
 }

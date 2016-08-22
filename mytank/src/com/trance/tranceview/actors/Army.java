@@ -54,7 +54,7 @@ public class Army extends GameActor implements Poolable{
 	}
 	
 	public void move() {
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		
@@ -75,7 +75,7 @@ public class Army extends GameActor implements Poolable{
 	 * 111
 	 */
 	public void fire() {
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		
@@ -127,7 +127,7 @@ public class Army extends GameActor implements Poolable{
 			batch.begin();
 		}
 		
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		if (!alive) {

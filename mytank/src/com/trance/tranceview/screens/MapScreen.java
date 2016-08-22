@@ -145,7 +145,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			init = true;
 		}
 		
-		MapData.gameover = true;
+		MapData.gamerunning = true;
 		stage.clear();
 		float w = bg.getWidth();
 		float h = bg.getHeight();

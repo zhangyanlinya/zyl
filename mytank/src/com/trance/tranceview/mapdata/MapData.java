@@ -45,5 +45,5 @@ public class MapData extends Application {
 	/**
 	 * game over
 	 */
-	public static boolean gameover;
+	public static boolean gamerunning;
 }

@@ -116,7 +116,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
+	private final Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -155,7 +155,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			init();
 			init = true;
 		}
-		MapData.gameover = false;
+		MapData.gamerunning = false;
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
 		initClock();
@@ -246,35 +246,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
-		keepArmys.clear();
 		if(armyDtos == null || armyDtos.isEmpty()){
 			return;
 		}
-		
-//		int index = 0;
-		for(ArmyType type : armyDtos.keySet()){
-			if(chooseType == null){
-				chooseType = type;//初始默认第一个
-			}
-//			index ++;
-//			Image actor = new Image(AssetsManager.getInstance().getArmyTextureRegion(type));
-//			actor.setBounds(100 * index, 100, 80, 80);
-//		
-//			actor.setName(type.getId() + "");
-//			actor.addListener(new ClickListener(){
-//
-//				@Override
-//				public void clicked(InputEvent event, float x, float y) {
-//					Actor actor = event.getListenerActor();
-//					String name = actor.getName();
-//					chooseType =  ArmyType.valueOf(Integer.valueOf(name));
-//				}
-//			});
-//			stage.addActor(actor);
-			
-			keepArmys.add(AssetsManager.getInstance().getArmyTextureRegion(type));
-			
-		}
+		chooseType = armyDtos.get(0).getType();
 	}
 
 	//DestoryBody
@@ -336,7 +311,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
-						MapData.gameover = true;
+						MapData.gamerunning = true;
 					}
 				}
 			});
@@ -428,11 +403,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 	}
 	
-	private Array<TextureRegion> keepArmys = new Array<TextureRegion>();
+//	private Array<TextureRegion> keepArmys = new Array<TextureRegion>();
 	
 	private void renderKeepArmys(SpriteBatch batch){
-		for(int i = 0 ; i < keepArmys.size ; i++){
-			batch.draw(keepArmys.get(i), i * 100, 0, 100,100);
+		for(int i = 0 ; i < armyDtos.size() ; i++){
+			batch.draw(armyDtos.get(i).getRegion(), i * 100, 0, 100,100);
 		}
 	}
 	
@@ -440,7 +415,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			stage.addActor(window);
 		}
 		
@@ -449,8 +424,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 //		debugRenderer.render(world, camera.combined);
 		//debug---
 		
-//		controldir();
-//		track();
 		scan();
 		stage.draw();
 		stage.act(delta);
@@ -477,8 +450,14 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	private void checkGameOver() {
-		if(armyDtos.isEmpty() && armys.size <= 0){
-			MapData.gameover = true;
+		if(armys.size == 0){
+			for(ArmyDto dto : armyDtos.values()){
+				if(dto.isGo()){
+					continue;
+				}
+				return;
+			}
+			MapData.gamerunning = true;
 		}
 	}
 
@@ -525,6 +504,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				}
 			}
         }
+        
+        if(a.role == 1 && b.role == 1){
+        	return;
+        }
+        
         if(a.role == 1){
      	   a.dead();
         }
@@ -549,9 +533,21 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 
     }
     
+    private ArmyType hitKeepArmy(float x, float y){
+    	for(ArmyDto dto : armyDtos.values()){
+    		if(contains(dto.getRegion(), x, y)){
+    			return dto.getType();
+    		}
+    	}
+    	return null;
+    }
+    
+	private boolean contains (TextureRegion region,float x, float y) {
+		return region.getRegionX() <= x && region.getRegionX() + region.getRegionWidth() >= x && region.getRegionY() <= y && region.getRegionY() + region.getRegionHeight() >= y;
+	}
+    
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-//		screenY = height - screenY;
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
@@ -561,26 +557,36 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return false;
 	    }
 		
+		ArmyType type = hitKeepArmy(screenX, screenY);
+		if(type != null){
+			chooseType = type;	
+		}
+		
 		Actor actor = stage.hit(x, y, true);
 		if(actor != null){
 			return false;
 		}
 		
-//		if(x < 0 && )
-		
-		ArmyDto army = armyDtos.remove(chooseType);
-		if(army != null){
+		int index = 0;
+		for(ArmyDto army : armyDtos.values()){
+			if(army.isGo()){
+				continue;
+			}
+			if(index == 1){//next chooseType
+				chooseType = army.getType();
+				break;
+			}
+			if(army.getType() != chooseType){
+				continue;
+			}
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
 				block.init(world,army.getType(), x + i * length , y, length,length,shapeRenderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
-		}
-		
-		//next chooseType
-		if(!armyDtos.isEmpty()){
-			chooseType = armyDtos.keySet().iterator().next();
+			army.setGo(true);
+			index ++;
 		}
 		
 		return true;
@@ -593,7 +599,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 
 	@Override
 	public void hide() {
-		MapData.gameover = true;
+		MapData.gamerunning = true;
 	}
 
 	@Override

@@ -87,7 +87,7 @@ public class Block extends GameActor implements Poolable{
 	
 	@Override
 	public void move() {
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		
@@ -104,7 +104,7 @@ public class Block extends GameActor implements Poolable{
 	private long time;
 	
 	public void fire() {
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		
@@ -157,7 +157,7 @@ public class Block extends GameActor implements Poolable{
 			batch.begin();
 		}
 		
-		if(MapData.gameover){
+		if(MapData.gamerunning){
 			return;
 		}
 		if (!alive) {
@@ -181,7 +181,7 @@ public class Block extends GameActor implements Poolable{
 		blockPool.free(this);
 		
 		if(this.attr.getType() == BlockType.KING.getValue()){
-			MapData.gameover = true;
+			MapData.gamerunning = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
 		}
