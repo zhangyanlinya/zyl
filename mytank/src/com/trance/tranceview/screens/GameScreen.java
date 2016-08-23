@@ -597,7 +597,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(army.isGo()){
 				continue;
 			}
-			chooseType = type;
+			chooseType = army.getType();
 			break;
 		}
 		
