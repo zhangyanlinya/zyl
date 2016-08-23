@@ -256,10 +256,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(i == 0){
 				chooseType = dto.getType();
 			}
-			i++;
 			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
 			Rectangle rect = new Rectangle(i * 100, 0, 100, 100);//TODO
 			dto.setRect(rect);
+			i++;
 		}
 	}
 
@@ -576,14 +576,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return false;
 		}
 		
-		int index = 0;
 		for(ArmyDto army : armyDtos.values()){
 			if(army.isGo()){
 				continue;
-			}
-			if(index == 1){//next chooseType
-				chooseType = army.getType();
-				break;
 			}
 			if(army.getType() != chooseType){
 				continue;
@@ -595,7 +590,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				stage.addActor(block);
 			}
 			army.setGo(true);
-			index ++;
+		}
+		
+		//for the next choose type;
+		for(ArmyDto army : armyDtos.values()){
+			if(army.isGo()){
+				continue;
+			}
+			chooseType = type;
+			break;
 		}
 		
 		return true;
@@ -614,9 +617,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public void pause() {
 		System.out.println("gameScreen pause!");
-		for(GameActor army: armys){
-			army.stop();
-		}
 	}
 
 	@Override
