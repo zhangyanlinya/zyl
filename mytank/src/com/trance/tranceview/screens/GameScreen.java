@@ -100,7 +100,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     private World world;
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;;
-    private float accumulator = 0f;
+//    private float accumulator = 0f;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -448,11 +448,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		checkGameOver();
 		
 		//box2d
-        accumulator += delta;
-        while (accumulator >= delta) {
+//        accumulator += delta;
+//        while (accumulator >= delta) {
             world.step(TIME_STEP, 6, 2);
-            accumulator -= TIME_STEP;
-        }
+//            accumulator -= TIME_STEP;
+//        }
         
         world.getBodies(bodies);
         for(int i = 0 ; i < bodies.size ; i++){
@@ -617,11 +617,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public void pause() {
 		System.out.println("gameScreen pause!");
+//		TIME_STEP = 0;
 	}
 
 	@Override
 	public void resume() {
 		System.out.println("gameScreen resume!");
+//		TIME_STEP = 1 / 50f;
 	}
 
 	@Override
