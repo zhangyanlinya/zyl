@@ -2,6 +2,7 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -100,7 +101,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     private World world;
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;;
-//    private float accumulator = 0f;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -162,21 +162,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		initClock();
 		initWorld();
 		initMap();
-		
-		armyDtos.clear();
-		ArmyDto army = new ArmyDto();
-		army.setAmout(5);
-		army.setType(ArmyType.TANK);
-		armyDtos.put(ArmyType.TANK,army);
-		ArmyDto army2 = new ArmyDto();
-		army2.setAmout(1);
-		army2.setType(ArmyType.FAT);
-		armyDtos.put(ArmyType.FAT,army2);
-		
-		
-//		stage.addActor(toWorld);
 		initArmy();
-		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		GestureDetector gestureHandler = new GestureDetector(controller);
@@ -195,6 +181,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width * 2, height * 2, true);
 		
+		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera(); 
         camera.setToOrtho(false, width, height);
         camera.position.set(width/2 , height/2 , 0);
@@ -243,12 +230,25 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     	world = WorldUtils.createWorld();
 	}
 	
-	
+	private static float CELL_LENGHT;
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
-		if(armyDtos == null || armyDtos.isEmpty()){
+		List<ArmyDto> list = playerDto.getArmys();
+		
+		//TEST
+//		ArmyDto army = new ArmyDto();
+//		army.setType(ArmyType.TANK);
+//		army.setAmout(2);
+//		list.add(army);
+		
+		if(list == null || list.isEmpty()){
 			return;
+		}
+		
+		armyDtos.clear();
+		for(ArmyDto dto : list){
+			armyDtos.put(dto.getType(), dto);
 		}
 		
 		int i = 0;
@@ -257,7 +257,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				chooseType = dto.getType();
 			}
 			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
-			Rectangle rect = new Rectangle(i * 100, 0, 100, 100);//TODO
+			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
 		}
@@ -448,11 +448,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		checkGameOver();
 		
 		//box2d
-//        accumulator += delta;
-//        while (accumulator >= delta) {
-            world.step(TIME_STEP, 6, 2);
-//            accumulator -= TIME_STEP;
-//        }
+        world.step(TIME_STEP, 6, 2);
         
         world.getBodies(bodies);
         for(int i = 0 ; i < bodies.size ; i++){
@@ -585,7 +581,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world,army.getType(), x + i * length , y, length,length,shapeRenderer);
+				block.init(world,army.getType(), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
