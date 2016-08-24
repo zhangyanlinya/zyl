@@ -445,6 +445,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		int i = 0;
 		for(ArmyDto dto : armyDtos.values()){
 			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
+			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i, dto.getRect().y);
 			i ++;
 		}
 	}
