@@ -67,7 +67,7 @@ public class Block extends GameActor implements Poolable{
 		if(attr.getType() == BlockType.WALL.getValue()){
 			
 		}else if(attr.getType() == BlockType.CANNON.getValue()){
-			
+			range = range * 2;
 		}
 		
 		if(world == null){
@@ -184,6 +184,7 @@ public class Block extends GameActor implements Poolable{
 			MapData.gamerunning = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
+			GameScreen.finishBattle();
 		}
 	}
 

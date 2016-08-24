@@ -118,7 +118,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private final Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
+	private final static Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -250,11 +250,44 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(i == 0){
 				chooseType = dto.getType();
 			}
+			dto.setGo(false);
 			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
 		}
+	}
+	
+	public static void finishBattle(){
+		List<ArmyDto> list = MainActivity.player.getArmys();
+		list.clear();
+		for(ArmyDto dto : armyDtos.values()){
+			if(!dto.isGo()){
+				list.add(dto);
+			}
+		}
+		for(GameActor actor : armys){
+			Army army = (Army)actor;
+			ArmyType type = army.type;
+			boolean has = false;
+			for(ArmyDto a : list){
+				if(type == a.getType()){
+					a.setAmout(a.getAmout() + 1);
+					has = true;
+					break;
+				}
+			}
+			
+			if(!has){
+				ArmyDto dto = new ArmyDto();
+				dto.setType(type);
+				dto.setAmout(1);
+				list.add(dto);
+			}
+		}
+		
+		//TODO send to server !
+		
 	}
 
 	//DestoryBody
@@ -459,6 +492,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				return;
 			}
 			MapData.gamerunning = true;
+			finishBattle();
 		}
 	}
 
@@ -602,6 +636,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public void hide() {
 		MapData.gamerunning = true;
+		finishBattle();
 	}
 
 	@Override

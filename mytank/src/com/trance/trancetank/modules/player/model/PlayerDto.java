@@ -1,8 +1,8 @@
 package com.trance.trancetank.modules.player.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * PlayerDto对象
@@ -61,7 +61,7 @@ public class PlayerDto implements Serializable {
 	
 	private int[][] map;
 	
-	private List<ArmyDto> armys = new ArrayList<ArmyDto>();
+	private List<ArmyDto> armys = new CopyOnWriteArrayList<ArmyDto>();
 
 	public long getId() {
 		return id;
