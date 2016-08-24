@@ -49,6 +49,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Block;
@@ -234,14 +235,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
-		List<ArmyDto> list = playerDto.getArmys();
-		
-		//TEST
-//		ArmyDto army = new ArmyDto();
-//		army.setType(ArmyType.TANK);
-//		army.setAmout(2);
-//		list.add(army);
-		
+		List<ArmyDto> list = MainActivity.player.getArmys();
 		if(list == null || list.isEmpty()){
 			return;
 		}
