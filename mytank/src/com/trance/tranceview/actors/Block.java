@@ -194,6 +194,7 @@ public class Block extends GameActor implements Poolable{
 		vy = y;
 		degrees = - MathUtils.atan2(vx, vy);
 		body.setTransform(body.getPosition(), degrees);
+		System.out.println(degrees);
 //		naturalRotation(degrees);
 	}
 	

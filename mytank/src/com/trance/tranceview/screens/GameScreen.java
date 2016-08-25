@@ -28,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -141,6 +142,17 @@ public class GameScreen implements Screen , ContactListener{
 		this.playerDto = playerDto;
 	}
 	
+	//清除动态的
+//	private void stageClearActors(){
+//		Array<Actor> actors = stage.getActors();
+//		for(Actor a : actors){
+//			if(a instanceof GameActor){
+//				a.remove();
+//			}
+//		}
+//		window.remove();
+//	}
+	
 	@Override
 	public void show() {
 		if(!init){
@@ -151,7 +163,6 @@ public class GameScreen implements Screen , ContactListener{
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
 		initClock();
-		stage.addActor(toWorld);
 		initWorld();
 		initMap();
 		if(mainTank == null){
@@ -168,6 +179,7 @@ public class GameScreen implements Screen , ContactListener{
 			
 		});
 		
+		stage.addActor(toWorld);
 		stage.addActor(fireImage);
 		stage.addActor(touchpad);
 		
@@ -197,27 +209,6 @@ public class GameScreen implements Screen , ContactListener{
 		menu_width     = (width - game_width)/2;
 		control_height = height - game_height -length;//再减少一格
 		renderer = new ShapeRenderer();
-		
-		bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//		float w = bg.getWidth();
-//		float h = bg.getHeight();
-//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-//			for(float y = -h ; y < stage.getHeight() ; y += h){
-//				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
-//				bg.setPosition(x, y);
-//				stage.addActor(bg);
-//			}
-//		}
-//		
-//		for(int i = 0 ; i < 5; i ++){
-//			int index = RandomUtil.nextInt(4) + 1;
-//			int x = RandomUtil.nextInt((int)width);
-//			int y = RandomUtil.nextInt((int)height);
-//			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
-//			grass.setPosition(x, y);
-//			stage.addActor(grass);
-//		}
-		
 		
 		//返回家
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
@@ -251,7 +242,6 @@ public class GameScreen implements Screen , ContactListener{
 			}
 		});
     	world = WorldUtils.createWorld();
-		
 		initTouchPad();
 	}
 	
@@ -386,6 +376,29 @@ public class GameScreen implements Screen , ContactListener{
 		if(map == null){
 			return;
 		}
+		
+		bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h ; y < stage.getHeight() ; y += h){
+				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+		
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
+		
+		
+		
 		for (int i = 0; i < map.length; i++) {
 			float n = map.length - 1 - i;
 			for (int j = 0; j < map[i].length; j++) {
@@ -458,8 +471,10 @@ public class GameScreen implements Screen , ContactListener{
 			stage.addActor(window);
 		}
 		
-		camera.update();
-		debugRenderer.render(world, camera.combined);//debug
+		//debug---
+//		camera.update();
+//		debugRenderer.render(world, camera.combined);
+		//debug---
 		
 		controldir();
 //		track();

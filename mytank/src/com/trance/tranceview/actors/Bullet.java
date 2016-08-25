@@ -61,6 +61,7 @@ public class Bullet extends GameActor{
 		x += block.getWidth()/2;
 		y += block.getHeight()/2;		
 		
+		//radius;
 		float radius = block.getHeight() + width;
 		float sin = -MathUtils.sin(degrees);
 		float cos =  MathUtils.cos(degrees);
@@ -78,24 +79,12 @@ public class Bullet extends GameActor{
 				
 		body = WorldUtils.createBullet(block.body.getWorld(),x, y,width,height,degrees);
 		body.setTransform(body.getPosition(), degrees);
-		
-//		body.setTransform(body.getPosition(), degrees);
-//		this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
-//		System.out.println(block.vx * speed+"  ----  "+ block.vy* speed);
 		body.applyLinearImpulse(sin * speed,  cos * speed,
 				body.getWorldCenter().x, body.getWorldCenter().y, true);
 //		body.setLinearVelocity(sin * speed,  cos * speed);
 		body.setUserData(this);
 			
 	}
-	
-	public Vector2 getVector2ByDegrees(float degrees, float radius, float x, float y){
-		Vector2 point = new Vector2(MathUtils.cos(degrees) * radius, MathUtils.sin(degrees) * radius);
-		point.x += x; //跟据圆心对偏移量进行修正
-		point.y += y; //跟据圆心对偏移量进行修正
-	    return point;
-	}
-	
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
