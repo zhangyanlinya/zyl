@@ -45,6 +45,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.ArmyType;
@@ -56,7 +57,6 @@ import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
-import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
@@ -427,7 +427,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if (type > 0){
 					Building block = Building.blockPool.obtain();
-					if(type == BlockType.CANNON.getValue()){
+					if(type == BuildingType.HORSE_MARKET){
 						block.init(world,type, x, y, length,length,null);
 						blocks.add(block);
 						connons.add(block);

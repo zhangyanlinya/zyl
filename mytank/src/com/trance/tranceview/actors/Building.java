@@ -8,15 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pool.Poolable;
-import com.trance.trancetank.model.Attr;
-import com.trance.tranceview.constant.BlockType;
+import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.utils.AssetsManager;
-import com.trance.tranceview.utils.MapUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
@@ -24,12 +21,12 @@ import com.trance.tranceview.utils.WorldUtils;
  * @author zhangyl
  *
  */
-public class Building extends GameActor implements Poolable{
+public class Building extends GameActor{
 	
 	public final static Pool<Building> blockPool = new BuildingPool();
 	public Body body;
 	public int value;
-	public Attr attr;
+	public int type;
 	public int i;
 	public int j;
 	private TextureRegion textureRegion;
@@ -53,28 +50,21 @@ public class Building extends GameActor implements Poolable{
 		this.renderer = renderer;
 		this.alive = true;
 		this.camp = 1;
-		attr = MapUtil.parseValue(value);
 		
-		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(attr.getType());
+		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
 		
 		this.role = 0;
-		this.hp = hp * attr.getLevel();
 		this.maxhp = hp;
-		if(attr.getType() == BlockType.WALL.getValue()){
-			
-		}else if(attr.getType() == BlockType.CANNON.getValue()){
-			
-		}
 		
 		if(world == null){
 			body = null;
 			return;
 		}
-		body = WorldUtils.createBlock(world,attr.getType(), x, y, width, height);
+		body = WorldUtils.createBlock(world, x, y, width, height);
 		body.setUserData(this);
 		
 	}
@@ -169,10 +159,6 @@ public class Building extends GameActor implements Poolable{
 		}
 	}
 	
-	@Override
-	public void reset() {
-		hp = maxhp;
-	}
 	
 	@Override
 	public void dead() {
@@ -180,7 +166,7 @@ public class Building extends GameActor implements Poolable{
 		remove();
 		blockPool.free(this);
 		
-		if(this.attr.getType() == BlockType.KING.getValue()){
+		if(type == BuildingType.OFFICE){
 			MapData.gamerunning = true;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();

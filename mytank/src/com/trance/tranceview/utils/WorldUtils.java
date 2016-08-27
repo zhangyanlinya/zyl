@@ -59,7 +59,7 @@ public class WorldUtils {
         return body;
         
     }
-    public static Body createBlock(World world, int type,float x, float y, float width, float height) {
+    public static Body createBlock(World world,float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.StaticBody;
     	bodyDef.fixedRotation = true;
