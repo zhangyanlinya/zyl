@@ -2,6 +2,7 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -48,6 +49,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Building;
@@ -100,7 +102,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     private World world;
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;;
-//    private float accumulator = 0f;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
@@ -117,7 +118,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private final Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
+	private final static Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -162,21 +163,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		initClock();
 		initWorld();
 		initMap();
-		
-		armyDtos.clear();
-		ArmyDto army = new ArmyDto();
-		army.setAmout(5);
-		army.setType(ArmyType.TANK);
-		armyDtos.put(ArmyType.TANK,army);
-		ArmyDto army2 = new ArmyDto();
-		army2.setAmout(1);
-		army2.setType(ArmyType.FAT);
-		armyDtos.put(ArmyType.FAT,army2);
-		
-		
-//		stage.addActor(toWorld);
 		initArmy();
-		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		GestureDetector gestureHandler = new GestureDetector(controller);
@@ -195,6 +182,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width * 2, height * 2, true);
 		
+		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera(); 
         camera.setToOrtho(false, width, height);
         camera.position.set(width/2 , height/2 , 0);
@@ -243,12 +231,18 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     	world = WorldUtils.createWorld();
 	}
 	
-	
+	private static float CELL_LENGHT;
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
-		if(armyDtos == null || armyDtos.isEmpty()){
+		List<ArmyDto> list = MainActivity.player.getArmys();
+		if(list == null || list.isEmpty()){
 			return;
+		}
+		
+		armyDtos.clear();
+		for(ArmyDto dto : list){
+			armyDtos.put(dto.getType(), dto);
 		}
 		
 		int i = 0;
@@ -256,11 +250,44 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(i == 0){
 				chooseType = dto.getType();
 			}
+			dto.setGo(false);
 			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
-			Rectangle rect = new Rectangle(i * 100, 0, 100, 100);//TODO
+			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
 		}
+	}
+	
+	public static void finishBattle(){
+		List<ArmyDto> list = MainActivity.player.getArmys();
+		list.clear();
+		for(ArmyDto dto : armyDtos.values()){
+			if(!dto.isGo()){
+				list.add(dto);
+			}
+		}
+		for(GameActor actor : armys){
+			Army army = (Army)actor;
+			ArmyType type = army.type;
+			boolean has = false;
+			for(ArmyDto a : list){
+				if(type == a.getType()){
+					a.setAmout(a.getAmout() + 1);
+					has = true;
+					break;
+				}
+			}
+			
+			if(!has){
+				ArmyDto dto = new ArmyDto();
+				dto.setType(type);
+				dto.setAmout(1);
+				list.add(dto);
+			}
+		}
+		
+		//TODO send to server !
+		
 	}
 
 	//DestoryBody
@@ -418,6 +445,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		int i = 0;
 		for(ArmyDto dto : armyDtos.values()){
 			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
+			font.setColor(Color.BLUE);
+			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
 			i ++;
 		}
 	}
@@ -448,11 +477,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		checkGameOver();
 		
 		//box2d
-//        accumulator += delta;
-//        while (accumulator >= delta) {
-            world.step(TIME_STEP, 6, 2);
-//            accumulator -= TIME_STEP;
-//        }
+        world.step(TIME_STEP, 6, 2);
         
         world.getBodies(bodies);
         for(int i = 0 ; i < bodies.size ; i++){
@@ -469,6 +494,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				return;
 			}
 			MapData.gamerunning = true;
+			finishBattle();
 		}
 	}
 
@@ -585,7 +611,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world,army.getType(), x + i * length , y, length,length,shapeRenderer);
+				block.init(world,army.getType(), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
@@ -612,6 +638,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	@Override
 	public void hide() {
 		MapData.gamerunning = true;
+		finishBattle();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -29,9 +30,11 @@ import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -137,22 +140,32 @@ public class LoginScreen implements Screen{
 			PlayerDto playerDto = JSON.parseObject(pobj.toString(),
 					PlayerDto.class);
 			playerDto.setMyself(true);
-
+			
+			int[][] map = null;
 			Object mobj = result.get("mapdata");
-			if (mobj != null) {
-				int[][] map = JSON.parseObject(mobj.toString(), int[][].class);
-				playerDto.setMap(map);
+			if (mobj == null) {
+				map = MapData.baseMap;
+			}else{
+				map = JSON.parseObject(mobj.toString(), int[][].class);
 			}
+			playerDto.setMap(map);
 
 			Object wobj = result.get("worldPlayers");
 			if (wobj != null) {
-				Map<String, Object> map = (Map<String, Object>) wobj;
-				for (Entry<String, Object> e : map.entrySet()) {
+				Map<String, Object> players = (Map<String, Object>) wobj;
+				for (Entry<String, Object> e : players.entrySet()) {
 					String dto = JSON.toJSONString(e.getValue());
 					PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
 					MainActivity.worldPlayers.put(e.getKey(), value);
 				}
 			}
+			
+			Object aobj = result.get("armys");
+			if(aobj != null){
+				List<ArmyDto> armys = JSON.parseArray(aobj.toString(), ArmyDto.class);
+				playerDto.setArmys(armys);
+			}
+			
 			MainActivity.player = playerDto;
 			
 			Gdx.app.postRunnable(new Runnable() {

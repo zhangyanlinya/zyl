@@ -22,7 +22,7 @@ public class Army extends GameActor implements Poolable{
 	
 	public final static Pool<Army> armyPool = new ArmyPool();
 	public Body body;
-	private ArmyType type;
+	public ArmyType type;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 3;
