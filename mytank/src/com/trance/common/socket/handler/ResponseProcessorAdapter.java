@@ -64,8 +64,4 @@ public class ResponseProcessorAdapter implements ResponseProcessor {
 		
 	}
 
-	@Override
-	public void handleMessage(Message msg, Context context) {
-		
-	}
 }

@@ -13,7 +13,7 @@ import com.trance.trancetank.model.Attr;
 import com.trance.tranceview.constant.BlockType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.pools.BlockPool;
+import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.MapUtil;
@@ -24,9 +24,9 @@ import com.trance.tranceview.utils.WorldUtils;
  * @author zhangyl
  *
  */
-public class Block extends GameActor implements Poolable{
+public class Building extends GameActor implements Poolable{
 	
-	public final static Pool<Block> blockPool = new BlockPool();
+	public final static Pool<Building> blockPool = new BuildingPool();
 	public Body body;
 	public int value;
 	public Attr attr;

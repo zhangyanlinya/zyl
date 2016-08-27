@@ -32,6 +32,20 @@ public interface Module {
 	 * 地图
 	 */
 	int WORLD = 3;
+	/**
+	 * army
+	 */
+	int ARMY = 5;
+	
+	/**
+	 * coolqueue
+	 */
+	int COOLQUEUE = 6;
+	
+	/**
+	 * building
+	 */
+	int BUILDING = 7;
 
 	/**
 	 * 通用模块
@@ -47,5 +61,6 @@ public interface Module {
 	 * 补丁模块
 	 */
 	int PATCH = 1002;
+
 
 }

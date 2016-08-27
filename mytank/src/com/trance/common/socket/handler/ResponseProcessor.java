@@ -41,10 +41,4 @@ public interface ResponseProcessor {
 	 */
 	void callback(IoSession session, Response response, Object message);
 	
-	/**
-	 *  主线程回调
-	 * @param msg
-	 * @param context
-	 */
-	void handleMessage(Message msg, Context context);
 }

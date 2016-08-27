@@ -50,7 +50,7 @@ import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Army;
-import com.trance.tranceview.actors.Block;
+import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
@@ -399,7 +399,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				}
 				
 				if (type > 0){
-					Block block = Block.blockPool.obtain();
+					Building block = Building.blockPool.obtain();
 					if(type == BlockType.CANNON.getValue()){
 						block.init(world,type, x, y, length,length,null);
 						blocks.add(block);
@@ -661,7 +661,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		armys.clear();
 		connons.clear();
 		Bullet.bulletPool.clear();
-		Block.blockPool.clear();
+		Building.blockPool.clear();
 		
 	}
 }

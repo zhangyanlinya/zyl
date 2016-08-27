@@ -1,6 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -25,10 +26,11 @@ import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
+import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.actors.Block;
+import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
@@ -68,7 +70,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image attack;
 	private Image toWorld;
 	private Image rename;
-	public final static Array<Block> blocks = new Array<Block>();
+	public final static Array<Building> blocks = new Array<Building>();
 	private boolean init;
 	private TextInputListener listener;
 	private PlayerDto playerDto;
@@ -146,6 +148,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		MapData.gamerunning = true;
+		noArmy = false;
 		stage.clear();
 		float w = bg.getWidth();
 		float h = bg.getHeight();
@@ -195,7 +198,13 @@ public class MapScreen implements Screen ,InputProcessor{
 		return(playerDto.isMyself());//是自己的地图 且处于网络状态
 	}
 	
+	boolean noArmy = false;
 	private void attack(){
+		List<ArmyDto> list =MainActivity.player.getArmys();
+		if(list == null || list.isEmpty()){
+			noArmy = true;
+			return;
+		}
 		game.gameScreen.setPlayerDto(playerDto);
 		game.setScreen(game.gameScreen);
 	}
@@ -212,6 +221,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch,"可拖动砖块编辑",0,height);
+		}
+		if(noArmy){
+			font.draw(spriteBatch,"没有可用部队",0,100);
 		}
 		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		font.draw(spriteBatch,"攻击", width-300,100);
@@ -255,7 +267,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					stage.addActor(grass);
 				}
 				
-				Block block = Block.blockPool.obtain();
+				Building block = Building.blockPool.obtain();
 				block.setIndex(i, j);
 				if (type > 0){
 					block.init(null,type, x, y, length,length,null);
@@ -277,14 +289,14 @@ public class MapScreen implements Screen ,InputProcessor{
 			if(i==8){//没有8
 				continue;
 			}
-			Block block = Block.blockPool.obtain();
+			Building block = Building.blockPool.obtain();
 			x = i * length;
 			block.init(null,i, x,control_height/2, length,length,null);
 			stage.addActor(block);
 		}
 	}
 	
-	private Block a ;
+	private Building a ;
 	private float oldx;
 	private float oldy;
 	private int oldi;
@@ -307,13 +319,13 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		Actor actor = stage.hit(x, y, true);
-		if(actor == null || !(actor instanceof Block)){
+		if(actor == null || !(actor instanceof Building)){
 			return false;
 		}
 		controller.setCanUpdate(false);
 		
-		a = (Block) actor;
-		Block b = (Block)a;
+		a = (Building) actor;
+		Building b = (Building)a;
 		oldx = b.getX();
 		oldy = b.getY();
 		oldi = b.i;
@@ -342,7 +354,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		x -= a.getWidth()/2;
 		y -= a.getHeight()/2;	
 		
-		Block b = compute(x,y,a);
+		Building b = compute(x,y,a);
 		if(b == null){//移除
 			if(oldy == control_height/2 ){//原始的不移除 
 				a.setPosition(oldx, oldy);
@@ -354,10 +366,10 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 			
 			a.remove();
-			Block.blockPool.free(a);
+			Building.blockPool.free(a);
 			playerDto.getMap()[oldi][oldj] = 0;
 			
-			Block block = Block.blockPool.obtain();
+			Building block = Building.blockPool.obtain();
 			block.i = oldi;
 			block.j = oldj;
 			block.setPosition(oldx, oldy);
@@ -378,8 +390,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			}else{
 				b.remove();
 			}
-			Block.blockPool.free(b);
-			Block block = Block.blockPool.obtain();
+			Building.blockPool.free(b);
+			Building block = Building.blockPool.obtain();
 			block.init(null,oldValue, oldx, oldy, length, length,null);
 			stage.addActor(block);
 			StringBuilder to = new StringBuilder();
@@ -429,7 +441,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	 * @param newX
 	 * @param newY
 	 */
-	private Block compute(float x, float y ,Actor a) {
+	private Building compute(float x, float y ,Actor a) {
 		float min = a.getWidth() > a.getHeight() ? a.getHeight()/2: a.getWidth()/2;
 		Array<Actor> actors = stage.getActors();
 		for(int i = 0 ;i < actors.size ; i++){
@@ -440,7 +452,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			if(!(at instanceof GameActor)){
 				continue;
 			}
-			Block b = (Block)at;
+			Building b = (Building)at;
 			if(b.i == 0){//与原始的不比较
 				continue;
 			}
@@ -450,7 +462,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		}
 		for( int i = 0 ;i< blocks.size ;i++){
-			Block b =  blocks.get(i);
+			Building b =  blocks.get(i);
 			float dst = b.dst(x,y);
 			if(dst <= min){
 				return b;
