@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+
 /**
  * PlayerDto对象
  * 
@@ -62,6 +64,8 @@ public class PlayerDto implements Serializable {
 	private int[][] map;
 	
 	private List<ArmyDto> armys = new CopyOnWriteArrayList<ArmyDto>();
+	
+	private List<PlayerBuildingDto> buidingAttrs = new CopyOnWriteArrayList<PlayerBuildingDto>();
 
 	public long getId() {
 		return id;
@@ -152,6 +156,13 @@ public class PlayerDto implements Serializable {
 	public void setArmys(List<ArmyDto> armys) {
 		this.armys = armys;
 	}
-	
+
+	public List<PlayerBuildingDto> getBuidingAttrs() {
+		return buidingAttrs;
+	}
+
+	public void setBuidingAttrs(List<PlayerBuildingDto> buidingAttrs) {
+		this.buidingAttrs = buidingAttrs;
+	}
 	
 }

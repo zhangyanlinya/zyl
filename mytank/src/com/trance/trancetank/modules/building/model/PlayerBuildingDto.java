@@ -10,7 +10,7 @@ package com.trance.trancetank.modules.building.model;
 public class PlayerBuildingDto {
 
 	/**
-	 * 建筑id
+	 * 建筑id {@link BuildingType}
 	 */
 	private int id;
 	
@@ -24,7 +24,6 @@ public class PlayerBuildingDto {
 	 */
 	private int quality;
 	
-
 	public int getId() {
 		return id;
 	}
