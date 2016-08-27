@@ -25,7 +25,6 @@ public class Building extends GameActor{
 	
 	public final static Pool<Building> blockPool = new BuildingPool();
 	public Body body;
-	public int value;
 	public int type;
 	public int i;
 	public int j;
@@ -44,12 +43,12 @@ public class Building extends GameActor{
 	 * @param width
 	 * @param height
 	 */
-	public void init(World world,int value, float x , float y,float width,float height,ShapeRenderer renderer){
+	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
-		this.value = value;
 		this.renderer = renderer;
 		this.alive = true;
 		this.camp = 1;
+		this.type = type;
 		
 		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
