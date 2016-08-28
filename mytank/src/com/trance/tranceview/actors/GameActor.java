@@ -3,9 +3,10 @@ package com.trance.tranceview.actors;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
-public abstract class GameActor extends Actor{
+public abstract class GameActor extends Image{
 	
 	/**
 	 * 0 - 静态  或坦克  1- 子弹

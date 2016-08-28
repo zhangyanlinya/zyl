@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.MapScreen;
+import com.trance.tranceview.screens.UpgradeScreen;
 import com.trance.tranceview.screens.WorldScreen;
 
 public class TranceGame extends Game {
@@ -12,6 +13,7 @@ public class TranceGame extends Game {
 	public WorldScreen worldScreen;//
 	public MapScreen mapScreen;    //
 	public GameScreen gameScreen;  //
+	public UpgradeScreen upgradeScreen;  //
 	
 	@Override
 	public void create() {
@@ -19,6 +21,7 @@ public class TranceGame extends Game {
 		worldScreen = new WorldScreen(this);
 		mapScreen = new MapScreen(this);
 		gameScreen = new GameScreen(this);
+		upgradeScreen = new UpgradeScreen(this);
 		this.setScreen(loginScreen);
 	}
 
@@ -36,6 +39,7 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
+		upgradeScreen.dispose();
 		super.dispose();
 	}
 }

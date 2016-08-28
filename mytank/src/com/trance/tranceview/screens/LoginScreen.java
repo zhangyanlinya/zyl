@@ -166,6 +166,9 @@ public class LoginScreen implements Screen{
 				playerDto.setArmys(armys);
 			}
 			
+//			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
+//			TimeUtil.init(serverTime);
+			
 			MainActivity.player = playerDto;
 			
 			Gdx.app.postRunnable(new Runnable() {

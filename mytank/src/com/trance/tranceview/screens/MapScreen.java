@@ -69,6 +69,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
+	private Image toUpgrade;
 	private Image rename;
 	public final static Array<Building> blocks = new Array<Building>();
 	private boolean init;
@@ -120,6 +121,17 @@ public class MapScreen implements Screen ,InputProcessor{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				toWorld();
+			}
+		});
+		
+		//升级
+		toUpgrade = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
+		toUpgrade.setBounds(10 + toUpgrade.getWidth(), 10, toUpgrade.getWidth() + toUpgrade.getWidth()/2, toUpgrade.getHeight() + toUpgrade.getHeight()/2);
+		toUpgrade.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				toProgress();
 			}
 		});
 		
@@ -175,6 +187,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
+		stage.addActor(toUpgrade);
 		if(playerDto.isMyself()){
 			stage.addActor(rename);
 		}
@@ -211,6 +224,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
+	}
+	private void toProgress(){
+		this.game.setScreen(game.upgradeScreen);
 	}
 
 	@Override

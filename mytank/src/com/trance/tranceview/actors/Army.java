@@ -18,7 +18,7 @@ import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.WorldUtils;
 
 
-public class Army extends GameActor implements Poolable{
+public class Army extends GameActor{
 	
 	public final static Pool<Army> armyPool = new ArmyPool();
 	public Body body;
@@ -40,6 +40,7 @@ public class Army extends GameActor implements Poolable{
 		this.alive = true;
 		this.move = true;
 		this.camp = 2;
+		this.hp = maxhp;
 		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -137,11 +138,6 @@ public class Army extends GameActor implements Poolable{
 		if(move){
 			move();
 		}
-	}
-	
-	@Override
-	public void reset() {
-		hp = maxhp;
 	}
 	
 	@Override

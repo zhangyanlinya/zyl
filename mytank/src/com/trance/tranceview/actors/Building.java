@@ -50,7 +50,7 @@ public class Building extends GameActor{
 		this.camp = 1;
 		this.type = type;
 		
-		textureRegion = AssetsManager.getInstance().getBlockTextureRegion2(type);
+		textureRegion = AssetsManager.getInstance().getBuildingTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
@@ -120,6 +120,8 @@ public class Building extends GameActor{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
+		Color color = getColor();
+		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());

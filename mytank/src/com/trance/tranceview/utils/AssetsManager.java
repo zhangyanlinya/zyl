@@ -98,7 +98,7 @@ public class AssetsManager extends AssetManager{
         return atlasRegion;
     }
 	
-	public TextureRegion getBlockTextureRegion2(int value) {
+	public TextureRegion getBuildingTextureRegion(int value) {
 		if(textureAtlas2 == null){
 			textureAtlas2 = this.get("blocks/pic.pack", TextureAtlas.class);
 		}
