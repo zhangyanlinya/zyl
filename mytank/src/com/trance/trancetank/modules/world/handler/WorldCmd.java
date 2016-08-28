@@ -15,4 +15,5 @@ public interface WorldCmd {
 	int QUERY_PLAYER = 3 ;
 	
 	int CHANGE_PLAYER= 4;
+       //test
 }
