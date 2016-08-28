@@ -8,7 +8,6 @@ import org.apache.mina.core.session.IoSession;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessor;
-import com.trance.common.socket.handler.ResponseProcessorAdapter;
 import com.trance.common.socket.model.Response;
 import com.trance.trancetank.config.Module;
 
@@ -20,31 +19,6 @@ public class BuildingHandler extends HandlerSupport{
 
 	@Override
 	public void init() {
-		this.registerProcessor(new ResponseProcessorAdapter() {
-			
-			@Override
-			public Type getType() {
-				return null;
-			}
-			
-			@Override
-			public int getModule() {
-				return Module.BUILDING;
-			}
-			
-			@Override
-			public int getCmd() {
-				return BuildingCmd.GET_BUILDINGS;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-				
-			}
-
-		});
-		
 		this.registerProcessor(new ResponseProcessor() {
 			
 			@Override
@@ -95,29 +69,6 @@ public class BuildingHandler extends HandlerSupport{
 			}
 		});
 		
-		this.registerProcessor(new ResponseProcessor() {
-			
-			@Override
-			public Type getType() {
-				return null;
-			}
-			
-			@Override
-			public int getModule() {
-				return Module.BUILDING;
-			}
-			
-			@Override
-			public int getCmd() {
-				return BuildingCmd.ENTER_CITY;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-				
-			}
-		});
 	}
 	
 }

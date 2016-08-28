@@ -41,10 +41,4 @@ public interface BuildingCmd {
 	 */
 	int UPGRADE_BUILDING_LEVEL = 3;
 	
-	/**
-	 * 进入主城
- 	 * @return {@link BuildingResult}
-	 */
-	int ENTER_CITY = 4;
-	
 }
