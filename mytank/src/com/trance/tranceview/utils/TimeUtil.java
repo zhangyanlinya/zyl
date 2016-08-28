@@ -9,6 +9,7 @@ public class TimeUtil {
 	}
 	
 	public static long getNowTime(){
-		return System.currentTimeMillis() + deltaTime;
+		return System.currentTimeMillis();//TODO test
+//		return System.currentTimeMillis() + deltaTime;
 	}
 }

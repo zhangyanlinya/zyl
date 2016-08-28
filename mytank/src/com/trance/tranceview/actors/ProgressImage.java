@@ -7,15 +7,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.trance.tranceview.utils.TimeUtil;
 
 public class ProgressImage extends Image{
 	
 	private ShapeRenderer renderer;
 	
+	private long needTime;
 	
-	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer) {
+	private long endTime;
+	
+	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, long endTime) {
 		super(region);
 		this.renderer = shapeRenderer;
+		this.needTime = needTime;
+		this.endTime = endTime;
 	}
 	
 		
@@ -24,12 +30,16 @@ public class ProgressImage extends Image{
 		super.draw(batch, parentAlpha);
 		
 		batch.end();
-		float percent = 0.5f;
+		long leftTime = endTime - TimeUtil.getNowTime();
+		if(leftTime < 0){
+			leftTime = 0;
+		}
+		float percent = (needTime - leftTime) / (float)needTime;
 		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
 		renderer.rect(Gdx.graphics.getWidth() / 4 , this.getY() + 12, Gdx.graphics.getWidth() / 2, 40);
 		renderer.end();
-		if(percent < 0.2){
+		if(percent < 0.2){ 
 			renderer.setColor(Color.RED);
 		}else if(percent < 0.5){
 			renderer.setColor(Color.YELLOW);
@@ -41,4 +51,5 @@ public class ProgressImage extends Image{
 		renderer.end();
 		batch.begin();
 	}
+	
 }

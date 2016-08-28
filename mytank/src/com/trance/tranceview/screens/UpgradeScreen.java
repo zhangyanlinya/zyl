@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -54,7 +55,10 @@ public class UpgradeScreen extends ScreenAdapter{
 		
 		for(int i = 0; i < list.size(); i++){
 			PlayerBuildingDto dto = list.get(i);
-			Image image = new ProgressImage(AssetsManager.getInstance().getBuildingTextureRegion(dto.getId()),shapeRenderer);
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
+			long needTime = 1000 * 20;
+			long endTime = System.currentTimeMillis() + 10000;
+			Image image = new ProgressImage(region,shapeRenderer,needTime, endTime);
 			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
 			stage.addActor(image);
 		}
