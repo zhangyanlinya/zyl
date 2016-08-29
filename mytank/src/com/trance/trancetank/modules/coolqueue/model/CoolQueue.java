@@ -10,8 +10,7 @@ import com.trance.common.basedb.Basedb;
  * @author Along
  *
  */
-@Basedb
-public class CoolQueue{
+public class CoolQueue implements Basedb{
 
 	/**
 	 * 冷却队列id
@@ -33,7 +32,7 @@ public class CoolQueue{
 	 */
 	private int vipLevel;
 
-	public int getId() {
+	public Object getId() {
 		return id;
 	}
 

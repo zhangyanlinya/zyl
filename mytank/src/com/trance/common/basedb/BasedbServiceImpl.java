@@ -1,6 +1,5 @@
 package com.trance.common.basedb;
 
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +16,12 @@ import com.trance.tranceview.constant.LogTag;
 import dalvik.system.DexFile;
 import dalvik.system.PathClassLoader;
 
+@SuppressWarnings("rawtypes")
 public class BasedbServiceImpl implements BasedbService {
-		
+	
+	
+	private final Map<Class, Map<Object,Basedb>> storage = new HashMap<Class, Map<Object,Basedb>>();
+	
 	@Override
 	public void init(Context context){
 		FileHandle fileHandle = Gdx.files.internal("xml_db");
@@ -41,33 +44,42 @@ public class BasedbServiceImpl implements BasedbService {
 			while(n.hasMoreElements()){
 			    String entry = n.nextElement();
 				Class<?> clazz = dex.loadClass(entry, classLoader);
-		          if (clazz != null) {
-		        	Basedb annotation = clazz.getAnnotation(Basedb.class);
-		            if (annotation != null) {
-		            	String key = clazz.getSimpleName();
-		            	System.out.println(clazz.getSimpleName());
+				if(clazz == null){
+					continue;
+				}
+				Class<?>[] interfaces = clazz.getInterfaces();
+				if(interfaces != null && interfaces.length > 0){
+					for(Class in : interfaces)
+					if(in == Basedb.class){
+						String key = clazz.getSimpleName();
 		            	FileHandle file = filemap.get(key);
 		            	if(file == null){
 		            		Log.e(LogTag.TAG, key+"没有JSON文件");
 		            		continue;
 		            	}
 		            	
-		            	List<?> list = JSON.parseArray(new String(file.readBytes()), clazz);
+		            	@SuppressWarnings("unchecked")
+						List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
 		            	if(list != null){
-		            		for(Object o :list){
-		            			System.out.println(o);
+		            		Map<Object,Basedb> map = new HashMap<Object,Basedb>();
+		            		for(Basedb o :list){
+			            			map.put(o.getId(), o);
 		            		}
+		            		storage.put(clazz, map);
 		            	}
-		            }
-		          }
+					}
+				} 
 			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		
-
-		
-
+	}
+	
+	public Basedb get(Class clazz, Object id){
+		Map<Object, Basedb> map = storage.get(clazz);
+		if(map == null){
+			return null;
+		}
+		return map.get(id);
 	}
 }
