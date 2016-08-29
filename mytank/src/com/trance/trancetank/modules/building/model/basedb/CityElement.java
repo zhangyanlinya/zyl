@@ -1,5 +1,7 @@
 package com.trance.trancetank.modules.building.model.basedb;
 
+import com.trance.common.basedb.Basedb;
+
 
 /**
  * 主城建筑
@@ -7,7 +9,7 @@ package com.trance.trancetank.modules.building.model.basedb;
  * @author Along
  *
  */
-public class CityElement {
+public class CityElement implements Basedb{
 
 	/**
 	 * id

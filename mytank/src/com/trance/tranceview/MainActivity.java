@@ -19,7 +19,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.basedb.BasedbService;
-import com.trance.common.basedb.BasedbServiceImpl;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
@@ -115,9 +114,7 @@ public class MainActivity extends AndroidApplication {
 			}
 		}.start();
 		
-		
-		BasedbService basedbService = new BasedbServiceImpl();
-		basedbService.init(this);
+		BasedbService.init(this);
 		isInit = true;
 	}
 

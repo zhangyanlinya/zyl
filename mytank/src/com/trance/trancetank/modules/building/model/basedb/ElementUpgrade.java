@@ -1,5 +1,7 @@
 package com.trance.trancetank.modules.building.model.basedb;
 
+import com.trance.common.basedb.Basedb;
+
 
 /**
  * 主城建筑升级表
@@ -7,7 +9,7 @@ package com.trance.trancetank.modules.building.model.basedb;
  * @author Along
  *
  */
-public class ElementUpgrade {
+public class ElementUpgrade implements Basedb{
 
 	/**
 	 * id

@@ -12,6 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.trance.common.basedb.BasedbService;
+import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueue;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
@@ -47,8 +50,11 @@ public class UpgradeScreen extends ScreenAdapter{
 		for(int i = 0; i < list.size(); i++){
 			CoolQueueDto dto = list.get(i);
 			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
-			long needTime = 1000 * 20;
-			Image image = new ProgressImage(region,shapeRenderer,needTime, dto.getExpireTime());
+			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
+			if(elementUpgrade == null){
+				continue;
+			}
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto.getExpireTime());
 			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
 			stage.addActor(image);
 		}

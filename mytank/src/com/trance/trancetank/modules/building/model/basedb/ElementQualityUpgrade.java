@@ -1,5 +1,7 @@
 package com.trance.trancetank.modules.building.model.basedb;
 
+import com.trance.common.basedb.Basedb;
+
 
 /**
  * 建筑品质升级
@@ -7,7 +9,7 @@ package com.trance.trancetank.modules.building.model.basedb;
  * @author Along
  *
  */
-public class ElementQualityUpgrade {
+public class ElementQualityUpgrade implements Basedb{
 
 	/**
 	 * id
@@ -39,7 +41,7 @@ public class ElementQualityUpgrade {
 	 */
 	private String cost;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
