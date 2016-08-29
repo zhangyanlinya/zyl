@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 
 /**
  * PlayerDto对象
@@ -66,6 +67,8 @@ public class PlayerDto implements Serializable {
 	private List<ArmyDto> armys = new CopyOnWriteArrayList<ArmyDto>();
 	
 	private List<PlayerBuildingDto> buidingAttrs = new CopyOnWriteArrayList<PlayerBuildingDto>();
+	
+	private List<CoolQueueDto> coolQueues = new CopyOnWriteArrayList<CoolQueueDto>();
 
 	public long getId() {
 		return id;
@@ -164,5 +167,12 @@ public class PlayerDto implements Serializable {
 	public void setBuidingAttrs(List<PlayerBuildingDto> buidingAttrs) {
 		this.buidingAttrs = buidingAttrs;
 	}
-	
+
+	public List<CoolQueueDto> getCoolQueues() {
+		return coolQueues;
+	}
+
+	public void setCoolQueues(List<CoolQueueDto> coolQueues) {
+		this.coolQueues = coolQueues;
+	}
 }

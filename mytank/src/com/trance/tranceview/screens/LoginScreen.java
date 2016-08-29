@@ -23,12 +23,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.trance.common.basedb.Basedb;
+import com.trance.common.basedb.BasedbService;
+import com.trance.common.basedb.BasedbServiceImpl;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.PlayerDto;
@@ -38,6 +42,7 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
+import com.trance.tranceview.utils.TimeUtil;
 
 public class LoginScreen implements Screen{
 	
@@ -60,6 +65,10 @@ public class LoginScreen implements Screen{
 		renderer = new ShapeRenderer(); 
 		assetsManager = AssetsManager.getInstance();
 		assetsManager.init();
+		
+		BasedbService basedbService = new BasedbServiceImpl<Basedb>();
+		basedbService.init();
+		
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
 		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
@@ -166,8 +175,14 @@ public class LoginScreen implements Screen{
 				playerDto.setArmys(armys);
 			}
 			
-//			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
-//			TimeUtil.init(serverTime);
+			Object cobj = result.get("coolQueues");
+			if(cobj != null){
+				List<CoolQueueDto> coolQueues = JSON.parseArray(cobj.toString(), CoolQueueDto.class);
+				playerDto.setCoolQueues(coolQueues);
+			}
+			
+			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
+			TimeUtil.init(serverTime);
 			
 			MainActivity.player = playerDto;
 			

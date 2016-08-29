@@ -12,7 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.utils.AssetsManager;
@@ -24,7 +25,7 @@ public class UpgradeScreen extends ScreenAdapter{
 	private boolean init;
 	private TranceGame tranceGame;
 	
-	private List<PlayerBuildingDto> list = new ArrayList<PlayerBuildingDto>();
+	private List<CoolQueueDto> list = new ArrayList<CoolQueueDto>();
 	
 	public UpgradeScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -36,29 +37,18 @@ public class UpgradeScreen extends ScreenAdapter{
 			init();
 			init = true;
 		}
+		
+		list = MainActivity.player.getCoolQueues();
 	}
 	
 	private void init(){
 		shapeRenderer = new ShapeRenderer(); 
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		
-		//TODO TEST
-		PlayerBuildingDto building1 = new PlayerBuildingDto();
-		building1.setLevel(1);
-		building1.setId(1);
-		list.add(building1);
-		
-		PlayerBuildingDto building2 = new PlayerBuildingDto();
-		building2.setLevel(2);
-		building2.setId(2);
-		list.add(building2);
-		
 		for(int i = 0; i < list.size(); i++){
-			PlayerBuildingDto dto = list.get(i);
+			CoolQueueDto dto = list.get(i);
 			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
 			long needTime = 1000 * 20;
-			long endTime = System.currentTimeMillis() + 10000;
-			Image image = new ProgressImage(region,shapeRenderer,needTime, endTime);
+			Image image = new ProgressImage(region,shapeRenderer,needTime, dto.getExpireTime());
 			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
 			stage.addActor(image);
 		}
