@@ -10,7 +10,8 @@ import com.trance.common.basedb.Basedb;
  * @author Along
  *
  */
-public class CoolQueue implements Basedb{
+@Basedb
+public class CoolQueue{
 
 	/**
 	 * 冷却队列id

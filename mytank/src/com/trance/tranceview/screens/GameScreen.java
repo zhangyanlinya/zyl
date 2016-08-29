@@ -158,6 +158,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			init = true;
 		}
 		MapData.gamerunning = false;
+		camera.position.set(width/2 , height/2 , 0);
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
 		initClock();
@@ -185,7 +186,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera(); 
         camera.setToOrtho(false, width, height);
-        camera.position.set(width/2 , height/2 , 0);
 //		debugRenderer = new Box2DDebugRenderer(); 
 		stage.setCamera(camera);
 		

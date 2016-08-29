@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.trance.common.basedb.Basedb;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.basedb.BasedbServiceImpl;
 import com.trance.common.socket.model.Request;
@@ -65,9 +64,6 @@ public class LoginScreen implements Screen{
 		renderer = new ShapeRenderer(); 
 		assetsManager = AssetsManager.getInstance();
 		assetsManager.init();
-		
-		BasedbService basedbService = new BasedbServiceImpl<Basedb>();
-		basedbService.init();
 		
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
@@ -181,8 +177,8 @@ public class LoginScreen implements Screen{
 				playerDto.setCoolQueues(coolQueues);
 			}
 			
-			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
-			TimeUtil.init(serverTime);
+//			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
+//			TimeUtil.init(serverTime);
 			
 			MainActivity.player = playerDto;
 			

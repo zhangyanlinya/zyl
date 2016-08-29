@@ -1,7 +1,10 @@
 package com.trance.common.basedb;
 
+import android.content.Context;
+
+
 public interface BasedbService {
 
-	void init();
+	void init(Context context);
 
 }

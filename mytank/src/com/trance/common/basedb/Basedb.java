@@ -1,5 +1,8 @@
 package com.trance.common.basedb;
 
-public interface Basedb {
-	
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Basedb {
 }
