@@ -1,7 +1,9 @@
 package com.trance.tranceview.screens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -12,18 +14,32 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.trance.common.basedb.BasedbService;
+import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
+import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
+import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.trancetank.modules.player.handler.PlayerResult;
+import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.ProgressImage;
+import com.trance.tranceview.net.ClientService;
+import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.SocketUtil;
 
 public class UpgradeScreen extends ScreenAdapter{
 	
@@ -69,11 +85,35 @@ public class UpgradeScreen extends ScreenAdapter{
 		}
 		
 		for(int i = 0; i < buildings.size(); i++){
-			PlayerBuildingDto dto = buildings.get(i);
+			final PlayerBuildingDto dto = buildings.get(i);
 			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
 			Image image = new BuildingImage(region, font, dto);
 			dto.getLevel();
 			image.setPosition(100, ( i + 1) * 100 );
+			image.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					Map<String, Object> params = new HashMap<String, Object>();
+					params.put("buildingId", dto.getId());
+					Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
+					
+					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+						return;
+					}
+					Result<?> result = (Result<?>) response.getValue();
+					if(result != null){
+						if(result.getCode() != PlayerResult.SUCCESS){
+							return ;
+						}
+						ValueResultSet valueResultSet = (ValueResultSet) result.get("valueResultSet");
+						
+						CoolQueueDto coolQueueDto = (CoolQueueDto) result.get("coolQueueDto");
+						if(coolQueueDto != null)
+						coolQueues.add(coolQueueDto);
+					}
+				}
+			});
 			stage.addActor(image);
 		}
 		

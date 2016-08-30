@@ -38,6 +38,16 @@ public class PlayerDto implements Serializable {
 	private long gold;
 	
 	/**
+	 * 银元
+	 */
+	private long silver;
+	
+	/**
+	 * 粮草
+	 */
+	private long foods;
+	
+	/**
 	 * UP
 	 */
 	private long up;
@@ -175,4 +185,22 @@ public class PlayerDto implements Serializable {
 	public void setCoolQueues(List<CoolQueueDto> coolQueues) {
 		this.coolQueues = coolQueues;
 	}
+
+	public long getSilver() {
+		return silver;
+	}
+
+	public void setSilver(long silver) {
+		this.silver = silver;
+	}
+
+	public long getFoods() {
+		return foods;
+	}
+
+	public void setFoods(long foods) {
+		this.foods = foods;
+	}
+	
+	
 }
