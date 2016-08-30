@@ -30,13 +30,13 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * 远程主机ip
 	 */
-	private String ip = "112.74.30.92";
-//	private String ip = "192.168.0.4";
+//	private String ip = "112.74.30.92";
+	private String ip = "192.168.0.4";
 	
 	/**
 	 * 远程主机端口号
 	 */
-	private int port = 10101;
+	private int port = 10102;
 	
 //	/**
 //	 * 上次重连时间
