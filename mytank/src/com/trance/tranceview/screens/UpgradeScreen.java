@@ -54,7 +54,7 @@ public class UpgradeScreen extends ScreenAdapter{
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		
 		coolQueues = MainActivity.player.getCoolQueues();
-		buildings = MainActivity.player.getBuidingAttrs();
+		buildings = MainActivity.player.getBuidings();
 		
 		for(int i = 0; i < coolQueues.size(); i++){
 			CoolQueueDto dto = coolQueues.get(i);

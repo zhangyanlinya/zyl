@@ -41,6 +41,4 @@ public class ArmyDto {
 	public void setRect(Rectangle rect) {
 		this.rect = rect;
 	}
-	
-	
 }

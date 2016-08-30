@@ -66,7 +66,7 @@ public class PlayerDto implements Serializable {
 	
 	private List<ArmyDto> armys = new CopyOnWriteArrayList<ArmyDto>();
 	
-	private List<PlayerBuildingDto> buidingAttrs = new CopyOnWriteArrayList<PlayerBuildingDto>();
+	private List<PlayerBuildingDto> buidings = new CopyOnWriteArrayList<PlayerBuildingDto>();
 	
 	private List<CoolQueueDto> coolQueues = new CopyOnWriteArrayList<CoolQueueDto>();
 
@@ -160,12 +160,12 @@ public class PlayerDto implements Serializable {
 		this.armys = armys;
 	}
 
-	public List<PlayerBuildingDto> getBuidingAttrs() {
-		return buidingAttrs;
+	public List<PlayerBuildingDto> getBuidings() {
+		return buidings;
 	}
 
-	public void setBuidingAttrs(List<PlayerBuildingDto> buidingAttrs) {
-		this.buidingAttrs = buidingAttrs;
+	public void setBuidings(List<PlayerBuildingDto> buidings) {
+		this.buidings = buidings;
 	}
 
 	public List<CoolQueueDto> getCoolQueues() {

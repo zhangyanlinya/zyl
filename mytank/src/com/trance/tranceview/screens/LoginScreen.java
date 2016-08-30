@@ -29,6 +29,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
@@ -174,7 +175,13 @@ public class LoginScreen implements Screen{
 				playerDto.setCoolQueues(coolQueues);
 			}
 			
-//			Long serverTime = (Long) result.get("serverTime");//同步服务器时间
+			Object bobj = result.get("buildings");
+			if(bobj != null){
+				List<PlayerBuildingDto> buildings = JSON.parseArray(bobj.toString(), PlayerBuildingDto.class);
+				playerDto.setBuidings(buildings);
+			}
+			
+//			Long serverTime = (Long) result.get("serverTime");
 //			TimeUtil.init(serverTime);
 			
 			MainActivity.player = playerDto;
