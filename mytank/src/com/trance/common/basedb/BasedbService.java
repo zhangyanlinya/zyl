@@ -1,5 +1,6 @@
 package com.trance.common.basedb;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -49,24 +50,25 @@ public class BasedbService {
 				}
 				Class<?>[] interfaces = clazz.getInterfaces();
 				if(interfaces != null && interfaces.length > 0){
-					for(Class in : interfaces)
-					if(in == Basedb.class){
-						String key = clazz.getSimpleName();
-		            	FileHandle file = filemap.get(key);
-		            	if(file == null){
-		            		Log.e(LogTag.TAG, key+"没有JSON文件");
-		            		continue;
-		            	}
-		            	
-		            	@SuppressWarnings("unchecked")
-						List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
-		            	if(list != null){
-		            		Map<Object,Basedb> map = new HashMap<Object,Basedb>();
-		            		for(Basedb o :list){
-			            			map.put(o.getId(), o);
-		            		}
-		            		storage.put(clazz, map);
-		            	}
+					for(Class in : interfaces){
+						if(in == Basedb.class){
+							String key = clazz.getSimpleName();
+			            	FileHandle file = filemap.get(key);
+			            	if(file == null){
+			            		Log.e(LogTag.TAG, key+"没有JSON文件");
+			            		continue;
+			            	}
+			            	
+			            	@SuppressWarnings("unchecked")
+							List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
+			            	if(list != null){
+			            		Map<Object,Basedb> map = new HashMap<Object,Basedb>();
+			            		for(Basedb o :list){
+				            			map.put(o.getId(), o);
+			            		}
+			            		storage.put(clazz, map);
+			            	}
+						}
 					}
 				} 
 			}
@@ -82,5 +84,10 @@ public class BasedbService {
 			return null;
 		}
 		return (T) map.get(id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Collection<T> listAll(Class<T> clazz){
+		return  (Collection<T>) storage.get(clazz).values();
 	}
 }

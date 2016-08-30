@@ -68,6 +68,17 @@ public class FontUtil {
 		return font;
 	}
 	
+	public BitmapFont getFont(int size, Color color){
+		generator = new FreeTypeFontGenerator(
+				Gdx.files.internal("font/font.ttf"));
+		FreeTypeBitmapFontData fontData = generator.generateData(size,
+				FreeTypeFontGenerator.DEFAULT_CHARS, false);
+		generator.dispose();
+		BitmapFont font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
+		font.setColor(color);
+		return font;
+	}
+	
 	public static String randomChineseName(){
 		int index = RandomUtil.nextInt(Surname.length - 1);		
 		String name = Surname[index]; //
