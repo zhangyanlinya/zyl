@@ -31,6 +31,7 @@ import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.handler.PlayerResult;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
+import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.BuildingImage;
@@ -101,12 +102,13 @@ public class UpgradeScreen extends ScreenAdapter{
 					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 						return;
 					}
-					Result<?> result = (Result<?>) response.getValue();
+					HashMap<String,Object> result = (HashMap<String,Object>) response.getValue();
 					if(result != null){
-						if(result.getCode() != PlayerResult.SUCCESS){
+						if(Integer.valueOf(String.valueOf(result.get("result"))) != PlayerResult.SUCCESS){
 							return ;
 						}
 						ValueResultSet valueResultSet = (ValueResultSet) result.get("valueResultSet");
+						RewardService.executeRewards(valueResultSet);
 						
 						CoolQueueDto coolQueueDto = (CoolQueueDto) result.get("coolQueueDto");
 						if(coolQueueDto != null)
