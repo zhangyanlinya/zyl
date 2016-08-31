@@ -44,12 +44,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.reward.result.ValueResultSet;
+import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Army;
@@ -77,7 +83,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Music music;
-	private PlayerDto playerDto;
+	private static PlayerDto playerDto;
 	
 	
 	/** 数组宽数量 */
@@ -157,7 +163,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			init();
 			init = true;
 		}
-		MapData.gamerunning = false;
+		MapData.gamerunning = true;
 		camera.position.set(width/2 , height/2 , 0);
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
@@ -258,7 +264,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 	}
 	
-	public static void finishBattle(){
+	public static void finishBattle(boolean win){
 		List<ArmyDto> list = MainActivity.player.getArmys();
 		list.clear();
 		for(ArmyDto dto : armyDtos.values()){
@@ -287,7 +293,22 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		//TODO send to server !
-		
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("armys ", list);
+		params.put("destLv", playerDto.getLevel());
+		params.put("state", win ? 0 : 1);
+		params.put("sign", "");//TODO
+		Request request = Request.valueOf(Module.Battle, BattleCmd.FINISH_BATTLE, params);
+		Response response = SocketUtil.send(request, true);
+		if(response == null){
+			return;
+		}
+		ResponseStatus status = response.getStatus();
+		if (status != ResponseStatus.SUCCESS) {
+			return;
+		}
+		Result<ValueResultSet> result = (Result<ValueResultSet>) response.getValue();
+		RewardService.executeRewards(result.getContent());
 	}
 
 	//DestoryBody
@@ -349,7 +370,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
-						MapData.gamerunning = true;
+						MapData.gamerunning = false;
 					}
 				}
 			});
@@ -455,7 +476,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			stage.addActor(window);
 		}
 		
@@ -493,8 +514,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				}
 				return;
 			}
-			MapData.gamerunning = true;
-			finishBattle();
+			MapData.gamerunning = false;
+			finishBattle(false);
 		}
 	}
 
@@ -637,8 +658,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 
 	@Override
 	public void hide() {
-		MapData.gamerunning = true;
-		finishBattle();
+		MapData.gamerunning = false;
+		finishBattle(false);
 	}
 
 	@Override

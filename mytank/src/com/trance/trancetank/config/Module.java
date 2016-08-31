@@ -46,6 +46,8 @@ public interface Module {
 	 * building
 	 */
 	int BUILDING = 7;
+	
+	int Battle = 8;
 
 	/**
 	 * 通用模块
@@ -61,6 +63,5 @@ public interface Module {
 	 * 补丁模块
 	 */
 	int PATCH = 1002;
-
 
 }

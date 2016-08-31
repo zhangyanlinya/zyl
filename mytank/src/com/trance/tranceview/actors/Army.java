@@ -54,7 +54,7 @@ public class Army extends GameActor{
 	}
 	
 	public void move() {
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		
@@ -75,7 +75,7 @@ public class Army extends GameActor{
 	 * 111
 	 */
 	public void fire() {
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		
@@ -127,7 +127,7 @@ public class Army extends GameActor{
 			batch.begin();
 		}
 		
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		if (!alive) {

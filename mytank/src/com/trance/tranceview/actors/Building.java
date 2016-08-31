@@ -76,7 +76,7 @@ public class Building extends GameActor{
 	
 	@Override
 	public void move() {
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		
@@ -93,7 +93,7 @@ public class Building extends GameActor{
 	private long time;
 	
 	public void fire() {
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		
@@ -148,7 +148,7 @@ public class Building extends GameActor{
 			batch.begin();
 		}
 		
-		if(MapData.gamerunning){
+		if(!MapData.gamerunning){
 			return;
 		}
 		if (!alive) {
@@ -168,7 +168,7 @@ public class Building extends GameActor{
 		blockPool.free(this);
 		
 		if(type == BuildingType.OFFICE){
-			MapData.gamerunning = true;
+			MapData.gamerunning = false;
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
 		}

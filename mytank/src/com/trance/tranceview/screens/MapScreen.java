@@ -159,7 +159,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			init = true;
 		}
 		
-		MapData.gamerunning = true;
+		MapData.gamerunning = false;
 		camera.position.set(width/2, height/2, 0);
 		noArmy = false;
 		stage.clear();
