@@ -23,7 +23,7 @@ import com.trance.tranceview.utils.WorldUtils;
  */
 public class Building extends GameActor{
 	
-	public final static Pool<Building> blockPool = new BuildingPool();
+	public final static Pool<Building> buildingPool = new BuildingPool();
 	public Body body;
 	public int type;
 	public int i;
@@ -165,10 +165,12 @@ public class Building extends GameActor{
 	public void dead() {
 		alive = false;
 		remove();
-		blockPool.free(this);
+		buildingPool.free(this);
+		GameScreen.buildings.removeValue(this, true);
 		
 		if(type == BuildingType.OFFICE){
 			MapData.gamerunning = false;
+			GameScreen.finishBattle(true);
 //			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
 //			music.play();
 		}

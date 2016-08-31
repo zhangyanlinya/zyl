@@ -83,7 +83,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	private Music music;
-	private static PlayerDto playerDto;
+	public static PlayerDto playerDto;
 	
 	
 	/** 数组宽数量 */
@@ -114,7 +114,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     
     private Box2DDebugRenderer debugRenderer;
 	
-	public final static Array<GameActor> blocks = new Array<GameActor>();
+	public final static Array<GameActor> buildings = new Array<GameActor>();
 	
 	public final static Array<GameActor> armys = new Array<GameActor>();
 	
@@ -142,9 +142,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		this.tranceGame = tranceGame;
 	}
 	
-	public void setPlayerDto(PlayerDto playerDto){
-		this.playerDto = playerDto;
-	}
 	
 	//清除动态的
 //	private void stageClearActors(){
@@ -307,8 +304,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if (status != ResponseStatus.SUCCESS) {
 			return;
 		}
-		Result<ValueResultSet> result = (Result<ValueResultSet>) response.getValue();
-		RewardService.executeRewards(result.getContent());
+//		Result<ValueResultSet> result = (Result<ValueResultSet>) response.getValue();
+//		RewardService.executeRewards(result.getContent());
 	}
 
 	//DestoryBody
@@ -383,7 +380,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	//
 	private void initMap() {
-		blocks.clear();
+		buildings.clear();
 		connons.clear();
 		if(playerDto == null){
 			return;
@@ -447,14 +444,14 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				}
 				
 				if (type > 0){
-					Building block = Building.blockPool.obtain();
+					Building block = Building.buildingPool.obtain();
 					if(type == BuildingType.HORSE_MARKET){
 						block.init(world,type, x, y, length,length,null);
-						blocks.add(block);
+						buildings.add(block);
 						connons.add(block);
 					}else{
 						block.init(world,type, x,y, length,length,null);
-						blocks.add(block);
+						buildings.add(block);
 					}
 					stage.addActor(block);
 				}
@@ -525,7 +522,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		for(GameActor army : armys){
-			army.scan(blocks);
+			army.scan(buildings);
 		}
 	}
 
@@ -705,11 +702,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		bodies.clear();
 		
-		blocks.clear();
+		buildings.clear();
 		armys.clear();
 		connons.clear();
 		Bullet.bulletPool.clear();
-		Building.blockPool.clear();
+		Building.buildingPool.clear();
 		
 	}
 }

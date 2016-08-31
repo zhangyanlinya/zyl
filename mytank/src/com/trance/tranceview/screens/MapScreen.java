@@ -219,7 +219,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			noArmy = true;
 			return;
 		}
-		game.gameScreen.setPlayerDto(playerDto);
+		GameScreen.playerDto = playerDto;
 		game.setScreen(game.gameScreen);
 	}
 	
@@ -284,7 +284,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					stage.addActor(grass);
 				}
 				
-				Building block = Building.blockPool.obtain();
+				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
 				if (type > 0){
 					block.init(null,type, x, y, length,length,null);
@@ -306,7 +306,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			if(i==8){//没有8
 				continue;
 			}
-			Building block = Building.blockPool.obtain();
+			Building block = Building.buildingPool.obtain();
 			x = i * length;
 			block.init(null,i, x,control_height/2, length,length,null);
 			stage.addActor(block);
@@ -383,10 +383,10 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 			
 			a.remove();
-			Building.blockPool.free(a);
+			Building.buildingPool.free(a);
 			playerDto.getMap()[oldi][oldj] = 0;
 			
-			Building block = Building.blockPool.obtain();
+			Building block = Building.buildingPool.obtain();
 			block.i = oldi;
 			block.j = oldj;
 			block.setPosition(oldx, oldy);
@@ -407,8 +407,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			}else{
 				b.remove();
 			}
-			Building.blockPool.free(b);
-			Building block = Building.blockPool.obtain();
+			Building.buildingPool.free(b);
+			Building block = Building.buildingPool.obtain();
 			block.init(null,oldType, oldx, oldy, length, length,null);
 			stage.addActor(block);
 			StringBuilder to = new StringBuilder();
