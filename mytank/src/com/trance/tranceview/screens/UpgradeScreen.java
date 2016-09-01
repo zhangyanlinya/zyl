@@ -63,12 +63,6 @@ public class UpgradeScreen extends ScreenAdapter{
 			init();
 			init = true;
 		}
-	}
-	
-	private void init(){
-		shapeRenderer = new ShapeRenderer(); 
-		font = FontUtil.getInstance().getFont(25, Color.WHITE);;
-		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		
 		coolQueues = MainActivity.player.getCoolQueues();
 		buildings = MainActivity.player.getBuidings();
@@ -122,6 +116,14 @@ public class UpgradeScreen extends ScreenAdapter{
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
+	
+	private void init(){
+		shapeRenderer = new ShapeRenderer(); 
+		font = FontUtil.getInstance().getFont(25, Color.WHITE);;
+		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		
+		
 	}
 	
 	@Override

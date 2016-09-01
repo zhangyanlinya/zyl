@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -289,7 +290,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 		}
 		
-		//TODO send to server !
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("armys ", list);
 		params.put("destLv", playerDto.getLevel());
@@ -300,12 +300,19 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(response == null){
 			return;
 		}
+		
 		ResponseStatus status = response.getStatus();
 		if (status != ResponseStatus.SUCCESS) {
 			return;
 		}
-//		Result<ValueResultSet> result = (Result<ValueResultSet>) response.getValue();
-//		RewardService.executeRewards(result.getContent());
+		
+		byte[] bytes = response.getValueBytes();
+		Result<?> result = JSON.parseObject(bytes, Result.class);
+		Object o = result.getContent();
+		if(o != null){
+			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
+			RewardService.executeRewards(valueResultSet);
+		}
 	}
 
 	//DestoryBody
