@@ -40,6 +40,7 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.SocketUtil;
+import com.trance.tranceview.utils.TimeUtil;
 
 public class LoginScreen implements Screen{
 	
@@ -181,8 +182,8 @@ public class LoginScreen implements Screen{
 				playerDto.setBuidings(buildings);
 			}
 			
-//			Long serverTime = (Long) result.get("serverTime");
-//			TimeUtil.init(serverTime);
+			Long serverTime = (Long) result.get("serverTime");
+			TimeUtil.init(serverTime);
 			
 			MainActivity.player = playerDto;
 			

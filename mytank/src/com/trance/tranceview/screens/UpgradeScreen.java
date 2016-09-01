@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
@@ -69,7 +70,11 @@ public class UpgradeScreen extends ScreenAdapter{
 		
 		for(int i = 0; i < coolQueues.size(); i++){
 			CoolQueueDto dto = coolQueues.get(i);
-			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
+			int id = dto.getId();
+			if(id == 8){//TODO
+				id = 1;
+			}
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
 			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
 			if(elementUpgrade == null){
 				continue;
@@ -101,12 +106,18 @@ public class UpgradeScreen extends ScreenAdapter{
 						if(Integer.valueOf(String.valueOf(result.get("result"))) != PlayerResult.SUCCESS){
 							return ;
 						}
-						ValueResultSet valueResultSet = (ValueResultSet) result.get("valueResultSet");
-						RewardService.executeRewards(valueResultSet);
+						Object valueResult = result.get("valueResultSet");
+						if(valueResult != null){
+							ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+							RewardService.executeRewards(valueResultSet);
+						}
 						
-						CoolQueueDto coolQueueDto = (CoolQueueDto) result.get("coolQueueDto");
-						if(coolQueueDto != null)
-						coolQueues.add(coolQueueDto);
+						Object coolQueue = result.get("coolQueueDto");
+						if(coolQueue != null){
+							CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
+							if(coolQueueDto != null)
+							coolQueues.add(coolQueueDto);
+						}
 					}
 				}
 			});
