@@ -62,10 +62,10 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 		//新包开始
 		if (ctx.getState() == CodecState.READY) {
 			//flash 策略请求
-			boolean continued = doIfFlashPolicyRequest(session, in, out);
-			if (!continued) {
-				return false;
-			}
+//			boolean continued = doIfFlashPolicyRequest(session, in, out);
+//			if (!continued) {
+//				return false;
+//			}
 			
 			while (true) {
 				if (in.remaining() < PACKAGE_HEADER_LENGTH) {
