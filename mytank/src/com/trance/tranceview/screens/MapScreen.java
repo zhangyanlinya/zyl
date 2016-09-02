@@ -249,7 +249,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	public void renderPlayerInfo(SpriteBatch spriteBatch, PlayerDto playerDto){
-		font.setColor(Color.BLUE);
 		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		font.draw(spriteBatch, "等级：  " + playerDto.getLevel(), 0 , height - length * 2);
 		font.draw(spriteBatch, "金币：  " + playerDto.getGold(), 0 , height - length * 3);
