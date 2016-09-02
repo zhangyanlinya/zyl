@@ -80,9 +80,6 @@ public class WorldHandler extends HandlerSupport {
 				if (status == ResponseStatus.SUCCESS) {
 					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
 					int code = (Integer) result.get("result");
-					if(code == WorldResult.NO_PLAYER_DATA){
-						
-					}
 					if (code == 0) {
 						if (result.get("content") != null) {
 							Object obj = result.get("content");

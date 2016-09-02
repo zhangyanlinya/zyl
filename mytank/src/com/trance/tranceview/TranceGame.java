@@ -14,7 +14,7 @@ public class TranceGame extends Game {
 	public MapScreen mapScreen;    //
 	public GameScreen gameScreen;  //
 	public UpgradeScreen upgradeScreen;  //
-	
+
 	@Override
 	public void create() {
 		loginScreen = new LoginScreen(this);

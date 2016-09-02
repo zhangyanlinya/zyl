@@ -9,7 +9,6 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
-import com.trance.trancetank.modules.player.handler.PlayerResult;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.utils.SocketUtil;
 
@@ -33,7 +32,7 @@ public class RenameInputListener implements TextInputListener{
 		byte[] bytes = response.getValueBytes();
 		String str = new String(bytes);
 		Integer result = JSON.parseObject(str, Integer.class);
-		if(result == PlayerResult.SUCCESS){
+		if(result == 0){
 			MainActivity.player.setPlayerName(text);
 		}
 	}

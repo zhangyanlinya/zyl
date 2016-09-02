@@ -21,6 +21,8 @@ public class Result<T> extends HashMap<String, Object> {
 	 * 返回的内容对象
 	 */
 	public static final String CONTENT = "content";
+	
+	public static final int SUCCESS = 0;
 
 	/**
 	 * 返回成功结果
@@ -31,7 +33,7 @@ public class Result<T> extends HashMap<String, Object> {
 	 */
 	public static <T> Result<T> Success(T content) {
 		Result<T> result = new Result<T>();
-		result.setCode(0);
+		result.setCode(SUCCESS);
 		result.setContent(content);
 		return result;
 	}

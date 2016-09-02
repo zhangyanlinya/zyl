@@ -59,7 +59,7 @@ public class MainActivity extends AndroidApplication {
 				dialog.dismiss();
 				break;
 			default:
-				Toast.makeText(reference.get(), msg.what + "",
+				Toast.makeText(reference.get(), msg.obj+"",
 						Toast.LENGTH_LONG).show();
 				break;
 			}
@@ -84,6 +84,8 @@ public class MainActivity extends AndroidApplication {
 		init();
 	}
 	
+	public static Handler handler;
+	
 	/**
 	 * 初始化
 	 */
@@ -107,7 +109,7 @@ public class MainActivity extends AndroidApplication {
 	    WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
 	    lp.alpha = 0.8f;
 	    
-		final Handler handler = new MyHandler(this,dialog);
+		handler = new MyHandler(this,dialog);
 		new Thread(){
 			public void run(){
 				SocketUtil.init(handler);

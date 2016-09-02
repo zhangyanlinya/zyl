@@ -29,18 +29,15 @@ import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
-import com.trance.trancetank.modules.player.handler.PlayerCmd;
-import com.trance.trancetank.modules.player.handler.PlayerResult;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.ProgressImage;
-import com.trance.tranceview.net.ClientService;
-import com.trance.tranceview.net.ClientServiceImpl;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
 public class UpgradeScreen extends ScreenAdapter{
@@ -103,7 +100,9 @@ public class UpgradeScreen extends ScreenAdapter{
 					}
 					HashMap<String,Object> result = (HashMap<String,Object>) response.getValue();
 					if(result != null){
-						if(Integer.valueOf(String.valueOf(result.get("result"))) != PlayerResult.SUCCESS){
+						int code = Integer.valueOf(String.valueOf(result.get("result")));
+						if(code != Result.SUCCESS){
+							MsgUtil.showMsg(Module.BUILDING,code);
 							return ;
 						}
 						Object valueResult = result.get("valueResultSet");
