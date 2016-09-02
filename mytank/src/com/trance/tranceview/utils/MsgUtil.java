@@ -21,7 +21,7 @@ public class MsgUtil {
 	private final static String world_json ="[{\"id\":-10002,\"msg\":\"超过分配\"},{\"id\":-10004,\"msg\":\"NOT MY\"}]";
 	private final static Map<Integer,String> world = new HashMap<Integer,String>();
 	
-	private final static String building_json ="[{\"id\":-10001,\"msg\":\"建筑不存在\"},{\"id\":-10002,\"msg\":\"建筑等级不够，不能升品质\"},{\"id\":-10003,\"msg\":\"主公等级不足\"},{\"id\":-10004,\"msg\":\"官府等级不足\"},{\"id\":-10005,\"msg\":\"冷却队列已满\"},{\"id\":-10006,\"msg\":\"还没满足升级条件（非官府升级条件）\"},{\"id\":-10007,\"msg\":\"还没满足升级条件（粮草，银元的产量不足）\"}]";
+	private final static String building_json ="[{\"id\":-10001,\"msg\":\"建筑不存在\"},{\"id\":-10002,\"msg\":\"建筑等级不够，不能升品质\"},{\"id\":-10003,\"msg\":\"等级不足\"},{\"id\":-10004,\"msg\":\"主城等级不足\"},{\"id\":-10005,\"msg\":\"冷却队列已满\"},{\"id\":-10006,\"msg\":\"还没满足升级条件（非主城升级条件）\"},{\"id\":-10007,\"msg\":\"还没满足升级条件（粮草，银元的产量不足）\"}]";
 	private final static Map<Integer,String> building = new HashMap<Integer,String>();
 	
 	
