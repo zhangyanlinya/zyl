@@ -23,6 +23,7 @@ import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.version.UpdateManager;
 
@@ -116,6 +117,7 @@ public class MainActivity extends AndroidApplication {
 			}
 		}.start();
 		
+		MsgUtil.init();
 		BasedbService.init(this);
 		isInit = true;
 	}
