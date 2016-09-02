@@ -61,7 +61,7 @@ public class MainActivity extends AndroidApplication {
 				break;
 			default:
 				Toast.makeText(reference.get(), msg.obj+"",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

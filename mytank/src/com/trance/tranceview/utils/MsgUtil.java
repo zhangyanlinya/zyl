@@ -42,7 +42,7 @@ public class MsgUtil {
 	
 	public static void showMsg(int module, int code){
 		String str = null;
-		if(code >= 0 && code < 1000){
+		if(code <= 0 && code > -999){
 			str = common.get(code);
 		}else{
 			if(module == Module.PLAYER){
