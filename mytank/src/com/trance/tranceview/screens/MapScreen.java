@@ -193,7 +193,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(rename);
 		}
 		
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击" + playerDto.getPlayerName(), Color.RED);
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
@@ -242,9 +242,19 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(noArmy){
 			font.draw(spriteBatch,"没有可用部队",0,100);
 		}
-		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
+		renderPlayerInfo(spriteBatch,playerDto);
+		
 		font.draw(spriteBatch,"攻击", width-300,100);
 		spriteBatch.end();
+	}
+	
+	public void renderPlayerInfo(SpriteBatch spriteBatch, PlayerDto playerDto){
+		font.setColor(Color.BLUE);
+		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
+		font.draw(spriteBatch, "等级：  " + playerDto.getLevel(), 0 , height - length * 2);
+		font.draw(spriteBatch, "金币：  " + playerDto.getGold(), 0 , height - length * 3);
+		font.draw(spriteBatch, "粮食: " +playerDto.getFoods(), 0 , height - length * 4);
+		font.draw(spriteBatch, "银币: " +playerDto.getSilver(), 0 , height - length * 5);
 	}
 	
 	// 初始化关卡地图
