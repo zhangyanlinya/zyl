@@ -167,19 +167,25 @@ public class LoginScreen implements Screen{
 			Object aobj = result.get("armys");
 			if(aobj != null){
 				List<ArmyDto> armys = JSON.parseArray(aobj.toString(), ArmyDto.class);
-				playerDto.setArmys(armys);
+				for(ArmyDto dto : armys){
+					playerDto.addAmry(dto);
+				}
 			}
 			
 			Object cobj = result.get("coolQueues");
 			if(cobj != null){
 				List<CoolQueueDto> coolQueues = JSON.parseArray(cobj.toString(), CoolQueueDto.class);
-				playerDto.setCoolQueues(coolQueues);
+				for(CoolQueueDto dto : coolQueues){
+					playerDto.addCoolQueue(dto);
+				}
 			}
 			
 			Object bobj = result.get("buildings");
 			if(bobj != null){
 				List<PlayerBuildingDto> buildings = JSON.parseArray(bobj.toString(), PlayerBuildingDto.class);
-				playerDto.setBuidings(buildings);
+				for(PlayerBuildingDto dto : buildings){
+					playerDto.addBuilding(dto);
+				}
 			}
 			
 			Long serverTime = (Long) result.get("serverTime");

@@ -2,7 +2,6 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -239,13 +238,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private ArmyType chooseType;
 	private void initArmy(){
 		armys.clear();
-		List<ArmyDto> list = MainActivity.player.getArmys();
-		if(list == null || list.isEmpty()){
+		Map<ArmyType,ArmyDto> amrys = MainActivity.player.getArmys();
+		if(amrys == null || amrys.isEmpty()){
 			return;
 		}
 		
 		armyDtos.clear();
-		for(ArmyDto dto : list){
+		for(ArmyDto dto : amrys.values()){
 			armyDtos.put(dto.getType(), dto);
 		}
 		
@@ -263,35 +262,34 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	public static void finishBattle(boolean win){
-		List<ArmyDto> list = MainActivity.player.getArmys();
-		list.clear();
+		Map<ArmyType,ArmyDto> amryDtos = MainActivity.player.getArmys();
+		amryDtos.clear();
 		for(ArmyDto dto : armyDtos.values()){
 			if(!dto.isGo()){
-				list.add(dto);
+				amryDtos.put(dto.getType(), dto);
 			}
 		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
 			ArmyType type = army.type;
 			boolean has = false;
-			for(ArmyDto a : list){
-				if(type == a.getType()){
-					a.setAmout(a.getAmout() + 1);
-					has = true;
-					break;
-				}
+			ArmyDto a = amryDtos.get(type);
+			if(a != null){
+				a.setAmout(a.getAmout() + 1);
+				has = true;
+				break;
 			}
 			
 			if(!has){
 				ArmyDto dto = new ArmyDto();
 				dto.setType(type);
 				dto.setAmout(1);
-				list.add(dto);
+				amryDtos.put(type,dto);
 			}
 		}
 		
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("armys ", list);
+		params.put("armys ", armyDtos.values());
 		params.put("destLv", playerDto.getLevel());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO

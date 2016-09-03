@@ -1,9 +1,10 @@
 package com.trance.tranceview.screens;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -48,8 +49,9 @@ public class UpgradeScreen extends ScreenAdapter{
 	private TranceGame tranceGame;
 	private BitmapFont font;
 	
-	private List<CoolQueueDto> coolQueues = new ArrayList<CoolQueueDto>();
-	private List<PlayerBuildingDto> buildings = new ArrayList<PlayerBuildingDto>();
+	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
+	
+	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	
 	public UpgradeScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -63,10 +65,11 @@ public class UpgradeScreen extends ScreenAdapter{
 		}
 		
 		coolQueues = MainActivity.player.getCoolQueues();
-		buildings = MainActivity.player.getBuidings();
+		buildings = MainActivity.player.getBuildings();
 		
-		for(int i = 0; i < coolQueues.size(); i++){
-			CoolQueueDto dto = coolQueues.get(i);
+		int i = 0;
+		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
+			CoolQueueDto dto =e.getValue();
 			int id = dto.getId();
 			if(id == 8){//TODO
 				id = 1;
@@ -79,14 +82,17 @@ public class UpgradeScreen extends ScreenAdapter{
 			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto.getExpireTime());
 			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
 			stage.addActor(image);
+			i++;
 		}
 		
-		for(int i = 0; i < buildings.size(); i++){
-			final PlayerBuildingDto dto = buildings.get(i);
+		int j = 0;
+		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
+			final PlayerBuildingDto dto = e.getValue();
 			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
 			Image image = new BuildingImage(region, font, dto);
 			dto.getLevel();
-			image.setPosition(100, ( i + 1) * 100 );
+			image.setPosition(100, ( j + 1) * 100 );
+			j ++;
 			image.addListener(new ClickListener(){
 
 				@Override
@@ -115,7 +121,7 @@ public class UpgradeScreen extends ScreenAdapter{
 						if(coolQueue != null){
 							CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
 							if(coolQueueDto != null)
-							coolQueues.add(coolQueueDto);
+							coolQueues.put(coolQueueDto.getId(),coolQueueDto);
 						}
 					}
 				}

@@ -1,7 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -29,11 +28,11 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
+import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
-import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
@@ -99,9 +98,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		camera = new OrthographicCamera(width, height);
 		stage.setCamera(camera);
 		camera.setToOrtho(false, width, height);
+		camera.position.set(width/2, height/2, 0);
 		
 		//文字 
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.RED);
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		spriteBatch = new SpriteBatch();
 		
 		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
@@ -164,8 +164,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		MapData.gamerunning = false;
-		camera.position.set(width/2, height/2, 0);
-		camera.update();
+//		camera.position.set(width/2, height/2, 0);
+//		camera.update();
 		
 		noArmy = false;
 		stage.clear();
@@ -218,8 +218,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	boolean noArmy = false;
 	private void attack(){
-		List<ArmyDto> list =MainActivity.player.getArmys();
-		if(list == null || list.isEmpty()){
+		Map<ArmyType,ArmyDto> armys =MainActivity.player.getArmys();
+		if(armys == null || armys.isEmpty()){
 			noArmy = true;
 			return;
 		}
@@ -314,18 +314,15 @@ public class MapScreen implements Screen ,InputProcessor{
 	 * 初始化下面的选择框
 	 */
 	private void initPlayerLeftBuiding() {
-		List<PlayerBuildingDto> list = playerDto.getBuidings();
+		Map<Integer,PlayerBuildingDto> map = playerDto.getBuildings();
 		float x = 0;
-		for(int i = 0; i < list.size(); i++){
-			PlayerBuildingDto dto = list.get(i);
-			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
-			Image image = new BuildingImage(region, font, dto);
-//			Building buiding = Building.buildingPool.obtain();
+		int i = 0;
+		for(Integer id : map.keySet()){
+			Building buiding = Building.buildingPool.obtain();
 			x = i * length;
-			image.setBounds(x,control_height/2, length,length);
-			stage.addActor(image);
-//			buiding.init(null,dto.getId(), x,control_height/2, length,length,null);
-//			stage.addActor(buiding);
+			buiding.init(null,id, x,control_height/2, length,length,null);
+			stage.addActor(buiding);
+			i ++;
 		}
 	}
 	
@@ -358,6 +355,14 @@ public class MapScreen implements Screen ,InputProcessor{
 		controller.setCanUpdate(false);
 		
 		a = (Building) actor;
+		
+		if(y == control_height/2){//增加
+			PlayerBuildingDto dto = playerDto.getBuildings().get(a.type);
+			if(dto.getLeftAmount() <= 0){//不够建造物
+				return false;
+			}
+		}
+		
 		Building b = (Building)a;
 		oldx = b.getX();
 		oldy = b.getY();
@@ -389,28 +394,30 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		Building b = compute(x,y,a);
 		if(b == null){//移除
-			if(oldy == control_height/2 ){//原始的不移除 
-				a.setPosition(oldx, oldy);
-				return true;
-			}
-			if(a.getY()  > control_height/2){ //没有移到控制区域下面不算移除
-				a.setPosition(oldx, oldy);
-				return true;
-			}
-			
-			a.remove();
-			Building.buildingPool.free(a);
-			playerDto.getMap()[oldi][oldj] = 0;
-			
-			Building block = Building.buildingPool.obtain();
-			block.i = oldi;
-			block.j = oldj;
-			block.setPosition(oldx, oldy);
-			buildings.add(block);
-			StringBuilder from = new StringBuilder();
-			from.append(oldi).append("|").append(oldj).append("|").append(0);
-			saveMaptoServer(1,from.toString(),null);
+			a.setPosition(oldx, oldy);//暂时不做移除
 			return true;
+//			if(oldy == control_height/2 ){//原始的不移除 
+//				a.setPosition(oldx, oldy);
+//				return true;
+//			}
+//			if(a.getY()  > control_height/2){ //没有移到控制区域下面不算移除
+//				a.setPosition(oldx, oldy);
+//				return true;
+//			}
+//			
+//			a.remove();
+//			Building.buildingPool.free(a);
+//			playerDto.getMap()[oldi][oldj] = 0;
+//			
+//			Building block = Building.buildingPool.obtain();
+//			block.i = oldi;
+//			block.j = oldj;
+//			block.setPosition(oldx, oldy);
+//			buildings.add(block);
+//			StringBuilder from = new StringBuilder();
+//			from.append(oldi).append("|").append(oldj).append("|").append(0);
+//			saveMaptoServer(1,from.toString(),null);
+//			return true;
 		}
 		
 		a.setPosition(b.getX(), b.getY());

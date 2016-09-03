@@ -1,8 +1,8 @@
 package com.trance.trancetank.modules.player.model;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
@@ -74,11 +74,11 @@ public class PlayerDto implements Serializable {
 	
 	private int[][] map;
 	
-	private List<ArmyDto> armys = new CopyOnWriteArrayList<ArmyDto>();
+	private ConcurrentMap<ArmyType,ArmyDto> armys = new ConcurrentHashMap<ArmyType,ArmyDto>();
 	
-	private List<PlayerBuildingDto> buidings = new CopyOnWriteArrayList<PlayerBuildingDto>();
+	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
 	
-	private List<CoolQueueDto> coolQueues = new CopyOnWriteArrayList<CoolQueueDto>();
+	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 
 	public long getId() {
 		return id;
@@ -162,28 +162,41 @@ public class PlayerDto implements Serializable {
 		this.map = map;
 	}
 
-	public List<ArmyDto> getArmys() {
+	public ConcurrentMap<ArmyType, ArmyDto> getArmys() {
 		return armys;
 	}
 
-	public void setArmys(List<ArmyDto> armys) {
+	public void setArmys(ConcurrentMap<ArmyType, ArmyDto> armys) {
 		this.armys = armys;
 	}
-
-	public List<PlayerBuildingDto> getBuidings() {
-		return buidings;
+	
+	public void addAmry(ArmyDto dto) {
+		armys.put(dto.getType(), dto);
 	}
 
-	public void setBuidings(List<PlayerBuildingDto> buidings) {
-		this.buidings = buidings;
+	public ConcurrentMap<Integer, PlayerBuildingDto> getBuildings() {
+		return buildings;
 	}
 
-	public List<CoolQueueDto> getCoolQueues() {
+	public void setBuildings(ConcurrentMap<Integer, PlayerBuildingDto> buildings) {
+		this.buildings = buildings;
+	}
+
+	public void addBuilding(PlayerBuildingDto dto) {
+		buildings.put(dto.getId(), dto);
+	}
+
+
+	public ConcurrentMap<Integer, CoolQueueDto> getCoolQueues() {
 		return coolQueues;
 	}
 
-	public void setCoolQueues(List<CoolQueueDto> coolQueues) {
+	public void setCoolQueues(ConcurrentMap<Integer, CoolQueueDto> coolQueues) {
 		this.coolQueues = coolQueues;
+	}
+	
+	public void addCoolQueue(CoolQueueDto dto) {
+		coolQueues.put(dto.getId(), dto);
 	}
 
 	public long getSilver() {
@@ -201,6 +214,8 @@ public class PlayerDto implements Serializable {
 	public void setFoods(long foods) {
 		this.foods = foods;
 	}
+
+
 	
 	
 }
