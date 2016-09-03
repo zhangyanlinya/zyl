@@ -71,7 +71,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image toWorld;
 	private Image toUpgrade;
 	private Image rename;
-	public final static Array<Building> blocks = new Array<Building>();
+	public final static Array<Building> buildings = new Array<Building>();
 	private boolean init;
 	private TextInputListener listener;
 	private PlayerDto playerDto;
@@ -258,7 +258,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	// 初始化关卡地图
 	public void initMap() {
-		blocks.clear();
+		buildings.clear();
 		if(playerDto == null){
 			return;
 		}
@@ -300,7 +300,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					stage.addActor(block);
 				}else{
 					block.setPosition(x, y);
-					blocks.add(block);
+					buildings.add(block);
 				}
 			}
 		}
@@ -399,7 +399,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			block.i = oldi;
 			block.j = oldj;
 			block.setPosition(oldx, oldy);
-			blocks.add(block);
+			buildings.add(block);
 			StringBuilder from = new StringBuilder();
 			from.append(oldi).append("|").append(oldj).append("|").append(0);
 			saveMaptoServer(1,from.toString(),null);
@@ -412,7 +412,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		if(oldy == control_height/2){//增加
 			if(b.type == 0){
-				blocks.removeValue(b, false);
+				buildings.removeValue(b, false);
 			}else{
 				b.remove();
 			}
@@ -487,8 +487,8 @@ public class MapScreen implements Screen ,InputProcessor{
 				return b;
 			}
 		}
-		for( int i = 0 ;i< blocks.size ;i++){
-			Building b =  blocks.get(i);
+		for( int i = 0 ;i< buildings.size ;i++){
+			Building b =  buildings.get(i);
 			float dst = b.dst(x,y);
 			if(dst <= min){
 				return b;
@@ -561,7 +561,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		if (stage != null){
 			stage.dispose();
 		}
-		blocks.clear();
+		buildings.clear();
 		
 		if(spriteBatch != null){
 			spriteBatch.dispose();

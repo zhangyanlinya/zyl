@@ -24,6 +24,11 @@ public class PlayerBuildingDto {
 	 */
 	private int quality;
 	
+	/**
+	 * 数量
+	 */
+	private int amount;
+	
 	public int getId() {
 		return id;
 	}
@@ -46,6 +51,14 @@ public class PlayerBuildingDto {
 
 	public void setQuality(int quality) {
 		this.quality = quality;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 	
 }
