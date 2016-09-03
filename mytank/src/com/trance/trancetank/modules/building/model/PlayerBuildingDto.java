@@ -29,6 +29,11 @@ public class PlayerBuildingDto {
 	 */
 	private int amount;
 	
+	/**
+	 * 已建造数量
+	 */
+	private int buildAmount;
+	
 	public int getId() {
 		return id;
 	}
@@ -59,6 +64,21 @@ public class PlayerBuildingDto {
 
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+	public int getBuildAmount() {
+		return buildAmount;
+	}
+
+	public void setBuildAmount(int buildAmount) {
+		this.buildAmount = buildAmount;
+	}
+	
+	/**
+	 * 获得剩下未建造数量
+	 */
+	public int getLeftAmount(){
+		return amount - buildAmount;
 	}
 	
 }

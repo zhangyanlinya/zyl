@@ -22,10 +22,12 @@ public class BuildingImage extends Image{
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if(dto != null){
+		if(dto != null && font != null){
 			int level = dto.getLevel();
+			int leftAmount = dto.getLeftAmount();
 			font.setColor(Color.WHITE);
-			font.draw(batch, level+"" ,this.getX(),this.getY());
+			font.draw(batch, "lv:"+level ,this.getX(),this.getY());
+			font.draw(batch, "le:"+leftAmount ,this.getX(),this.getY() - getHeight());
 		}
 	}
 }

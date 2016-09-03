@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -25,12 +26,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.ArmyDto;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
+import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
@@ -98,6 +101,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		camera.setToOrtho(false, width, height);
 		
 		//文字 
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.RED);
 		spriteBatch = new SpriteBatch();
 		
 		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
@@ -161,6 +165,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		camera.position.set(width/2, height/2, 0);
+		camera.update();
+		
 		noArmy = false;
 		stage.clear();
 		float w = bg.getWidth();
@@ -184,7 +190,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		initMap();//初始化地图
 		if(isEdit()){
-			initPlayerBlock();
+			initPlayerLeftBuiding();
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
@@ -192,8 +198,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(playerDto.isMyself()){
 			stage.addActor(rename);
 		}
-		
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.RED);
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
@@ -309,16 +313,19 @@ public class MapScreen implements Screen ,InputProcessor{
 	/**
 	 * 初始化下面的选择框
 	 */
-	private void initPlayerBlock() {
+	private void initPlayerLeftBuiding() {
+		List<PlayerBuildingDto> list = playerDto.getBuidings();
 		float x = 0;
-		for(int i = 1; i < 10; i++){
-			if(i==8){//没有8
-				continue;
-			}
-			Building block = Building.buildingPool.obtain();
+		for(int i = 0; i < list.size(); i++){
+			PlayerBuildingDto dto = list.get(i);
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(dto.getId());
+			Image image = new BuildingImage(region, font, dto);
+//			Building buiding = Building.buildingPool.obtain();
 			x = i * length;
-			block.init(null,i, x,control_height/2, length,length,null);
-			stage.addActor(block);
+			image.setBounds(x,control_height/2, length,length);
+			stage.addActor(image);
+//			buiding.init(null,dto.getId(), x,control_height/2, length,length,null);
+//			stage.addActor(buiding);
 		}
 	}
 	
