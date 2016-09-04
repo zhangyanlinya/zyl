@@ -15,10 +15,6 @@
     
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<!-- 以下为可选权限 -->
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	
-	<uses-permission android:name="com.android.vending.BILLIN" />
     
     <application
        android:allowBackup="true"
