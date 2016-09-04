@@ -71,6 +71,7 @@ import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
@@ -141,6 +142,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private int currTime = TOTAL_TIME;
 	private boolean init;
 	
+	private static boolean finishBattle;
+	
 	public GameScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
@@ -164,6 +167,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			init = true;
 		}
 		MapData.gamerunning = true;
+		finishBattle = false;
 		camera.position.set(width/2 , height/2 , 0);
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
@@ -265,6 +269,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	public static void finishBattle(boolean win){
+		if(finishBattle){
+			return;
+		}
 		Map<ArmyType,ArmyDto> amryDtos = MainActivity.player.getArmys();
 		amryDtos.clear();
 		for(ArmyDto dto : armyDtos.values()){
@@ -298,7 +305,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("armys ", vos);
+		params.put("armys", vos);
 		params.put("destLv", playerDto.getLevel());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO
@@ -314,12 +321,19 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		Result<?> result = JSON.parseObject(bytes, Result.class);
-		Object o = result.getContent();
+		HashMap<String, Object> result = JSON.parseObject(bytes, HashMap.class);
+		Object codeObject = result.get("result");
+		int code = Integer.valueOf(String.valueOf(codeObject));
+		if(code != Result.SUCCESS){
+			MsgUtil.showMsg(Module.Battle, code);
+			return;
+		}
+		Object o = result.get("content");
 		if(o != null){
 			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
 			RewardService.executeRewards(valueResultSet);
 		}
+		finishBattle = true;
 	}
 
 	//DestoryBody
