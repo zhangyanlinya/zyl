@@ -321,7 +321,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		HashMap<String, Object> result = JSON.parseObject(bytes, HashMap.class);
+		String text = new String(bytes);
+		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
