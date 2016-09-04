@@ -120,8 +120,6 @@ public class Building extends GameActor{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-//		Color color = getColor();
-//		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());

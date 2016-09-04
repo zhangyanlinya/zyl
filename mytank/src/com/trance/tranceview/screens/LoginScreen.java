@@ -189,7 +189,9 @@ public class LoginScreen implements Screen{
 			}
 			
 			Long serverTime = (Long) result.get("serverTime");
-			TimeUtil.init(serverTime);
+			if(serverTime != null){
+				TimeUtil.init(serverTime);
+			}
 			
 			MainActivity.player = playerDto;
 			

@@ -98,7 +98,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		camera = new OrthographicCamera(width, height);
 		stage.setCamera(camera);
 		camera.setToOrtho(false, width, height);
-		camera.position.set(width/2, height/2, 0);
 		
 		//文字 
 		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
@@ -201,6 +200,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+		camera.position.set(width/2, height/2, 0);
 		GestureDetector gestureHandler = new GestureDetector(controller);
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
@@ -352,18 +352,16 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(actor == null || !(actor instanceof Building)){
 			return false;
 		}
-		controller.setCanUpdate(false);
-		
-		a = (Building) actor;
-		
-		if(y == control_height/2){//增加
-			PlayerBuildingDto dto = playerDto.getBuildings().get(a.type);
+		Building b = (Building) actor;
+		if(actor.getY() == control_height/2){//增加
+			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
 			}
 		}
 		
-		Building b = (Building)a;
+		controller.setCanUpdate(false);
+		a = b;
 		oldx = b.getX();
 		oldy = b.getY();
 		oldi = b.i;
@@ -436,7 +434,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(block);
 			StringBuilder to = new StringBuilder();
 			to.append(b.i).append("|").append(b.j).append("|").append(b.type);
-			saveMaptoServer(1,null,to.toString());
+			saveMaptoServer(null,to.toString());
 			return true;
 		}
 		
@@ -453,7 +451,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
 		StringBuilder to = new StringBuilder();
 		to.append(a.i).append("|").append(a.j).append("|").append(b.type);
-		saveMaptoServer(1,from.toString(),to.toString());
+		saveMaptoServer(from.toString(),to.toString());
 		return true;
 	}
 	
@@ -514,9 +512,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	/**
 	 * save map to server
 	 */
-	private void saveMaptoServer(int level ,String from ,String to){
+	private void saveMaptoServer(String from ,String to){
 		HashMap<String,Object> parms = new HashMap<String,Object>();
-		parms.put("level", level);
 		parms.put("from", from);
 		parms.put("to", to);
 		SocketUtil.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
