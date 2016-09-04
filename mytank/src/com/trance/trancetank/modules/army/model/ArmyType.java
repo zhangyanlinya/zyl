@@ -1,4 +1,4 @@
-package com.trance.trancetank.modules.player.model;
+package com.trance.trancetank.modules.army.model;
 
 
 public enum ArmyType {

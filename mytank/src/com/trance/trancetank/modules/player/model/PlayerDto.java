@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.trance.trancetank.modules.army.model.ArmyDto;
+import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 

@@ -1,4 +1,4 @@
-package com.trance.trancetank.modules.player.model;
+package com.trance.trancetank.modules.army.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;

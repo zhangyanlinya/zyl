@@ -1,7 +1,9 @@
 package com.trance.tranceview.screens;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -48,11 +50,12 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.army.model.ArmyDto;
+import com.trance.trancetank.modules.army.model.ArmyType;
+import com.trance.trancetank.modules.army.model.ArmyVo;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
-import com.trance.trancetank.modules.player.model.ArmyDto;
-import com.trance.trancetank.modules.player.model.ArmyType;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
@@ -288,8 +291,14 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 		}
 		
+		//转换
+		List<ArmyVo> vos = new ArrayList<ArmyVo>();
+		for(ArmyDto armyDto : armyDtos.values()){
+			vos.add(ArmyVo.valueOf(armyDto));
+		}
+		
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("armys ", armyDtos.values());
+		params.put("armys ", vos);
 		params.put("destLv", playerDto.getLevel());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO
