@@ -272,18 +272,18 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(finishBattle){
 			return;
 		}
-		Map<ArmyType,ArmyDto> amryDtos = MainActivity.player.getArmys();
-		amryDtos.clear();
+		Map<ArmyType,ArmyDto> myArmys = MainActivity.player.getArmys();
+		myArmys.clear();
 		for(ArmyDto dto : armyDtos.values()){
 			if(!dto.isGo()){
-				amryDtos.put(dto.getType(), dto);
+				myArmys.put(dto.getType(), dto);
 			}
 		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
 			ArmyType type = army.type;
 			boolean has = false;
-			ArmyDto a = amryDtos.get(type);
+			ArmyDto a = myArmys.get(type);
 			if(a != null){
 				a.setAmout(a.getAmout() + 1);
 				has = true;
@@ -294,13 +294,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				ArmyDto dto = new ArmyDto();
 				dto.setType(type);
 				dto.setAmout(1);
-				amryDtos.put(type,dto);
+				myArmys.put(type,dto);
 			}
 		}
 		
 		//转换
 		List<ArmyVo> vos = new ArrayList<ArmyVo>();
-		for(ArmyDto armyDto : armyDtos.values()){
+		for(ArmyDto armyDto : myArmys.values()){
 			vos.add(ArmyVo.valueOf(armyDto));
 		}
 		
