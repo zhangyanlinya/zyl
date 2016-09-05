@@ -19,6 +19,7 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
 /**
@@ -69,6 +70,7 @@ public class ReconnectionFilter extends IoFilterAdapter{
 		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
 		if(result != null){
 			if(result.getCode() != Result.SUCCESS){
+				MsgUtil.showMsg(Module.PLAYER, result.getCode());
 				logger.error("断线重连失败 code =" + result.getCode());
 				return false;
 			}
