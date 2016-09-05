@@ -160,6 +160,9 @@ public class SimpleSocketClient {
 		
 		try {
 			IoSession session = this.getSession();
+			if(session == null){
+				return null;
+			}
 			WriteFuture writeFuture = session.write(request);
 			writeFuture.awaitUninterruptibly(15 * 1000L);
 			ctx.await(15, TimeUnit.SECONDS);
