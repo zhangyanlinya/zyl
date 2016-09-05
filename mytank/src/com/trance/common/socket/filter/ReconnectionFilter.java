@@ -8,6 +8,8 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -63,7 +65,8 @@ public class ReconnectionFilter extends IoFilterAdapter{
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return false;
 		}
-		Result<?> result = (Result<?>) response.getValue();
+		byte[] bytes = response.getValueBytes();
+		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
 		if(result != null){
 			if(result.getCode() != Result.SUCCESS){
 				logger.error("断线重连失败 code =" + result.getCode());
