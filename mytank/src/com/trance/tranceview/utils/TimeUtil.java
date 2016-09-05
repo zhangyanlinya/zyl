@@ -8,7 +8,7 @@ public class TimeUtil {
 		deltaTime = System.currentTimeMillis() - serverTime;
 	}
 	
-	public static long getNowTime(){
+	public static long getServerTime(){
 		return System.currentTimeMillis() + deltaTime;
 	}
 }

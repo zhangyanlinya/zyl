@@ -138,8 +138,6 @@ public class UpgradeScreen extends ScreenAdapter{
 		shapeRenderer = new ShapeRenderer(); 
 		font = FontUtil.getInstance().getFont(25, Color.WHITE);;
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		
-		
 	}
 	
 	@Override

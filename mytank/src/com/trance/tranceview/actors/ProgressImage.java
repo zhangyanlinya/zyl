@@ -33,7 +33,7 @@ public class ProgressImage extends Image{
 		batch.end();
 		float percent = 0;
 		if(!dto.isFreezing()){
-			long leftTime = dto.getExpireTime() - TimeUtil.getNowTime();
+			long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
 			if(leftTime < 0){
 				leftTime = 0;
 			}
