@@ -69,7 +69,7 @@ public class UpgradeScreen extends ScreenAdapter{
 		
 		int i = 0;
 		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
-			CoolQueueDto dto =e.getValue();
+			CoolQueueDto dto = e.getValue();
 			int id = dto.getId();
 			if(id == 8){//TODO
 				id = 1;
@@ -79,7 +79,7 @@ public class UpgradeScreen extends ScreenAdapter{
 			if(elementUpgrade == null){
 				continue;
 			}
-			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto.getExpireTime());
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
 			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
 			stage.addActor(image);
 			i++;

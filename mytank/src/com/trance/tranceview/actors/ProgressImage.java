@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.tranceview.utils.TimeUtil;
 
 public class ProgressImage extends Image{
@@ -15,13 +16,13 @@ public class ProgressImage extends Image{
 	
 	private long needTime;
 	
-	private long endTime;
+	private CoolQueueDto dto;
 	
-	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, long endTime) {
+	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, CoolQueueDto dto) {
 		super(region);
 		this.renderer = shapeRenderer;
 		this.needTime = needTime;
-		this.endTime = endTime;
+		this.dto = dto;
 	}
 	
 		
@@ -30,11 +31,17 @@ public class ProgressImage extends Image{
 		super.draw(batch, parentAlpha);
 		
 		batch.end();
-		long leftTime = endTime - TimeUtil.getNowTime();
-		if(leftTime < 0){
-			leftTime = 0;
+		float percent = 0;
+		if(!dto.isFreezing()){
+			long leftTime = dto.getExpireTime() - TimeUtil.getNowTime();
+			if(leftTime < 0){
+				leftTime = 0;
+			}
+			percent = (needTime - leftTime) / (float)needTime;
+			if(percent < 0){
+				percent = 0;
+			}
 		}
-		float percent = (needTime - leftTime) / (float)needTime;
 		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
 		renderer.rect(Gdx.graphics.getWidth() / 4 , this.getY() + 12, Gdx.graphics.getWidth() / 2, 40);
