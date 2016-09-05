@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -36,6 +38,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -191,6 +194,8 @@ public class LoginScreen implements Screen{
 			Long serverTime = (Long) result.get("serverTime");
 			if(serverTime != null){
 				TimeUtil.init(serverTime);
+			}else{
+				Log.e(LogTag.TAG,"同步服务器时间失败！");
 			}
 			
 			MainActivity.player = playerDto;

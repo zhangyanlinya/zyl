@@ -1,5 +1,11 @@
 package com.trance.tranceview.actors;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.http.impl.cookie.DateUtils;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,14 +39,22 @@ public class ProgressImage extends Image{
 		batch.end();
 		float percent = 0;
 		if(!dto.isFreezing()){
+			long serverTime = TimeUtil.getServerTime();
+			DateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String strBeginDate = dateTimeformat.format(new Date(serverTime));
+			System.out.println("服务器当前时间："+strBeginDate);
+			String  expireTimeStr = dateTimeformat.format(new Date(dto.getExpireTime()));
+			System.out.println("队列到期时间: "+expireTimeStr);
 			long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
 			if(leftTime < 0){
 				leftTime = 0;
 			}
 			percent = (needTime - leftTime) / (float)needTime;
-			if(percent < 0){
+			System.out.println(percent);
+			if(percent < 0 || percent == 1.0f){
 				percent = 0;
 			}
+			
 		}
 		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
