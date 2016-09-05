@@ -151,8 +151,17 @@ public class UpgradeScreen extends ScreenAdapter{
 	
 	@Override
 	public void dispose() {
-		stage.dispose();
-		shapeRenderer.dispose();
-		font.dispose();
+		if(!init){
+			return;
+		}
+		if(stage != null){
+			stage.dispose();
+		}
+		if(shapeRenderer != null){
+			shapeRenderer.dispose();
+		}
+		if(font != null){
+			font.dispose();
+		}
 	}
 }

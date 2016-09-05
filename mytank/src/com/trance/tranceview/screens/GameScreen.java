@@ -282,15 +282,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
 			ArmyType type = army.type;
-			boolean has = false;
 			ArmyDto a = myArmys.get(type);
 			if(a != null){
 				a.setAmout(a.getAmout() + 1);
-				has = true;
-				break;
-			}
-			
-			if(!has){
+			}else{
 				ArmyDto dto = new ArmyDto();
 				dto.setType(type);
 				dto.setAmout(1);
