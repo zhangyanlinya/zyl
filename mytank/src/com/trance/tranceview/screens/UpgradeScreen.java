@@ -176,12 +176,12 @@ public class UpgradeScreen extends ScreenAdapter{
 		if(!init){
 			return;
 		}
-		if(stage != null){
-			stage.dispose();
-		}
-		if(shapeRenderer != null){
-			shapeRenderer.dispose();
-		}
+//		if(stage != null){
+//			stage.dispose();
+//		}
+//		if(shapeRenderer != null){
+//			shapeRenderer.dispose();
+//		}
 		if(font != null){
 			font.dispose();
 		}
