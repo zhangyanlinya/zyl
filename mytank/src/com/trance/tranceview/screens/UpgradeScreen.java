@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -67,23 +68,7 @@ public class UpgradeScreen extends ScreenAdapter{
 		coolQueues = MainActivity.player.getCoolQueues();
 		buildings = MainActivity.player.getBuildings();
 		
-		int i = 0;
-		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
-			CoolQueueDto dto = e.getValue();
-			int id = dto.getId();
-			if(id == 8){//TODO
-				id = 1;
-			}
-			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
-			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
-			if(elementUpgrade == null){
-				continue;
-			}
-			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
-			stage.addActor(image);
-			i++;
-		}
+		refreshCoolQueue();
 		
 		int j = 0;
 		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
@@ -120,8 +105,21 @@ public class UpgradeScreen extends ScreenAdapter{
 						Object coolQueue = result.get("coolQueueDto");
 						if(coolQueue != null){
 							CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
-							if(coolQueueDto != null)
-							coolQueues.put(coolQueueDto.getId(),coolQueueDto);
+							if(coolQueueDto != null){
+								coolQueues.put(coolQueueDto.getId(),coolQueueDto);
+								refreshCoolQueue();
+							}
+						}
+						
+						Object building = result.get("content");
+						if(building != null){
+							PlayerBuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), PlayerBuildingDto.class);
+							if(playerBuildingDto != null){
+								PlayerBuildingDto dto = buildings.get(playerBuildingDto.getId());
+								if(dto != null){
+									dto.setLevel(playerBuildingDto.getLevel());
+								}
+							}
 						}
 					}
 				}
@@ -132,6 +130,32 @@ public class UpgradeScreen extends ScreenAdapter{
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
+	
+	private void refreshCoolQueue(){
+		for(Actor actor : stage.getActors()){
+			if(actor instanceof ProgressImage){
+				actor.remove();
+			}
+		}
+		
+		int i = 0;
+		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
+			CoolQueueDto dto = e.getValue();
+			int id = dto.getId();
+			if(id == 8){//TODO
+				id = 1;
+			}
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
+			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
+			if(elementUpgrade == null){
+				continue;
+			}
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
+			image.setPosition(100, Gdx.graphics.getHeight() - ( i + 1) * 100 );
+			stage.addActor(image);
+			i++;
+		}
 	}
 	
 	private void init(){
@@ -155,9 +179,9 @@ public class UpgradeScreen extends ScreenAdapter{
 		if(stage != null){
 			stage.dispose();
 		}
-//		if(shapeRenderer != null){
-//			shapeRenderer.dispose();
-//		}
+		if(shapeRenderer != null){
+			shapeRenderer.dispose();
+		}
 		if(font != null){
 			font.dispose();
 		}

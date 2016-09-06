@@ -24,11 +24,6 @@ public class CoolQueueDto {
 	 */
 	private long expireTime;
 	
-	/**
-	 * 是否空闲中（满了以后不能再用，要等完全冷却完才行）
-	 */
-	private boolean freezing;
-	
 
 	public int getId() {
 		return id;
@@ -52,14 +47,6 @@ public class CoolQueueDto {
 
 	public void setExpireTime(long expireTime) {
 		this.expireTime = expireTime;
-	}
-
-	public boolean isFreezing() {
-		return freezing;
-	}
-
-	public void setFreezing(boolean freezing) {
-		this.freezing = freezing;
 	}
 	
 }

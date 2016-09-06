@@ -37,26 +37,27 @@ public class ProgressImage extends Image{
 		super.draw(batch, parentAlpha);
 		
 		batch.end();
-		float percent = 0;
-		if(!dto.isFreezing()){
-			long serverTime = TimeUtil.getServerTime();
-			DateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String strBeginDate = dateTimeformat.format(new Date(serverTime));
-			System.out.println("服务器当前时间："+strBeginDate);
-			String  expireTimeStr = dateTimeformat.format(new Date(dto.getExpireTime()));
-			System.out.println("队列到期时间: "+expireTimeStr);
-			long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
-			if(leftTime < 0){
-				leftTime = 0;
-			}
-			percent = (needTime - leftTime) / (float)needTime;
-			System.out.println(percent);
-			if(percent < 0 || percent == 1.0f){
-				percent = 0;
-			}
-			
+//		long serverTime = TimeUtil.getServerTime();
+//		DateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		String strBeginDate = dateTimeformat.format(new Date(serverTime));
+//		System.out.println("服务器当前时间："+strBeginDate);
+//		String  expireTimeStr = dateTimeformat.format(new Date(dto.getExpireTime()));
+//		System.out.println("队列到期时间: "+expireTimeStr);
+		long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
+		if(leftTime < 0){
+			leftTime = 0;
 		}
-		renderer.setColor(Color.RED);
+		
+		float percent = (needTime - leftTime) / (float)needTime;
+		System.out.println(percent);
+		if(percent < 0){
+			percent = 0;
+		}
+		if(percent >= 1.0){
+			this.remove();
+		}
+			
+		renderer.setColor(Color.ORANGE);
 		renderer.begin(ShapeType.Line);
 		renderer.rect(Gdx.graphics.getWidth() / 4 , this.getY() + 12, Gdx.graphics.getWidth() / 2, 40);
 		renderer.end();
