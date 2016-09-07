@@ -357,6 +357,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		Building b = (Building) actor;
 		if(actor.getY() <= control_height/2){//增加
+			System.out.println("增加 " + b.type);
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
@@ -434,6 +435,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			if(dto != null){
+				System.out.println("已增加 " + b.type);
 				dto.setAmount(dto.getAmount() -1);
 				dto.setBuildAmount(dto.getBuildAmount() + 1);
 			}

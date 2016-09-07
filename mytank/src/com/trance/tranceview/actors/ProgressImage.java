@@ -49,7 +49,7 @@ public class ProgressImage extends Image{
 		}
 		
 		float percent = (needTime - leftTime) / (float)needTime;
-		System.out.println(percent);
+//		System.out.println(percent);
 		if(percent < 0){
 			percent = 0;
 		}
