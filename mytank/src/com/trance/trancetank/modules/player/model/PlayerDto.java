@@ -15,9 +15,8 @@ import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
  * @author Along
  *
  */
-public class PlayerDto implements Serializable {
+public class PlayerDto{
 	
-	private static final long serialVersionUID = -1915278413295908824L;
 
 	/**
 	 * 玩家id

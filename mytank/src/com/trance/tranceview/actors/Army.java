@@ -29,9 +29,6 @@ public class Army extends GameActor{
 	public long dirDelay = 10000;
 	public int level;
 	
-	//range 
-	public float range = 200;
-	
 	public void init(World world,ArmyType type, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.type = type;

@@ -311,16 +311,19 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	/**
-	 * 初始化下面的选择框
+	 * 
 	 */
 	private void initPlayerLeftBuiding() {
 		Map<Integer,PlayerBuildingDto> map = playerDto.getBuildings();
 		float x = 0;
 		int i = 0;
-		for(Integer id : map.keySet()){
+		for(PlayerBuildingDto dto : map.values()){
+			if(dto.getLeftAmount() <= 0){
+				continue;
+			}
 			Building buiding = Building.buildingPool.obtain();
 			x = i * length;
-			buiding.init(null,id, x,control_height/2, length,length,null);
+			buiding.init(null,dto.getId(), x,control_height/2, length,length,null, font, dto.getLeftAmount());
 			stage.addActor(buiding);
 			i ++;
 		}
@@ -353,7 +356,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			return false;
 		}
 		Building b = (Building) actor;
-		if(actor.getY() == control_height/2){//增加
+		if(actor.getY() <= control_height/2){//增加
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
@@ -422,12 +425,19 @@ public class MapScreen implements Screen ,InputProcessor{
 		a.setIndex(b.i, b.j);
 		playerDto.getMap()[b.i][b.j] = oldType; 
 		
-		if(oldy == control_height/2){//增加
+		if(oldy <= control_height/2){//增加
 			if(b.type == 0){
 				buildings.removeValue(b, false);
 			}else{
 				b.remove();
 			}
+			
+			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
+			if(dto != null){
+				dto.setAmount(dto.getAmount() -1);
+				dto.setBuildAmount(dto.getBuildAmount() + 1);
+			}
+			
 			Building.buildingPool.free(b);
 			Building block = Building.buildingPool.obtain();
 			block.init(null,oldType, oldx, oldy, length, length,null);

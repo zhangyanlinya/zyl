@@ -86,7 +86,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private Window window;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-	private Music music;
+//	private Music music;
 	public static PlayerDto playerDto;
 	
 	
@@ -307,11 +307,13 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		Request request = Request.valueOf(Module.Battle, BattleCmd.FINISH_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null){
+			finishBattle = true;
 			return;
 		}
 		
 		ResponseStatus status = response.getStatus();
 		if (status != ResponseStatus.SUCCESS) {
+			finishBattle = true;
 			return;
 		}
 		
@@ -322,6 +324,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
 			MsgUtil.showMsg(Module.Battle, code);
+			finishBattle = true;
 			return;
 		}
 		Object o = result.get("content");
@@ -709,17 +712,14 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			spriteBatch.dispose();
 		}
 		
-		if(music != null){
-			music.dispose();
-		}
+//		music.dispose();
 		
 		if(font != null){
 			font.dispose();
 		}
 		
 		shapeRenderer.dispose();
-		if(debugRenderer != null)
-		debugRenderer.dispose();
+//		debugRenderer.dispose();
 		
 		if(world != null){
 			world.dispose();

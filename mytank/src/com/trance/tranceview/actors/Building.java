@@ -1,6 +1,7 @@
 package com.trance.tranceview.actors;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -34,6 +35,8 @@ public class Building extends GameActor{
 	public long fireDelay = 1000;
 	public long dirDelay = 10000;
 	public int level;
+	private BitmapFont font;
+	private int amount;
 	
 	/**
 	 * 初始化
@@ -66,6 +69,11 @@ public class Building extends GameActor{
 		body = WorldUtils.createBlock(world, x, y, width, height);
 		body.setUserData(this);
 		
+	}
+	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, int amount){
+		init(world, type, x, y, width, height, renderer);
+		this.font = font;
+		this.amount = amount;
 	}
 	
 	public void setIndex(int i,int j){
@@ -123,6 +131,9 @@ public class Building extends GameActor{
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
+		if(font != null){
+			font.draw(batch, amount+"", getX(), getY());
+		}
 		
 		if(renderer != null){
 			batch.end();
