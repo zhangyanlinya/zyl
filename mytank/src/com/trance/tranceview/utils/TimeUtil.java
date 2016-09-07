@@ -1,20 +1,25 @@
 package com.trance.tranceview.utils;
 
+import android.annotation.SuppressLint;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.http.impl.cookie.DateUtils;
 
 public class TimeUtil {
 	
 	private static long deltaTime;
 	
+	@SuppressLint("SimpleDateFormat")
 	public static void init(long serverTime){
-		DateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String strBeginDate = dateTimeformat.format(new Date(serverTime));
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String strBeginDate = format.format(new Date(serverTime));
 		System.out.println("服务器当前时间："+strBeginDate);
 		deltaTime = System.currentTimeMillis() - serverTime;
+		if(deltaTime > 0){
+			System.out.println("客户端比服务器时间快了" + deltaTime/1000 +"秒");
+		}else{
+			System.out.println("客户端比服务器时间慢了" + Math.abs(deltaTime/1000) +"秒");
+		}
 	}
 	
 	public static long getServerTime(){
