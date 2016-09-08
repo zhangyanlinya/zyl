@@ -60,7 +60,6 @@ public class MsgUtil {
 			this.msg = msg;
 		}
 	}
-	 
 	
 	public static void showMsg(int module, int code){
 		Msg msg = null;
@@ -89,7 +88,7 @@ public class MsgUtil {
 		
 	}
 	
-	private static void sendMessage(Object obj){
+	public static void sendMessage(Object obj){
 		Message msg = Message.obtain();
 		msg.what = -1000;
 		msg.obj = obj;

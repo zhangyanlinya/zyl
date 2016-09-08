@@ -130,6 +130,16 @@ public class MainActivity extends AndroidApplication {
 	
 	private long time;
 	
+	
+	@Override
+	protected void onPause() {
+		if(player == null){
+			System.out.println(" onpase() 关闭socket...");
+			SocketUtil.destroy();
+		}
+		super.onPause();
+	}
+
 	@Override
 	public void onBackPressed() {
 		Screen screen = tranceGame.getScreen();

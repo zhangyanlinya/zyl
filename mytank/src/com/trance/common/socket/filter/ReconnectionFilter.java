@@ -68,7 +68,7 @@ public class ReconnectionFilter extends IoFilterAdapter{
 		byte[] bytes = response.getValueBytes();
 		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
 		if(result != null){
-			if(result.getCode() != Result.SUCCESS){
+			if(result.getCode() != Result.SUCCESS && result.getCode()!= -10005){//-10005 重连被禁止
 				MsgUtil.showMsg(Module.PLAYER, result.getCode());
 				logger.error("断线重连失败 code =" + result.getCode());
 				return false;

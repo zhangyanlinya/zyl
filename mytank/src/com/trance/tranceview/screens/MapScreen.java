@@ -322,7 +322,7 @@ public class MapScreen implements Screen ,InputProcessor{
 				continue;
 			}
 			Building buiding = Building.buildingPool.obtain();
-			x = i * length;
+			x = i * length + 100;
 			buiding.init(null,dto.getId(), x,control_height/2, length,length,null, font, dto.getLeftAmount());
 			stage.addActor(buiding);
 			i ++;
@@ -432,18 +432,23 @@ public class MapScreen implements Screen ,InputProcessor{
 			}else{
 				b.remove();
 			}
+			Building.buildingPool.free(b);
 			
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
+			boolean none = false;
 			if(dto != null){
 				System.out.println("已增加 " + b.type);
 				dto.setAmount(dto.getAmount() -1);
 				dto.setBuildAmount(dto.getBuildAmount() + 1);
+				if(dto.getLeftAmount() <= 0){
+					none = true;
+				}
 			}
-			
-			Building.buildingPool.free(b);
-			Building block = Building.buildingPool.obtain();
-			block.init(null,oldType, oldx, oldy, length, length,null);
-			stage.addActor(block);
+			if(dto != null && !none){
+				Building block = Building.buildingPool.obtain();
+				block.init(null,oldType, oldx, oldy, length, length, null, font, dto.getLeftAmount());
+				stage.addActor(block);
+			}
 			StringBuilder to = new StringBuilder();
 			to.append(b.i).append("|").append(b.j).append("|").append(b.type);
 			saveMaptoServer(null,to.toString());

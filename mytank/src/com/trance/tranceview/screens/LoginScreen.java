@@ -42,6 +42,7 @@ import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.TimeUtil;
 
@@ -129,6 +130,7 @@ public class LoginScreen implements Screen{
 		int cmd = PlayerCmd.LOGIN;
 		Response response = SocketUtil.send(Request.valueOf(module, cmd, params),true);
 		if(response == null){
+			MsgUtil.sendMessage("网络连接失败");
 			return;
 		}
 		
