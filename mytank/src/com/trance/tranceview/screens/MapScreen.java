@@ -99,8 +99,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.setCamera(camera);
 		camera.setToOrtho(false, width, height);
 		
-		//文字 
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
+		
 		spriteBatch = new SpriteBatch();
 		
 		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
@@ -163,8 +162,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		MapData.gamerunning = false;
-//		camera.position.set(width/2, height/2, 0);
-//		camera.update();
+		//文字 
+		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		
 		noArmy = false;
 		stage.clear();

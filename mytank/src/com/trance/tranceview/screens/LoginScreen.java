@@ -58,6 +58,8 @@ public class LoginScreen implements Screen{
 	private AssetsManager assetsManager;
 	//画笔
   	public ShapeRenderer renderer;
+  	
+  	public static boolean loginSuccess;
 	
 	public LoginScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -110,6 +112,7 @@ public class LoginScreen implements Screen{
 			init();
 			init = true;
 		}
+		loginSuccess = false;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -202,6 +205,7 @@ public class LoginScreen implements Screen{
 			
 			MainActivity.player = playerDto;
 			
+			loginSuccess = true;
 			Gdx.app.postRunnable(new Runnable() {
 				
 				@Override

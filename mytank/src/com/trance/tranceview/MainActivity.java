@@ -133,10 +133,10 @@ public class MainActivity extends AndroidApplication {
 	
 	@Override
 	protected void onPause() {
-		if(player == null){
-			System.out.println(" onpase() 关闭socket...");
-			SocketUtil.destroy();
-		}
+//		if(player == null){
+//			System.out.println(" onpase() 关闭socket...");
+//			SocketUtil.destroy();
+//		}
 		super.onPause();
 	}
 
