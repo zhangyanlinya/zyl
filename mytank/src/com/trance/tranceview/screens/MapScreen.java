@@ -217,7 +217,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	boolean noArmy = false;
 	private void attack(){
-		Map<ArmyType,ArmyDto> armys =MainActivity.player.getArmys();
+		Map<ArmyType,ArmyDto> armys = MainActivity.player.getArmys();
 		if(armys == null || armys.isEmpty()){
 			noArmy = true;
 			return;
