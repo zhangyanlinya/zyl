@@ -13,7 +13,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -168,6 +167,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		MapData.gamerunning = true;
 		finishBattle = false;
+		gobattle = false;
 		camera.position.set(width/2 , height/2 , 0);
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
@@ -269,7 +269,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	public static void finishBattle(boolean win){
-		if(finishBattle){
+		if(finishBattle || !gobattle){
+			System.out.println("无派出 ：已结算");
 			return;
 		}
 		Map<ArmyType,ArmyDto> myArmys = MainActivity.player.getArmys();
@@ -624,6 +625,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     	return null;
     }
     
+    public static boolean gobattle;
+    
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
@@ -661,6 +664,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				stage.addActor(block);
 			}
 			army.setGo(true);
+			gobattle = true;
+			
 		}
 		
 		//for the next choose type;

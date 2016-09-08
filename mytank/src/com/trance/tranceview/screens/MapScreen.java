@@ -70,7 +70,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image toWorld;
 	private Image toUpgrade;
 	private Image rename;
-//	public final static List<Building> buildings = new ArrayList<Building>();
 	private boolean init;
 	private TextInputListener listener;
 	private PlayerDto playerDto;
@@ -258,7 +257,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	// 初始化关卡地图
 	public void initMap() {
-//		buildings.clear();
 		if(playerDto == null){
 			return;
 		}
@@ -295,13 +293,8 @@ public class MapScreen implements Screen ,InputProcessor{
 				
 				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
-//				if (type > 0){
-					block.init(null,type, x, y, length,length,null);
-					stage.addActor(block);
-//				}else{
-//					block.setPosition(x, y);
-//					buildings.add(block);
-//				}
+				block.init(null,type, x, y, length,length,null);
+				stage.addActor(block);
 			}
 		}
 	}

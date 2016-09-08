@@ -53,6 +53,7 @@ public class Building extends GameActor{
 		this.camp = 1;
 		this.type = type;
 		if(type <= 0){
+			textureRegion = null;
 			return;
 		}
 		textureRegion = AssetsManager.getInstance().getBuildingTextureRegion(type);
