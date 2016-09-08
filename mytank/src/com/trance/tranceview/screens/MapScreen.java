@@ -79,7 +79,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
 	private Image bg;
-	private GestureController controller;
+//	private GestureController controller;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -198,10 +198,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
-		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-		camera.position.set(width/2, height/2, 0);
-		GestureDetector gestureHandler = new GestureDetector(controller);
-		inputMultiplexer.addProcessor(gestureHandler);
+//		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+//		camera.position.set(width/2, height/2, 0);
+//		GestureDetector gestureHandler = new GestureDetector(controller);
+//		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -363,7 +363,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		}
 		
-		controller.setCanUpdate(false);
+//		controller.setCanUpdate(false);
 		a = b;
 		oldx = b.getX();
 		oldy = b.getY();
@@ -378,7 +378,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(a == null){
 			return true;
 		}
-		controller.setCanUpdate(true);
+//		controller.setCanUpdate(true);
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
@@ -431,7 +431,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			}else{
 				b.remove();
 			}
-			Building.buildingPool.free(b);
 			
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			boolean none = false;
@@ -443,6 +442,9 @@ public class MapScreen implements Screen ,InputProcessor{
 					none = true;
 				}
 			}
+			
+			Building.buildingPool.free(b);
+			
 			if(dto != null && !none){
 				Building block = Building.buildingPool.obtain();
 				block.init(null,oldType, oldx, oldy, length, length, null, font, dto.getLeftAmount());
