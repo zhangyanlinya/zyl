@@ -52,7 +52,9 @@ public class Building extends GameActor{
 		this.alive = true;
 		this.camp = 1;
 		this.type = type;
-		
+		if(type <= 0){
+			return;
+		}
 		textureRegion = AssetsManager.getInstance().getBuildingTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -128,6 +130,9 @@ public class Building extends GameActor{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
+		if(textureRegion == null){
+			return;
+		}
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
