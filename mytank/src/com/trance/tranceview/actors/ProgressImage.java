@@ -1,11 +1,5 @@
 package com.trance.tranceview.actors;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.apache.http.impl.cookie.DateUtils;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -59,7 +53,7 @@ public class ProgressImage extends Image{
 			
 		renderer.setColor(Color.ORANGE);
 		renderer.begin(ShapeType.Line);
-		renderer.rect(Gdx.graphics.getWidth() / 4 , this.getY() + 12, Gdx.graphics.getWidth() / 2, 40);
+		renderer.rect(Gdx.graphics.getWidth() / 2 + this.getWidth() * 2, this.getY() + 12, Gdx.graphics.getWidth() / 4, 40);
 		renderer.end();
 		if(percent < 0.2){ 
 			renderer.setColor(Color.RED);
@@ -69,7 +63,7 @@ public class ProgressImage extends Image{
 			renderer.setColor(Color.GREEN);
 		}
 		renderer.begin(ShapeType.Filled);
-		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, this.getY() + 16, percent * Gdx.graphics.getWidth()/2 - 6, 34);
+		renderer.rect(Gdx.graphics.getWidth() / 2 + 2 + this.getWidth() * 2, this.getY() + 16, percent * Gdx.graphics.getWidth()/4 - 6, 34);
 		renderer.end();
 		batch.begin();
 	}

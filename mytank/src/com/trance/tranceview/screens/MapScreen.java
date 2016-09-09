@@ -122,7 +122,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		
-		//攻击
 		attack = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
 		attack.setPosition(width - attack.getWidth() * 2, attack.getHeight());
 		attack.addListener(new ClickListener(){
@@ -133,7 +132,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
-		//返回世界地图
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
@@ -143,17 +141,6 @@ public class MapScreen implements Screen ,InputProcessor{
 				toWorld();
 			}
 		});
-//		
-//		//升级
-//		toUpgrade = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
-//		toUpgrade.setBounds(10 + toUpgrade.getWidth(), 10, toUpgrade.getWidth() + toUpgrade.getWidth()/2, toUpgrade.getHeight() + toUpgrade.getHeight()/2);
-//		toUpgrade.addListener(new ClickListener(){
-//			
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				toProgress();
-//			}
-//		});
 		
 		//Rename
 		listener = new RenameInputListener();
@@ -210,7 +197,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
-//		stage.addActor(toUpgrade);
 		if(playerDto.isMyself()){
 			stage.addActor(rename);
 		}
@@ -246,7 +232,7 @@ public class MapScreen implements Screen ,InputProcessor{
 				continue;
 			}
 			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(width/2 + side * i , control_height/2 - ( i + 1) * 100 );
+			image.setPosition(width/2 + side * i , control_height - length - ( i + 1) * 100 );
 			stage.addActor(image);
 			i++;
 		}
@@ -274,9 +260,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
 	}
-//	private void toProgress(){
-//		this.game.setScreen(game.upgradeScreen);
-//	}
 
 	@Override
 	public void render(float delta) {
@@ -350,33 +333,27 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	
 	private void initPlayerLeftBuiding() {
-//		Map<Integer,PlayerBuildingDto> map = playerDto.getBuildings();
-//		float x = 0;
-//		int i = 0;
-//		for(PlayerBuildingDto dto : map.values()){
-//			if(dto.getLeftAmount() <= 0){
-//				continue;
-//			}
-//			Building buiding = Building.buildingPool.obtain();
-//			x = i * length + 100;
-//			buiding.init(null,dto.getId(), x,control_height/2, length,length,null, font, dto.getLeftAmount());
-//			stage.addActor(buiding);
-//			i ++;
-//		}
-		
 		coolQueues = playerDto.getCoolQueues();
 		buildings = playerDto.getBuildings();
 		
 		refreshCoolQueue();
 		
-		int side = width/20;
-		int j = 0;
+		float side = width/10;
+		float x = length;
+		int rate = 1;
 		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
 			PlayerBuildingDto dto = e.getValue();
 			Building buiding = Building.buildingPool.obtain();
-			buiding.init(null,dto.getId(), side * j, control_height/2, length,length,null, font, dto.getLeftAmount());
+			if(rate == 1){
+				rate = (int) (x / (width/2) + 1);			
+			}
+			float y = control_height - (length * 2 + rate * length * 2 );
+			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto.getLeftAmount());
 			stage.addActor(buiding);
-			j ++;
+			x += side; 
+			if(rate == 2){
+				x = length;
+			}
 		}
 	}
 	
@@ -385,10 +362,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("buildingId", dto.getId());
 		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
-		
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
+		
 		HashMap<String,Object> result = (HashMap<String,Object>) response.getValue();
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
@@ -453,7 +430,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		Building b = (Building) actor;
-		if(actor.getY() <= control_height/2){//增加
+		if(actor.getY() <= control_height - length){//增加
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
 			updateBuilding(dto);
 			if(dto.getLeftAmount() <= 0){//不够建造物
@@ -498,7 +475,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			return true;
 		}
 		
-		if(oldy <= control_height/2){//增加
+		if(oldy <= control_height - length){//增加
 			System.out.println("开始增加...");
 			if(b.type != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
@@ -598,8 +575,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			return null;
 		}
 		Building b = (Building)at;
-		if(b.getY() <= control_height/2){//与原始的不比较
-			System.out.println("b.getY() <= control_height/2");
+		if(b.getY() <= control_height - length){//与原始的不比较
+			System.out.println("b.getY() <= control_height - length");
 			return null;
 		}
 		return b;
