@@ -2,9 +2,13 @@ package com.trance.tranceview.screens;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
@@ -15,6 +19,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,22 +28,33 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.ArmyType;
+import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.reward.result.ValueResultSet;
+import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
+import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
@@ -68,7 +85,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
-	private Image toUpgrade;
+//	private Image toUpgrade;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -76,6 +93,10 @@ public class MapScreen implements Screen ,InputProcessor{
 	private OrthographicCamera camera;
 	private Image bg;
 //	private GestureController controller;
+	
+	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
+	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
+	public ShapeRenderer shapeRenderer;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -97,6 +118,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		
 		spriteBatch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer(); 
 		
 		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
 		
@@ -121,17 +143,17 @@ public class MapScreen implements Screen ,InputProcessor{
 				toWorld();
 			}
 		});
-		
-		//升级
-		toUpgrade = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
-		toUpgrade.setBounds(10 + toUpgrade.getWidth(), 10, toUpgrade.getWidth() + toUpgrade.getWidth()/2, toUpgrade.getHeight() + toUpgrade.getHeight()/2);
-		toUpgrade.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				toProgress();
-			}
-		});
+//		
+//		//升级
+//		toUpgrade = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
+//		toUpgrade.setBounds(10 + toUpgrade.getWidth(), 10, toUpgrade.getWidth() + toUpgrade.getWidth()/2, toUpgrade.getHeight() + toUpgrade.getHeight()/2);
+//		toUpgrade.addListener(new ClickListener(){
+//			
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				toProgress();
+//			}
+//		});
 		
 		//Rename
 		listener = new RenameInputListener();
@@ -159,7 +181,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getInstance().getFont(35, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getInstance().getFont(30, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		
 		noArmy = false;
 		stage.clear();
@@ -188,7 +210,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
-		stage.addActor(toUpgrade);
+//		stage.addActor(toUpgrade);
 		if(playerDto.isMyself()){
 			stage.addActor(rename);
 		}
@@ -203,12 +225,39 @@ public class MapScreen implements Screen ,InputProcessor{
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
+	private void refreshCoolQueue(){
+		for(Actor actor : stage.getActors()){
+			if(actor instanceof ProgressImage){
+				actor.remove();
+			}
+		}
+		
+		int i = 0;
+		float side = width/20;
+		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
+			CoolQueueDto dto = e.getValue();
+			int id = dto.getId();
+			if(id == 8){//TODO
+				id = 1;
+			}
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
+			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
+			if(elementUpgrade == null){
+				continue;
+			}
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
+			image.setPosition(width/2 + side * i , control_height/2 - ( i + 1) * 100 );
+			stage.addActor(image);
+			i++;
+		}
+	}
+	
 	/**
 	 *  地图是否可编辑
 	 * @return
 	 */
 	private boolean isEdit(){
-		return(playerDto.isMyself());//是自己的地图 且处于网络状态
+		return(playerDto.isMyself());//
 	}
 	
 	boolean noArmy = false;
@@ -225,9 +274,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
 	}
-	private void toProgress(){
-		this.game.setScreen(game.upgradeScreen);
-	}
+//	private void toProgress(){
+//		this.game.setScreen(game.upgradeScreen);
+//	}
 
 	@Override
 	public void render(float delta) {
@@ -299,23 +348,82 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
-	/**
-	 * 
-	 */
+	
 	private void initPlayerLeftBuiding() {
-		Map<Integer,PlayerBuildingDto> map = playerDto.getBuildings();
-		float x = 0;
-		int i = 0;
-		for(PlayerBuildingDto dto : map.values()){
-			if(dto.getLeftAmount() <= 0){
-				continue;
-			}
+//		Map<Integer,PlayerBuildingDto> map = playerDto.getBuildings();
+//		float x = 0;
+//		int i = 0;
+//		for(PlayerBuildingDto dto : map.values()){
+//			if(dto.getLeftAmount() <= 0){
+//				continue;
+//			}
+//			Building buiding = Building.buildingPool.obtain();
+//			x = i * length + 100;
+//			buiding.init(null,dto.getId(), x,control_height/2, length,length,null, font, dto.getLeftAmount());
+//			stage.addActor(buiding);
+//			i ++;
+//		}
+		
+		coolQueues = playerDto.getCoolQueues();
+		buildings = playerDto.getBuildings();
+		
+		refreshCoolQueue();
+		
+		int side = width/20;
+		int j = 0;
+		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
+			PlayerBuildingDto dto = e.getValue();
 			Building buiding = Building.buildingPool.obtain();
-			x = i * length + 100;
-			buiding.init(null,dto.getId(), x,control_height/2, length,length,null, font, dto.getLeftAmount());
+			buiding.init(null,dto.getId(), side * j, control_height/2, length,length,null, font, dto.getLeftAmount());
 			stage.addActor(buiding);
-			i ++;
+			j ++;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void updateBuilding(PlayerBuildingDto dto){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("buildingId", dto.getId());
+		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
+		
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			return;
+		}
+		HashMap<String,Object> result = (HashMap<String,Object>) response.getValue();
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.BUILDING,code);
+				return ;
+			}
+			Object valueResult = result.get("valueResultSet");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
+			
+			Object coolQueue = result.get("coolQueueDto");
+			if(coolQueue != null){
+				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
+				if(coolQueueDto != null){
+					coolQueues.put(coolQueueDto.getId(),coolQueueDto);
+					refreshCoolQueue();
+				}
+			}
+			
+			Object building = result.get("content");
+			if(building != null){
+				PlayerBuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), PlayerBuildingDto.class);
+				if(playerBuildingDto != null){
+					PlayerBuildingDto pbd = buildings.get(playerBuildingDto.getId());
+					if(pbd != null){
+						pbd.setLevel(playerBuildingDto.getLevel());
+//						BasedbService.get(clazz, id)
+					}
+				}
+			}
+		}
+	
 	}
 	
 	private Building a ;
@@ -335,7 +443,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		float x = vector3.x;
 		float y = vector3.y;
 		
-//		screenY = height - screenY;
 		if(y < 0){
 			return false;
 		}
@@ -344,15 +451,16 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(actor == null || !(actor instanceof Building)){
 			return false;
 		}
+		
 		Building b = (Building) actor;
 		if(actor.getY() <= control_height/2){//增加
 			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
+			updateBuilding(dto);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
 			}
 		}
 		
-//		controller.setCanUpdate(false);
 		a = b;
 		oldx = b.getX();
 		oldy = b.getY();
@@ -367,13 +475,11 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(a == null){
 			return true;
 		}
-//		controller.setCanUpdate(true);
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);  
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
 		
-//		screenY = height - screenY;
 		if(y < 0){
 			a.setPosition(oldx, oldy);
 			a = null;
@@ -390,28 +496,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			a.setPosition(oldx, oldy);//暂时不做移除
 			a = null;
 			return true;
-//			if(oldy == control_height/2 ){//原始的不移除 
-//				a.setPosition(oldx, oldy);
-//				return true;
-//			}
-//			if(a.getY()  > control_height/2){ //没有移到控制区域下面不算移除
-//				a.setPosition(oldx, oldy);
-//				return true;
-//			}
-//			
-//			a.remove();
-//			Building.buildingPool.free(a);
-//			playerDto.getMap()[oldi][oldj] = 0;
-//			
-//			Building block = Building.buildingPool.obtain();
-//			block.i = oldi;
-//			block.j = oldj;
-//			block.setPosition(oldx, oldy);
-//			buildings.add(block);
-//			StringBuilder from = new StringBuilder();
-//			from.append(oldi).append("|").append(oldj).append("|").append(0);
-//			saveMaptoServer(1,from.toString(),null);
-//			return true;
 		}
 		
 		if(oldy <= control_height/2){//增加
@@ -437,11 +521,11 @@ public class MapScreen implements Screen ,InputProcessor{
 			a.setIndex(b.i, b.j);
 			playerDto.getMap()[b.i][b.j] = oldType; 
 			
-			if(dto.getLeftAmount() > 0){
+//			if(dto.getLeftAmount() > 0){
 				Building block = Building.buildingPool.obtain();
 				block.init(null,oldType, oldx, oldy, length, length, null, font, dto.getLeftAmount());
 				stage.addActor(block);
-			}
+//			}
 			
 			StringBuilder to = new StringBuilder();
 			to.append(b.i).append("|").append(b.j).append("|").append(oldType);
@@ -484,7 +568,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			camera.unproject(vector3); // 坐标转化  
 			float x = vector3.x;
 			float y = vector3.y;
-//			screenY = height - screenY;
 			if(y < 0){
 				return true;
 			}
@@ -502,10 +585,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	 * @param newY
 	 */
 	private Building compute(float x, float y) {
-//		float min = a.getWidth() > a.getHeight() ? a.getHeight()/2: a.getWidth()/2;
-//		Array<Actor> actors = stage.getActors();
-//		for(int i = 0 ;i < actors.size ; i++){
-//			Actor at = actors.get(i);
 		Actor at = stage.hit(x, y, true);
 		a.setTouchable(Touchable.enabled);//比较后就可以点了
 		if(at == null){
@@ -523,18 +602,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			System.out.println("b.getY() <= control_height/2");
 			return null;
 		}
-//		float dst = b.dst(x,y);
-//		if(dst <= min){
-//			return b;
-//		}
-//		}
-//		for( int i = 0; i< buildings.size() ;i++){
-//			Building bu =  buildings.get(i);
-//			float dst = b.dst(x,y);
-//			if(dst <= min){
-//				return b;
-//			}
-//		}
 		return b;
 	}
 	
@@ -601,10 +668,13 @@ public class MapScreen implements Screen ,InputProcessor{
 		if (stage != null){
 			stage.dispose();
 		}
-//		buildings.clear();
 		
 		if(spriteBatch != null){
 			spriteBatch.dispose();
+		}
+		
+		if(shapeRenderer!= null){
+			shapeRenderer.dispose();
 		}
 		
 		if(font != null){
