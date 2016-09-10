@@ -12,7 +12,7 @@ import com.trance.tranceview.MainActivity;
 
 @SuppressLint("UseSparseArrays")
 public class MsgUtil {
-	private final static String common_json ="[{\"id\":0,\"msg\":\" 操作成功 \"},{\"id\":-1,\"msg\":\" 操作失败 \"},{\"id\":-2,\"msg\":\" 没操作权限 \"},{\"id\":-3,\"msg\":\" 基础数据不存在 \"},{\"id\":-4,\"msg\":\" 角色不存在 \"},{\"id\":-5,\"msg\":\" 持久化异常 \"},{\"id\":-6,\"msg\":\" 参数错误  \"},{\"id\":-7,\"msg\":\" 用户不在线上\"},{\"id\":-8,\"msg\":\" 金币不足 \"},{\"id\":-9,\"msg\":\" 银元不足 \"},{\"id\":-10,\"msg\":\" 粮草不足 \"},{\"id\":-11,\"msg\":\" 用户经验不够 \"},{\"id\":-99,\"msg\":\" 非法的服标识\"}]";
+	private final static String common_json ="[{\"id\":0,\"msg\":\" 操作成功 \"},{\"id\":-1,\"msg\":\" 操作失败 \"},{\"id\":-2,\"msg\":\" 没操作权限 \"},{\"id\":-3,\"msg\":\" 基础数据不存在 \"},{\"id\":-4,\"msg\":\" 角色不存在 \"},{\"id\":-5,\"msg\":\" 持久化异常 \"},{\"id\":-6,\"msg\":\" 参数错误  \"},{\"id\":-7,\"msg\":\" 用户不在线上\"},{\"id\":-8,\"msg\":\" 金币不足 \"},{\"id\":-9,\"msg\":\" 银币不足 \"},{\"id\":-10,\"msg\":\" 粮食不足 \"},{\"id\":-11,\"msg\":\" 用户经验不够 \"},{\"id\":-99,\"msg\":\" 非法的服标识\"}]";
 	private final static Map<Integer,Msg> common = new HashMap<Integer,Msg>();
 	
 	private final static String player_json ="[{\"id\":-10001,\"msg\":\"登录key错误\"},{\"id\":-10003,\"msg\":\"注册时用户名已存在\"},{\"id\":-10004,\"msg\":\"注册时角色名已存在\"},{\"id\":-10005,\"msg\":\"重连被禁止\"},{\"id\":-10006,\"msg\":\"账号被封禁止登陆\"},{\"id\":-10007,\"msg\":\"IP被封禁止登陆\"},{\"id\":-10008,\"msg\":\"购买体力次数上限\"},{\"id\":-10009,\"msg\":\"防沉迷状态错误\"},{\"id\":-10010,\"msg\":\"被防火墙加入黑名单\"}]";
@@ -76,19 +76,19 @@ public class MsgUtil {
 		}
 		
 		if(msg == null){
-			sendMessage(code);
+			showMsg(code);
 		}else{
 			long now = System.currentTimeMillis();
 			if(now - msg.getTime() < 2000){
 				return;
 			}
 			msg.setTime(now);
-			sendMessage(msg.getMsg());
+			showMsg(msg.getMsg());
 		}
 		
 	}
 	
-	public static void sendMessage(Object obj){
+	public static void showMsg(Object obj){
 		Message msg = Message.obtain();
 		msg.what = -1000;
 		msg.obj = obj;

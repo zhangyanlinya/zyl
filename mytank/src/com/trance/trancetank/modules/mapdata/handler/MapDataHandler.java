@@ -4,11 +4,17 @@ import java.util.HashMap;
 
 import org.apache.mina.core.session.IoSession;
 
+import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessorAdapter;
 import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.utils.MsgUtil;
 
 
 /**
@@ -69,7 +75,14 @@ public class MapDataHandler extends HandlerSupport {
 			@Override
 			public void callback(IoSession session, Response response,
 					Object message) {
-				
+				ResponseStatus status = response.getStatus();
+				if (status == ResponseStatus.SUCCESS) {
+					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
+					int code = (Integer) result.get("result");
+					if (code != Result.SUCCESS) {
+						MsgUtil.showMsg(Module.MAP_DATA, code);
+					}
+				}
 			}
 		});
 		this.registerProcessor(new ResponseProcessorAdapter(){

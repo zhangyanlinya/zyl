@@ -153,6 +153,9 @@ public class MapScreen implements Screen ,InputProcessor{
 				Gdx.input.getTextInput(listener, "请输入要改的名字", MainActivity.player.getPlayerName());
 			}
 		});
+		
+		coolQueues = playerDto.getCoolQueues();
+		buildings = playerDto.getBuildings();
 	}
 	
 	public void setPlayerDto(PlayerDto playerDto){
@@ -193,7 +196,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		initMap();//初始化地图
 		if(isEdit()){
-			initPlayerLeftBuiding();
+			refreshCoolQueue();
+			refreshLeftBuiding();
 		}
 		stage.addActor(attack);
 		stage.addActor(toWorld);
@@ -331,13 +335,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
-	
-	private void initPlayerLeftBuiding() {
-		coolQueues = playerDto.getCoolQueues();
-		buildings = playerDto.getBuildings();
-		
-		refreshCoolQueue();
-		
+	private void refreshLeftBuiding() {
 		float side = width/10;
 		int i = 0;
 	
@@ -348,7 +346,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			float x = rate * side + length;
 			int rate2 = i/5 + 1;
 			float y = control_height - (length * 2 + rate2 * length * 2 );
-			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto.getLeftAmount());
+			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto);
 			stage.addActor(buiding);
 			i++;
 		}
@@ -392,7 +390,8 @@ public class MapScreen implements Screen ,InputProcessor{
 					PlayerBuildingDto pbd = buildings.get(playerBuildingDto.getId());
 					if(pbd != null){
 						pbd.setLevel(playerBuildingDto.getLevel());
-//						BasedbService.get(clazz, id)
+						pbd.setAmount(playerBuildingDto.getLevel());
+						refreshLeftBuiding();
 					}
 				}
 			}
@@ -497,7 +496,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 //			if(dto.getLeftAmount() > 0){
 				Building block = Building.buildingPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length, null, font, dto.getLeftAmount());
+				block.init(null,oldType, oldx, oldy, length, length, null, font, dto);
 				stage.addActor(block);
 //			}
 			
