@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class ArmyDto {
 	
 	private ArmyType type;
+	private int level;
 	private int amout;
 	private TextureRegion region;
 	private boolean go;
@@ -16,6 +17,12 @@ public class ArmyDto {
 	}
 	public void setType(ArmyType type) {
 		this.type = type;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	public int getAmout() {
 		return amout;
