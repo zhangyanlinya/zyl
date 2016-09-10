@@ -58,34 +58,5 @@ public class PlayerHandler extends HandlerSupport {
 				session.close(true);
 			}
 		});
-
-		this.registerProcessor(new ResponseProcessorAdapter(){
-
-			@Override
-			public int getModule() {
-				return Module.PLAYER;
-			}
-
-			@Override
-			public int getCmd() {
-				return PlayerCmd.CREATE_PLAYER;
-			}
-
-			@Override
-			public Object getType() {
-				return HashMap.class;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-				@SuppressWarnings("rawtypes")
-				HashMap values = (HashMap) response.getValue();
-				Object  map = values.get("content");
-				Object o = JSON.toJSON(map);
-				MainActivity.player  = JSON.parseObject(o.toString(),PlayerDto.class);
-			}
-		});
-		
 	}
 }

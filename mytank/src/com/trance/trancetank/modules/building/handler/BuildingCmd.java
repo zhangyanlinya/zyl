@@ -18,17 +18,6 @@ public interface BuildingCmd {
 	int GET_BUILDINGS = 1;
 	
 	/**
-	 * 升级建筑品质
-	 * @param buildingId 建筑id
-	 * @return Map {
-	 * 				"result" : {@link BuildingResult},O
-	 * 				"content" : {@link PlayerBuildingDto}, 玩家建筑DTO
-	 * 				"valueResultSet" : {@link ValueResultSet} 更新的属性集
-	 * 				}
-	 */
-	int UPGRADE_BUILDIING_QUALITY = 2;
-	
-	/**
 	 * 建筑升级
 	 * @param buildingId 建筑id
 	 * @return Map {
@@ -39,6 +28,6 @@ public interface BuildingCmd {
 	 * 				"newPlayerBuildingDtos" : {@link List<PlayerBuildingDto>} 新建筑DTO列表
 	 * 				}
 	 */
-	int UPGRADE_BUILDING_LEVEL = 3;
+	int UPGRADE_BUILDING_LEVEL = 2;
 	
 }

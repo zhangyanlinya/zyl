@@ -33,28 +33,7 @@ public class WorldHandler extends HandlerSupport {
 
 	@Override
 	public void init() {
-		this.registerProcessor(new ResponseProcessorAdapter() {
-
-			@Override
-			public int getModule() {
-				return Module.WORLD;
-			}
-
-			@Override
-			public int getCmd() {
-				return WorldCmd.GET_PLAYER_WORLD;
-			}
-
-			@Override
-			public Object getType() {
-				return HashMap.class;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-			}
-		});
+	
 
 		this.registerProcessor(new ResponseProcessorAdapter() {
 
@@ -97,60 +76,7 @@ public class WorldHandler extends HandlerSupport {
 			}
 			
 		});
-
-		this.registerProcessor(new ResponseProcessorAdapter() {
-
-			@Override
-			public int getModule() {
-				return Module.WORLD;
-			}
-
-			@Override
-			public int getCmd() {
-				return WorldCmd.QUERY_PLAYER;
-			}
-
-			@Override
-			public Object getType() {
-				return HashMap.class;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-				ResponseStatus status = response.getStatus();
-				if (status == ResponseStatus.SUCCESS) {
-					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-					int code = (Integer) result.get("result");
-					if (code == 0) {
-						//TODO
-					}
-				}
-			}
-		});
-
-		this.registerProcessor(new ResponseProcessorAdapter() {
-
-			@Override
-			public int getModule() {
-				return Module.WORLD;
-			}
-
-			@Override
-			public int getCmd() {
-				return WorldCmd.CHANGE_PLAYER;
-			}
-
-			@Override
-			public Object getType() {
-				return HashMap.class;
-			}
-
-			@Override
-			public void callback(IoSession session, Response response,
-					Object message) {
-			}
-		});
+	
 	}
 
 }
