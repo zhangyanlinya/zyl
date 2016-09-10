@@ -232,7 +232,7 @@ public class MapScreen implements Screen ,InputProcessor{
 				continue;
 			}
 			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(width/2 + side * i , control_height - length - ( i + 1) * 100 );
+			image.setPosition(width/2 + side * i + length , control_height - length - ( i + 1) * 100 );
 			stage.addActor(image);
 			i++;
 		}
@@ -339,21 +339,18 @@ public class MapScreen implements Screen ,InputProcessor{
 		refreshCoolQueue();
 		
 		float side = width/10;
-		float x = length;
-		int rate = 1;
+		int i = 0;
+	
 		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
 			PlayerBuildingDto dto = e.getValue();
 			Building buiding = Building.buildingPool.obtain();
-			if(rate == 1){
-				rate = (int) (x / (width/2) + 1);			
-			}
-			float y = control_height - (length * 2 + rate * length * 2 );
+			int rate  = i % 5;
+			float x = rate * side + length;
+			int rate2 = i/5 + 1;
+			float y = control_height - (length * 2 + rate2 * length * 2 );
 			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto.getLeftAmount());
 			stage.addActor(buiding);
-			x += side; 
-			if(rate == 2){
-				x = length;
-			}
+			i++;
 		}
 	}
 	
