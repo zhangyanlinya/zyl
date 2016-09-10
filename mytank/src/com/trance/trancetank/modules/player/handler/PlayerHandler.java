@@ -1,18 +1,13 @@
 package com.trance.trancetank.modules.player.handler;
 
-import java.util.HashMap;
-
 import org.apache.mina.core.session.IoSession;
 
-import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessorAdapter;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
-import com.trance.trancetank.modules.player.model.PlayerDto;
-import com.trance.tranceview.MainActivity;
 
 
 /**

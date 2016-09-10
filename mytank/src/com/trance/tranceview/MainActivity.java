@@ -19,6 +19,9 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.basedb.BasedbService;
+import com.trance.common.socket.model.Request;
+import com.trance.trancetank.config.Module;
+import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
@@ -128,17 +131,25 @@ public class MainActivity extends AndroidApplication {
 		return worldPlayers.get(key);
 	}
 	
-	private long time;
-	
+	@Override
+	protected void onStop() {
+		System.out.println("onStop()...");
+		onStop = true;
+		super.onStop();
+	}
 	
 	@Override
-	protected void onPause() {
-//		if(player == null){
-//			System.out.println(" onpase() 关闭socket...");
-//			SocketUtil.destroy();
-//		}
-		super.onPause();
+	protected void onRestart() {
+		System.out.println("onRestart()...");
+		onStop = false;
+		SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.HEART_BEAT, null));
+		super.onRestart();
 	}
+	
+	
+	private long time;
+	
+	public static boolean onStop;
 
 	@Override
 	public void onBackPressed() {
