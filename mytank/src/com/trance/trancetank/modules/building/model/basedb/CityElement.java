@@ -17,11 +17,6 @@ public class CityElement implements Basedb{
 	private Integer id;
 	
 	/**
-	 * 建筑类型
-	 */
-	private int type;
-	
-	/**
 	 * 开放等级
 	 */
 	private int openLevel;
@@ -32,14 +27,6 @@ public class CityElement implements Basedb{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
 	}
 
 	public int getOpenLevel() {

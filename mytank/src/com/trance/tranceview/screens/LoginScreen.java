@@ -1,5 +1,6 @@
 package com.trance.tranceview.screens;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -32,6 +34,7 @@ import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.building.model.BuildingDto;
+import com.trance.trancetank.modules.building.model.basedb.CityElement;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
@@ -202,17 +205,19 @@ public class LoginScreen implements Screen{
 			}
 			
 			Object bobj = result.get("buildings");
-//			if(bobj == null){//defalut;
-//				for(int i = 1; i <= 5 ; i++){
-//					PlayerBuildingDto dto = new PlayerBuildingDto();
-//					dto.setId(i);
-//					dto.setAmount(1);
-//					dto.setLevel(1);
-//					dto.setBuildAmount(1);
-//					playerDto.addBuilding(dto);
-//				}
-//			}
-			if(bobj != null){
+			if(bobj == null){//defalut;
+				Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
+				for(CityElement city : citys){
+					if(city.getOpenLevel()  == 1){
+						BuildingDto dto = new BuildingDto();
+						dto.setId(city.getId());
+						dto.setAmount(1);
+						dto.setLevel(1);
+						dto.setBuildAmount(1);
+						playerDto.addBuilding(dto);
+					}
+				}
+			}else{
 				List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
 				for(BuildingDto dto : buildings){
 					playerDto.addBuilding(dto);
