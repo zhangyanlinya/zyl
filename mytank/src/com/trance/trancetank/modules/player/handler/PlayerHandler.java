@@ -8,6 +8,8 @@ import com.trance.common.socket.handler.ResponseProcessorAdapter;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.MainActivity;
 
 
 /**
@@ -51,6 +53,35 @@ public class PlayerHandler extends HandlerSupport {
 				// 死了 则关闭连接
 				System.out.println("连接死掉了! 准备重连...");
 				session.close(true);
+			}
+		});
+		
+		this.registerProcessor(new ResponseProcessorAdapter(){
+
+			@Override
+			public int getModule() {
+				return Module.PLAYER;
+			}
+
+			@Override
+			public int getCmd() {
+				return PlayerCmd.PUSH_ATTR_REFRESH;
+			}
+
+			@Override
+			public Object getType() {
+				return PlayerDto.class;
+			}
+
+			@Override
+			public void callback(IoSession session, Response response,
+					Object message) {
+				if(response != null && response.getStatus() == ResponseStatus.SUCCESS){
+					return;
+				}
+				System.out.println("推送属性刷新...");
+				PlayerDto playerDto = (PlayerDto) response.getValue();
+				MainActivity.player = playerDto;
 			}
 		});
 	}
