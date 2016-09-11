@@ -31,7 +31,7 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.ArmyType;
-import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
@@ -213,8 +213,8 @@ public class LoginScreen implements Screen{
 //				}
 //			}
 			if(bobj != null){
-				List<PlayerBuildingDto> buildings = JSON.parseArray(bobj.toString(), PlayerBuildingDto.class);
-				for(PlayerBuildingDto dto : buildings){
+				List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+				for(BuildingDto dto : buildings){
 					playerDto.addBuilding(dto);
 				}
 			}

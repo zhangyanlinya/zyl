@@ -1,6 +1,7 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,8 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.building.handler.BuildingCmd;
-import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.building.model.BuildingType;
+import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
@@ -93,7 +95,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image bg;
 //	private GestureController controller;
 	
-	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
+	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
@@ -338,8 +340,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		float side = width/10;
 		int i = 0;
 	
-		for(Entry<Integer, PlayerBuildingDto> e : buildings.entrySet()){
-			PlayerBuildingDto dto = e.getValue();
+		for(Entry<Integer, BuildingDto> e : buildings.entrySet()){
+			BuildingDto dto = e.getValue();
 			Building buiding = Building.buildingPool.obtain();
 			int rate  = i % 5;
 			float x = rate * side + length;
@@ -352,7 +354,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void updateBuilding(PlayerBuildingDto dto){
+	private void updateBuilding(BuildingDto dto){
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("buildingId", dto.getId());
 		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
@@ -386,18 +388,42 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			Object building = result.get("content");
 			if(building != null){
-				PlayerBuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), PlayerBuildingDto.class);
+				BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
 				if(playerBuildingDto != null){
-					PlayerBuildingDto pbd = buildings.get(playerBuildingDto.getId());
+					BuildingDto pbd = buildings.get(playerBuildingDto.getId());
 					if(pbd != null){
 						pbd.setLevel(playerBuildingDto.getLevel());
-						pbd.setAmount(playerBuildingDto.getLevel());
+						if(pbd.getId() != BuildingType.OFFICE){
+							pbd.setAmount(playerBuildingDto.getLevel());
+						}
 						refreshLeftBuiding();
 					}
 				}
 			}
+			
+			//如果是主城升级的话  可能有新的建筑和部队
+			if(dto.getId() == BuildingType.OFFICE){
+				Object newBuildings  = result.get("newBuildingDtos");
+				if(newBuildings != null){
+				  List<BuildingDto> buildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), BuildingDto.class);
+				  if(buildingDtos != null){
+					  for(BuildingDto buildingDto : buildingDtos){
+						  buildings.put(buildingDto.getId(), buildingDto);
+					  }
+				  }
+				}
+				
+				Object newArmys = result.get("newArmyDtos");
+				if(newArmys != null){
+					List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
+					if(armyDtos != null){
+						for(ArmyDto armyDto : armyDtos){
+							MainActivity.player.addAmry(armyDto);
+						}
+					}
+				}
+			}
 		}
-	
 	}
 	
 	private Building a ;
@@ -428,7 +454,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		Building b = (Building) actor;
 		if(actor.getY() <= control_height - length){//增加
-			PlayerBuildingDto dto = playerDto.getBuildings().get(b.type);
+			BuildingDto dto = playerDto.getBuildings().get(b.type);
 			updateBuilding(dto);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
@@ -479,7 +505,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			b.remove();
 			Building.buildingPool.free(b);
 			
-			PlayerBuildingDto dto = playerDto.getBuildings().get(oldType);
+			BuildingDto dto = playerDto.getBuildings().get(oldType);
 			if(dto == null || dto.getLeftAmount() <= 0){
 				a.setPosition(oldx, oldy);
 				a = null;

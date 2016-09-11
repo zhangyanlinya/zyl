@@ -7,7 +7,7 @@ package com.trance.trancetank.modules.building.model;
  * @author zyl
  *
  */
-public class PlayerBuildingDto {
+public class BuildingDto {
 
 	/**
 	 * 建筑id {@link BuildingType}

@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.trance.trancetank.modules.army.model.ArmyDto;
-import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
+import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 
 /**
@@ -75,7 +75,7 @@ public class PlayerDto{
 	
 	private ConcurrentMap<Integer,ArmyDto> armys = new ConcurrentHashMap<Integer,ArmyDto>();
 	
-	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
+	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 	
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 
@@ -173,15 +173,15 @@ public class PlayerDto{
 		armys.put(dto.getId(), dto);
 	}
 
-	public ConcurrentMap<Integer, PlayerBuildingDto> getBuildings() {
+	public ConcurrentMap<Integer, BuildingDto> getBuildings() {
 		return buildings;
 	}
 
-	public void setBuildings(ConcurrentMap<Integer, PlayerBuildingDto> buildings) {
+	public void setBuildings(ConcurrentMap<Integer, BuildingDto> buildings) {
 		this.buildings = buildings;
 	}
 
-	public void addBuilding(PlayerBuildingDto dto) {
+	public void addBuilding(BuildingDto dto) {
 		buildings.put(dto.getId(), dto);
 	}
 

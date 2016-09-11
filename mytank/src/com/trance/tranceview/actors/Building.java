@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
-import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
@@ -37,7 +37,7 @@ public class Building extends GameActor{
 	public long dirDelay = 10000;
 	public int level;
 	private BitmapFont font;
-	private PlayerBuildingDto dto;
+	private BuildingDto dto;
 	
 	/**
 	 * 初始化
@@ -74,7 +74,7 @@ public class Building extends GameActor{
 		body.setUserData(this);
 		
 	}
-	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, PlayerBuildingDto dto){
+	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, BuildingDto dto){
 		init(world, type, x, y, width, height, renderer);
 		this.font = font;
 		this.dto = dto;

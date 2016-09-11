@@ -22,7 +22,7 @@ public interface BuildingCmd {
 	 * @param buildingId 建筑id
 	 * @return Map {
 	 * 				"result" : {@link BuildingResult},
-	 * 				"content" : {@link PlayerBuildingDto}, 玩家建筑DTO
+	 * 				"content" : {@link BuildingDto}, 玩家建筑DTO
 	 * 				"coolQueueDto" : {@link CoolQueueDto}, 冷却队列DTO
 	 * 				"valueResultSet" : {@link ValueResultSet} 更新的属性集
 	 * 				"newPlayerBuildingDtos" : {@link List<PlayerBuildingDto>} 新建筑DTO列表
