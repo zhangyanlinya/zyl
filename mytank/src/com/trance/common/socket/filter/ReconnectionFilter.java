@@ -48,9 +48,9 @@ public class ReconnectionFilter extends IoFilterAdapter{
 				}
 				logger.error("重连服务器登录失败,3秒再连接一次");
 				
-				if(MainActivity.onStop){
-					break;
-				}
+//				if(MainActivity.onStop){
+//					break;
+//				}
 			}
      }
 

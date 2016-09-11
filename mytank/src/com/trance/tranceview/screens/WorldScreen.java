@@ -3,6 +3,7 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -26,6 +27,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.JsonUtils;
 import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
@@ -36,6 +38,7 @@ import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
 
@@ -201,20 +204,25 @@ public class WorldScreen implements Screen, InputProcessor {
 						}
 						ResponseStatus status = response.getStatus();
 						if (status == ResponseStatus.SUCCESS) {
-							HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
+							byte[] bytes = response.getValueBytes();
+							String text = new String(bytes);
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
 							int code = (Integer) result.get("result");
-							if (code == 0) {
-								if (result.get("mapJson") != null) {
-									int[][] map = JsonUtils.jsonString2Object(
-											result.get("mapJson").toString(),
-											int[][].class);
-									dto.setMap(map);
-								}else{
-									dto.setMap(MapData.baseMap.clone());
-								}
-								tranceGame.mapScreen.setPlayerDto(dto);
-								tranceGame.setScreen(tranceGame.mapScreen);
+							if(code != Result.SUCCESS){
+								MsgUtil.showMsg(Module.WORLD, code);
+								return;
 							}
+							if (result.get("mapJson") != null) {
+								int[][] map = JsonUtils.jsonString2Object(
+										result.get("mapJson").toString(),
+										int[][].class);
+								dto.setMap(map);
+							}else{
+								dto.setMap(MapData.baseMap.clone());
+							}
+							tranceGame.mapScreen.setPlayerDto(dto);
+							tranceGame.setScreen(tranceGame.mapScreen);
 						}
 					}
 				});

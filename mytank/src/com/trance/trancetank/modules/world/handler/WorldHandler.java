@@ -4,9 +4,6 @@ import java.util.HashMap;
 
 import org.apache.mina.core.session.IoSession;
 
-import android.content.Context;
-import android.os.Message;
-
 import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
@@ -16,9 +13,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
-import com.trance.tranceview.actors.WorldImage;
-import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.screens.WorldScreen;
 
 /**
  * 
@@ -33,8 +27,6 @@ public class WorldHandler extends HandlerSupport {
 
 	@Override
 	public void init() {
-	
-
 		this.registerProcessor(new ResponseProcessorAdapter() {
 
 			@Override

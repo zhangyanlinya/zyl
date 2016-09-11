@@ -360,7 +360,9 @@ public class MapScreen implements Screen ,InputProcessor{
 			return;
 		}
 		
-		HashMap<String,Object> result = (HashMap<String,Object>) response.getValue();
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
