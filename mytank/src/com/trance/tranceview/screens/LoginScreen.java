@@ -202,6 +202,16 @@ public class LoginScreen implements Screen{
 			}
 			
 			Object bobj = result.get("buildings");
+//			if(bobj == null){//defalut;
+//				for(int i = 1; i <= 5 ; i++){
+//					PlayerBuildingDto dto = new PlayerBuildingDto();
+//					dto.setId(i);
+//					dto.setAmount(1);
+//					dto.setLevel(1);
+//					dto.setBuildAmount(1);
+//					playerDto.addBuilding(dto);
+//				}
+//			}
 			if(bobj != null){
 				List<PlayerBuildingDto> buildings = JSON.parseArray(bobj.toString(), PlayerBuildingDto.class);
 				for(PlayerBuildingDto dto : buildings){

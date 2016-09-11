@@ -20,11 +20,6 @@ public class PlayerBuildingDto {
 	private int level;
 	
 	/**
-	 * 建筑品质
-	 */
-	private int quality;
-	
-	/**
 	 * 数量
 	 */
 	private int amount;
@@ -48,14 +43,6 @@ public class PlayerBuildingDto {
 
 	public void setLevel(int level) {
 		this.level = level;
-	}
-
-	public int getQuality() {
-		return quality;
-	}
-
-	public void setQuality(int quality) {
-		this.quality = quality;
 	}
 
 	public int getAmount() {

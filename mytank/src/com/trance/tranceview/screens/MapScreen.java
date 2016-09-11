@@ -460,10 +460,6 @@ public class MapScreen implements Screen ,InputProcessor{
 			return true;
 		}
 		
-		//校正
-		x -= a.getWidth()/2;
-		y -= a.getHeight()/2;	
-		
 		Building b = compute(x,y);
 		if(b == null){//移除
 			System.out.println("b = null");
