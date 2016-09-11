@@ -1,11 +1,9 @@
 package com.trance.trancetank.modules.player.model;
 
-import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.trance.trancetank.modules.army.model.ArmyDto;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 
@@ -75,7 +73,7 @@ public class PlayerDto{
 	
 	private int[][] map;
 	
-	private ConcurrentMap<ArmyType,ArmyDto> armys = new ConcurrentHashMap<ArmyType,ArmyDto>();
+	private ConcurrentMap<Integer,ArmyDto> armys = new ConcurrentHashMap<Integer,ArmyDto>();
 	
 	private ConcurrentMap<Integer,PlayerBuildingDto> buildings = new ConcurrentHashMap<Integer,PlayerBuildingDto>();
 	
@@ -162,17 +160,17 @@ public class PlayerDto{
 	public void setMap(int[][] map) {
 		this.map = map;
 	}
-
-	public ConcurrentMap<ArmyType, ArmyDto> getArmys() {
+	
+	public ConcurrentMap<Integer, ArmyDto> getArmys() {
 		return armys;
 	}
 
-	public void setArmys(ConcurrentMap<ArmyType, ArmyDto> armys) {
+	public void setArmys(ConcurrentMap<Integer, ArmyDto> armys) {
 		this.armys = armys;
 	}
-	
+
 	public void addAmry(ArmyDto dto) {
-		armys.put(dto.getType(), dto);
+		armys.put(dto.getId(), dto);
 	}
 
 	public ConcurrentMap<Integer, PlayerBuildingDto> getBuildings() {

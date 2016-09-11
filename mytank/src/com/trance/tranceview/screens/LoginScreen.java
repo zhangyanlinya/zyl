@@ -70,9 +70,9 @@ public class LoginScreen implements Screen{
 		
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
-		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
-				" 谁知道那玩意越烤越香……后来我就买了瓶啤酒……太感人了！[流泪][流泪][流泪]"
-				+ "论技术怎么给策划解释概率不稳 是 因为 电压不稳 造成的？游戏服务器是跑在linux上吧，linux的随机数是硬件随机吧，所以电压不稳，造成概率失控";
+//		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
+//				" 谁知道那玩意越烤越香……后来我就买了瓶啤酒……太感人了！[流泪][流泪][流泪]"
+//				+ "论技术怎么给策划解释概率不稳 是 因为 电压不稳 造成的？游戏服务器是跑在linux上吧，linux的随机数是硬件随机吧，所以电压不稳，造成概率失控";
 		font = FontUtil.getInstance().getFont(45, "点击图片开始游戏", Color.RED);
 		
 		//GO
@@ -180,11 +180,11 @@ public class LoginScreen implements Screen{
 			if(aobj == null){//默认数值
 				ArmyDto tank = new ArmyDto();
 				tank.setAmout(6);
-				tank.setType(ArmyType.TANK);
+				tank.setId(ArmyType.TANK);
 				playerDto.addAmry(tank);
 				ArmyDto fat = new ArmyDto();
 				fat.setAmout(3);
-				fat.setType(ArmyType.FAT);
+				fat.setId(ArmyType.FAT);
 				playerDto.addAmry(fat);
 			}else{
 				List<ArmyDto> armys = JSON.parseArray(aobj.toString(), ArmyDto.class);

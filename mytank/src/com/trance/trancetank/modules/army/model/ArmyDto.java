@@ -5,18 +5,20 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class ArmyDto {
 	
-	private ArmyType type;
+	private int id;
 	private int level;
 	private int amout;
+	private int addAmount;
+	private long expireTime;
 	private TextureRegion region;
 	private boolean go;
 	private Rectangle rect;
 	
-	public ArmyType getType() {
-		return type;
+	public int getId() {
+		return id;
 	}
-	public void setType(ArmyType type) {
-		this.type = type;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public int getLevel() {
 		return level;
@@ -48,4 +50,18 @@ public class ArmyDto {
 	public void setRect(Rectangle rect) {
 		this.rect = rect;
 	}
+	public int getAddAmount() {
+		return addAmount;
+	}
+	public void setAddAmount(int addAmount) {
+		this.addAmount = addAmount;
+	}
+	public long getExpireTime() {
+		return expireTime;
+	}
+	public void setExpireTime(long expireTime) {
+		this.expireTime = expireTime;
+	}
+	
+	
 }

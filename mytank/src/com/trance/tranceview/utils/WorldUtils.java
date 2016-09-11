@@ -24,7 +24,6 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.screens.GameScreen;
 
 public class WorldUtils {
@@ -106,7 +105,7 @@ public class WorldUtils {
     	return body;
     }
 
-	public static Body createArmy(World world, ArmyType type, float x, float y,
+	public static Body createArmy(World world, int type, float x, float y,
 			float width, float height) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;

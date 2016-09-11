@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.ArmyPool;
@@ -21,7 +20,7 @@ public class Army extends GameActor{
 	
 	public final static Pool<Army> armyPool = new ArmyPool();
 	public Body body;
-	public ArmyType type;
+	public int armyId;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 3;
@@ -29,15 +28,15 @@ public class Army extends GameActor{
 	public long dirDelay = 10000;
 	public int level;
 	
-	public void init(World world,ArmyType type, float x , float y,float width,float height,ShapeRenderer renderer){
+	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
-		this.type = type;
+		this.armyId = armyId;
 		this.renderer = renderer;
 		this.alive = true;
 		this.move = true;
 		this.camp = 2;
 		this.hp = maxhp;
-		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(type);
+		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(armyId);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
@@ -46,7 +45,7 @@ public class Army extends GameActor{
 			body = null;
 			return;
 		}
-		body = WorldUtils.createArmy(world,type,x, y, width, height);
+		body = WorldUtils.createArmy(world,armyId,x, y, width, height);
 		body.setUserData(this);
 	}
 	

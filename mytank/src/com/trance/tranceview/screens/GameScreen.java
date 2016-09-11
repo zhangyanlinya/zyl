@@ -2,9 +2,10 @@ package com.trance.tranceview.screens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -50,7 +51,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.army.model.ArmyVo;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.model.BuildingType;
@@ -127,7 +127,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private final static Map<ArmyType,ArmyDto> armyDtos = new LinkedHashMap<ArmyType,ArmyDto>();
+	private final static ConcurrentMap<Integer,ArmyDto> armyDtos = new ConcurrentHashMap<Integer,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -242,26 +242,26 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	}
 	
 	private static float CELL_LENGHT;
-	private ArmyType chooseType;
+	private int chooseArmyId;
 	private void initArmy(){
 		armys.clear();
-		Map<ArmyType,ArmyDto> amrys = MainActivity.player.getArmys();
+		Map<Integer,ArmyDto> amrys = MainActivity.player.getArmys();
 		if(amrys == null || amrys.isEmpty()){
 			return;
 		}
 		
 		armyDtos.clear();
 		for(ArmyDto dto : amrys.values()){
-			armyDtos.put(dto.getType(), dto);
+			armyDtos.put(dto.getId(), dto);
 		}
 		
 		int i = 0;
 		for(ArmyDto dto : armyDtos.values()){
 			if(i == 0){
-				chooseType = dto.getType();
+				chooseArmyId = dto.getId();
 			}
 			dto.setGo(false);
-			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getType()));
+			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
@@ -273,22 +273,22 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			System.out.println("无派出 ：已结算");
 			return;
 		}
-		Map<ArmyType,ArmyDto> myArmys = MainActivity.player.getArmys();
+		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
 		myArmys.clear();
 		for(ArmyDto dto : armyDtos.values()){
 			if(!dto.isGo()){
-				myArmys.put(dto.getType(), dto);
+				myArmys.put(dto.getId(), dto);
 			}
 		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
-			ArmyType type = army.type;
+			int type = army.armyId;
 			ArmyDto a = myArmys.get(type);
 			if(a != null){
 				a.setAmout(a.getAmout() + 1);
 			}else{
 				ArmyDto dto = new ArmyDto();
-				dto.setType(type);
+				dto.setId(type);
 				dto.setAmout(1);
 				myArmys.put(type,dto);
 			}
@@ -616,10 +616,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 
     }
     
-    private ArmyType hitKeepArmy(float x, float y){
+    private Integer hitKeepArmy(float x, float y){
     	for(ArmyDto dto : armyDtos.values()){
     		if(dto.getRect().contains(x, y)){
-    			return dto.getType();
+    			return dto.getId();
     		}
     	}
     	return null;
@@ -639,9 +639,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	    }
 		
 		screenY = height - screenY;//y top to down
-		ArmyType type = hitKeepArmy(screenX, screenY);
+		Integer type = hitKeepArmy(screenX, screenY);
 		if(type != null){
-			chooseType = type;	
+			chooseArmyId = type;	
 			return false;
 		}
 		
@@ -654,12 +654,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(army.isGo()){
 				continue;
 			}
-			if(army.getType() != chooseType){
+			if(army.getId() != chooseArmyId){
 				continue;
 			}
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world,army.getType(), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
+				block.init(world,army.getId(), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
 				armys.add(block);
 				stage.addActor(block);
 			}
@@ -673,7 +673,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(army.isGo()){
 				continue;
 			}
-			chooseType = army.getType();
+			chooseArmyId = army.getId();
 			break;
 		}
 		

@@ -35,7 +35,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.PlayerBuildingDto;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
@@ -223,7 +222,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		
 		int i = 0;
-		float side = width/20;
+		float side = width / 10;
 		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
 			CoolQueueDto dto = e.getValue();
 			int id = dto.getId();
@@ -252,7 +251,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	boolean noArmy = false;
 	private void attack(){
-		Map<ArmyType,ArmyDto> armys = MainActivity.player.getArmys();
+		Map<Integer,ArmyDto> armys = MainActivity.player.getArmys();
 		if(armys == null || armys.isEmpty()){
 			noArmy = true;
 			return;
@@ -272,7 +271,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.draw();
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch,"可拖动砖块编辑",0,height);
+			font.draw(spriteBatch,"可拖动砖块编辑",0,height -10);
 		}
 		if(noArmy){
 			font.draw(spriteBatch,"没有可用部队",0,100);

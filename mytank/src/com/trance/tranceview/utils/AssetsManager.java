@@ -106,9 +106,9 @@ public class AssetsManager extends AssetManager{
 		return atlasRegion;
 	}
 	
-	public TextureRegion getArmyTextureRegion(ArmyType type) {
+	public TextureRegion getArmyTextureRegion(int armyId) {
 		int test = 6;
-		if(type == ArmyType.TANK){
+		if(armyId == ArmyType.TANK){
 			test = 7;
 		}
 		return getBlockTextureRegion(test);

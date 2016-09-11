@@ -1,22 +1,23 @@
 package com.trance.trancetank.modules.army.model;
 
 public class ArmyVo {
-	private ArmyType type;
+	private int id;
 	private int amout;
 	
 	public static ArmyVo valueOf(ArmyDto armyDto){
 		ArmyVo vo = new ArmyVo();
 		vo.amout = armyDto.getAmout();
-		vo.type = armyDto.getType();
+		vo.id = armyDto.getId();
 		return vo;
 	}
-	
-	public ArmyType getType() {
-		return type;
+	public int getId() {
+		return id;
 	}
-	public void setType(ArmyType type) {
-		this.type = type;
+
+	public void setId(int id) {
+		this.id = id;
 	}
+
 	public int getAmout() {
 		return amout;
 	}
