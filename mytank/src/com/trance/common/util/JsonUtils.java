@@ -42,6 +42,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("对象转换成json字符串异常: %s", ex.getMessage());
 			Log.e(LogTag.TAG, msg);
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -59,6 +60,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("json字符串转换成对象异常: %s\t\t json字符串: %s", ex.getMessage(), jsonString);
 			Log.e(LogTag.TAG, msg);
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -75,6 +77,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("json字符串转换成对象异常: %s\t\t json字符串: %s", ex.getMessage(), jsonString);
 			Log.e(LogTag.TAG, msg);
+			ex.printStackTrace();
 			return null;
 		} 
 	}
@@ -91,7 +94,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("对象转换成字节数组异常: %s", ex.getMessage());
 			Log.e(LogTag.TAG, msg);
-
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -112,6 +115,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("字节数组转换成对象异常: %s", ex.getMessage());
 			Log.e(LogTag.TAG, msg);
+			ex.printStackTrace();
 			return null;
 		}		
 	}
@@ -132,7 +136,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("字节数组转换成对象异常: %s", ex.getMessage());
 			Log.e(LogTag.TAG, msg);
-
+			ex.printStackTrace();
 			return null;
 		}		
 	}
@@ -153,6 +157,7 @@ public abstract class JsonUtils {
 		} catch (Exception ex) {
 			String msg = String.format("字节数组转换成对象异常: %s", ex.getMessage());
 			Log.e(LogTag.TAG, msg);
+			ex.printStackTrace();
 			return null;
 		}		
 	}

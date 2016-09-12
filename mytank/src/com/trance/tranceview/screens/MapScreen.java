@@ -278,7 +278,11 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(noArmy){
 			font.draw(spriteBatch,"没有可用部队",0,100);
 		}
-		renderPlayerInfo(spriteBatch,playerDto);
+		if(playerDto.isMyself()){
+			renderPlayerInfo(spriteBatch,MainActivity.player);
+		}else{
+			renderPlayerInfo(spriteBatch,playerDto);
+		}
 		
 		font.draw(spriteBatch,"攻击", width-300,100);
 		spriteBatch.end();

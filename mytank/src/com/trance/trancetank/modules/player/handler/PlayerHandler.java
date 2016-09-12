@@ -10,6 +10,8 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.screens.MapScreen;
+import com.trance.tranceview.utils.MsgUtil;
 
 
 /**
@@ -65,23 +67,24 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public int getCmd() {
-				return PlayerCmd.PUSH_ATTR_REFRESH;
+				return PlayerCmd.PUSH_LEVEL_UPGRADE;
 			}
 
 			@Override
 			public Object getType() {
-				return PlayerDto.class;
+				return Integer.class;
 			}
 
 			@Override
 			public void callback(IoSession session, Response response,
 					Object message) {
-				if(response != null && response.getStatus() == ResponseStatus.SUCCESS){
+				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 					return;
 				}
-				System.out.println("推送属性刷新...");
-				PlayerDto playerDto = (PlayerDto) response.getValue();
-				MainActivity.player = playerDto;
+				int newLevel = (Integer) response.getValue();
+				System.out.println("收到推送等级提升...新等级＝" +newLevel);
+				MsgUtil.showMsg("恭喜升级到"+newLevel +"级~");
+				MainActivity.player.setLevel(newLevel);
 			}
 		});
 	}

@@ -62,6 +62,7 @@ public class ClientHandler extends IoHandlerAdapter {
 			//TODO 解压
 		}
 		
+		System.out.println("收到消息：module[" +response.getModule() + " ]  cmd [" +response.getCmd()+"]");
 		ResponseProcessor processor = this.responseProcessors.getProcessor(response.getModule(), response.getCmd());
 		if (processor != null && processor.getType() != null) {
 			//对象转换
