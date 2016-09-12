@@ -68,7 +68,6 @@ public class ReconnectionFilter extends IoFilterAdapter{
 		params.put("userName", MainActivity.userName);
 		params.put("loginKey", LoginMD5);
 		params.put("server", "1");
-		params.put("loginWay", "0");
 		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return false;

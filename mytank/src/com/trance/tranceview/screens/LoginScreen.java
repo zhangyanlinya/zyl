@@ -129,7 +129,6 @@ public class LoginScreen implements Screen{
 		params.put("userName", MainActivity.userName);
 		params.put("loginKey", loginMD5);
 		params.put("server", "1");
-		params.put("loginWay", "0");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
 		Response response = SocketUtil.send(Request.valueOf(module, cmd, params),true);

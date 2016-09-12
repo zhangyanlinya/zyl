@@ -29,11 +29,8 @@ public interface PlayerCmd {
 	 * 创建主公
 	 * @param userName 用户名
 	 * @param playerName 主公名称
-	 * @param country 国家
 	 * @param server 服标识
 	 * @param loginKey 登陆key
-	 * @param loginWayInt 登陆类型
-	 * @param adultStatus 成年状态 0-未知 1-未成年 2-成年
 	 * @return Map {
 	 * 				"result" : {@link PlayerResult} 0,-4,-10001,-10006
 	 * 				"content" : {@link PlayerDto}
@@ -64,7 +61,6 @@ public interface PlayerCmd {
 	 * @param String userName 玩家名称
 	 * @param int server 游戏服
 	 * @param String loginKey 登录密钥
-	 * @param int loginWay 登录方式 (0-普通 1-登陆器）
 	 * @return Map {
 	 * 				"result" : {@link PlayerResult} 0,-4,-10001,-10006
 	 * 				"content" : {@link PlayerDto}
