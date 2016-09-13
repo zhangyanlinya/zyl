@@ -203,16 +203,20 @@ public class WorldScreen implements Screen, InputProcessor {
 								MsgUtil.showMsg(Module.WORLD, code);
 								return;
 							}
-							if (result.get("mapJson") != null) {
-								int[][] map = JsonUtils.jsonString2Object(
-										result.get("mapJson").toString(),
-										int[][].class);
+							
+							Object pobj = result.get("content");
+							dto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+							
+							Object mobj = result.get("mapJson");
+							if (mobj != null) {
+								int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
 								dto.setMap(map);
 							}else{
 								dto.setMap(MapData.baseMap.clone());
 							}
 							dto.setX(ox);
 							dto.setY(oy);
+							location.setPlayerDto(dto);
 							tranceGame.mapScreen.setPlayerDto(dto);
 							tranceGame.setScreen(tranceGame.mapScreen);
 					   }

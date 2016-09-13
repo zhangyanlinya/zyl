@@ -11,27 +11,32 @@ public class WorldImage extends Image{
 	
 	private BitmapFont font;
 	
-	private PlayerDto dto;
+	private PlayerDto playerDto;
 	
 	public WorldImage(Texture texture, BitmapFont font, PlayerDto dto) {
 		super(texture);
 		this.font = font;
-		this.dto = dto;
+		this.playerDto = dto;
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if(dto != null){
-			String name = dto.getPlayerName() + ": ";
+		if(playerDto != null){
+			String name = playerDto.getPlayerName() + ": ";
 			font.setColor(Color.WHITE);
 			font.draw(batch, name ,this.getX(),this.getY());
 			font.setColor(Color.RED);
-			font.draw(batch, dto.getUp()+"" ,this.getX() + getWidth() + getWidth()/2, this.getY());
+			font.draw(batch, playerDto.getUp()+"" ,this.getX() + getWidth() + getWidth()/2, this.getY());
 		}
 	}
 	
 	public PlayerDto getPlayerDto(){
-		return dto;
+		return playerDto;
 	}
+
+	public void setPlayerDto(PlayerDto playerDto) {
+		this.playerDto = playerDto;
+	}
+	
 }

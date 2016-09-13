@@ -200,8 +200,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(isEdit()){
 			refreshCoolQueue();
 			refreshLeftBuiding();
+			stage.addActor(attack);
 		}
-		stage.addActor(attack);
 		stage.addActor(toWorld);
 		if(playerDto.isMyself()){
 			stage.addActor(rename);
