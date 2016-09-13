@@ -81,6 +81,8 @@ public class MsgUtil {
 				msg = world.get(code);
 			}else if(module == Module.BUILDING){
 				msg = building.get(code);
+			}else if(module == Module.DAILY_REWARD){
+				msg = dailyreward.get(code);
 			}
 		}
 		
