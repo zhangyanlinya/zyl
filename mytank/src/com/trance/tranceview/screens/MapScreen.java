@@ -214,8 +214,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			refreshCoolQueue();
 			refreshLeftBuiding();
 			stage.addActor(rename);
-			stage.addActor(toChange);
 		}else{
+			stage.addActor(toChange);
 			stage.addActor(attack);
 		}
 		
