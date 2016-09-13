@@ -306,7 +306,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		params.put("y", playerDto.getY());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO
-		Request request = Request.valueOf(Module.Battle, BattleCmd.FINISH_BATTLE, params);
+		Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null){
 			finishBattle = true;
@@ -326,7 +326,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.Battle, code);
+			MsgUtil.showMsg(Module.BATTLE, code);
 			finishBattle = true;
 			return;
 		}

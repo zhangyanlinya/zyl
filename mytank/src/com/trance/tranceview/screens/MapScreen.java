@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -46,11 +47,13 @@ import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
+import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
+import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
@@ -87,7 +90,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
-//	private Image toUpgrade;
+	private Image toChange;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -134,6 +137,16 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
+		toChange = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
+		toChange.setPosition(width - toChange.getWidth() * 2, toChange.getHeight());
+		toChange.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				change();
+			}
+		});
+		
 		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
@@ -173,7 +186,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getInstance().getFont(30, "可拖动砖块编辑攻击等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置攻击等级金银币粮食没有可用部队" + playerDto.getPlayerName(), Color.WHITE);
 		
 		noArmy = false;
 		stage.clear();
@@ -200,12 +213,13 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(isEdit()){
 			refreshCoolQueue();
 			refreshLeftBuiding();
+			stage.addActor(rename);
+			stage.addActor(toChange);
+		}else{
 			stage.addActor(attack);
 		}
+		
 		stage.addActor(toWorld);
-		if(playerDto.isMyself()){
-			stage.addActor(rename);
-		}
 		
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 //		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
@@ -253,6 +267,10 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	boolean noArmy = false;
+	
+	/**
+	 * attack other player
+	 */
 	private void attack(){
 		Map<Integer,ArmyDto> armys = MainActivity.player.getArmys();
 		if(armys == null || armys.isEmpty()){
@@ -263,7 +281,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("x", playerDto.getX());
 		params.put("y", playerDto.getY());
-		Request request = Request.valueOf(Module.Battle, BattleCmd.START_BATTLE, params);
+		Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			MsgUtil.showMsg("网络连接失败");
@@ -277,7 +295,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.Battle, code);
+			MsgUtil.showMsg(Module.BATTLE, code);
 			return;
 		}
 		
@@ -291,6 +309,41 @@ public class MapScreen implements Screen ,InputProcessor{
 		game.setScreen(game.gameScreen);
 	}
 	
+	/**
+	 * change player
+	 */
+	private void change(){
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("x", playerDto.getX());
+		params.put("y", playerDto.getY());
+		Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, params);
+		Response response = SocketUtil.send(request, true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			MsgUtil.showMsg("网络连接失败");
+			return;
+		}
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+		Object codeObject = result.get("result");
+		int code = Integer.valueOf(String.valueOf(codeObject));
+		if(code != Result.SUCCESS){
+			MsgUtil.showMsg(Module.WORLD, code);
+			return;
+		}
+		
+		Object pobj = result.get("content");
+		if(pobj != null){
+			PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+			String key = new StringBuilder().append(playerDto.getX()).append("_").append(playerDto.getY()).toString(); 
+			WorldImage image = WorldScreen.worldImages.get(key);
+			image.setPlayerDto(newPlayerDto);
+			MainActivity.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
+			playerDto = newPlayerDto;
+		}
+	}
+	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
 	}
@@ -302,7 +355,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.draw();
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch,"可拖动砖块编辑",0,height -10);
+			font.draw(spriteBatch,"可拖动建筑放置",0,height -10);
 		}
 		if(noArmy){
 			font.draw(spriteBatch,"没有可用部队",0,100);

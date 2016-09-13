@@ -47,7 +47,7 @@ public interface Module {
 	 */
 	int BUILDING = 7;
 	
-	int Battle = 8;
+	int BATTLE = 8;
 
 	/**
 	 * 通用模块

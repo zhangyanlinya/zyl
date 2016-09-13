@@ -132,6 +132,11 @@ public class MainActivity extends AndroidApplication {
 		return worldPlayers.get(key);
 	}
 	
+	public static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
+		String key = new StringBuilder().append(x).append("_").append(y).toString();
+		worldPlayers.put(key, newPlayerDto);
+	}
+	
 	@Override
 	protected void onStop() {
 		System.out.println("onStop()...");
