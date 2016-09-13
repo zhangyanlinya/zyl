@@ -47,7 +47,16 @@ public interface Module {
 	 */
 	int BUILDING = 7;
 	
+	/**
+	 * battle
+	 */
 	int BATTLE = 8;
+	
+	/**
+	 * daily reward
+	 */
+	int DAILY_REWARD = 9;
+	
 
 	/**
 	 * 通用模块

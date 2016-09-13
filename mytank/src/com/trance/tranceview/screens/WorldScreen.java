@@ -27,7 +27,10 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.dailyreward.handler.DailyRewardCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.trancetank.modules.reward.result.ValueResultSet;
+import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
@@ -55,6 +58,7 @@ public class WorldScreen implements Screen, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
+	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
 	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
@@ -84,7 +88,6 @@ public class WorldScreen implements Screen, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		
 		
 		spriteBatch = new SpriteBatch();
 		
@@ -227,6 +230,42 @@ public class WorldScreen implements Screen, InputProcessor {
 		//Home
 		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
 		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
+		
+		//Home
+		dailyReward = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
+		int x = RandomUtil.betweenValue(20, 480);
+		int y = RandomUtil.betweenValue(20, 800);
+		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);
+		stage.addActor(dailyReward);
+		
+		dailyReward.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Response response = SocketUtil.send(Request.valueOf(Module.DAILY_REWARD, DailyRewardCmd.GET_DAILY_REWARD, null),true);
+				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+					MsgUtil.showMsg("网络连接失败");
+					return;
+				}
+				
+				byte[] bytes = response.getValueBytes();
+				String text = new String(bytes);
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
+				int code = (Integer) result.get("result");
+				if(code != Result.SUCCESS){
+					MsgUtil.showMsg(Module.DAILY_REWARD, code);
+					return;
+				}
+				
+				Object reward = result.get("content");
+				if(reward != null){
+				ValueResultSet valueResultSet = JSON.parseObject(reward.toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+				}
+			}
+			
+		});
 		
 	}
 	
