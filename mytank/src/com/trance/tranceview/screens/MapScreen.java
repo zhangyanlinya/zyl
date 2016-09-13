@@ -138,7 +138,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		});
 		
 		toChange = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.ATTACK));
-		toChange.setPosition(width - toChange.getWidth() * 2, toChange.getHeight());
+		toChange.setPosition(width - toChange.getWidth() * 4, toChange.getHeight());
 		toChange.addListener(new ClickListener(){
 
 			@Override
