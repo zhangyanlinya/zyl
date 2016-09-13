@@ -176,34 +176,24 @@ public class WorldScreen implements Screen, InputProcessor {
 				worldImages.put(key, location);
 				stage.addActor(location);
 				
-				
 				final int ox = x;
 				final int oy = y;
 				location.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						PlayerDto dto = location.getPlayerDto();
-						if(dto == null){
-							Map<String,Object> params = new HashMap<String,Object>();
-							params.put("x", ox);
-							params.put("y", oy);
-							SocketUtil.sendAsync(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params));
-							return;
-						}
-						if(ox == 5 && oy == 5){
+						if(dto != null && ox == 5 && oy == 5){
 							dto.setMyself(true);
 							gotoHome();
-							return;
-						}
-						
-						HashMap<String,Object> params = new HashMap<String,Object>();
-						params.put("targetId", dto.getId());
-						Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.QUERY_PLAYER, params),true);
-						if(response == null){
-							return;
-						}
-						ResponseStatus status = response.getStatus();
-						if (status == ResponseStatus.SUCCESS) {
+						}else{
+							HashMap<String,Object> params = new HashMap<String,Object>();
+							params.put("x", ox);
+							params.put("y", oy);
+							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params),true);
+							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+								MsgUtil.showMsg("网络连接失败");
+								return;
+							}
 							byte[] bytes = response.getValueBytes();
 							String text = new String(bytes);
 							@SuppressWarnings("unchecked")
@@ -225,7 +215,7 @@ public class WorldScreen implements Screen, InputProcessor {
 							dto.setY(oy);
 							tranceGame.mapScreen.setPlayerDto(dto);
 							tranceGame.setScreen(tranceGame.mapScreen);
-						}
+					   }
 					}
 				});
 			}

@@ -11,9 +11,6 @@ public interface WorldCmd {
 	int GET_PLAYER_WORLD = 1;
 	// 分配
 	int ALLOCATION = 2;
-	// 侦查 
-	int QUERY_PLAYER = 3 ;
 	
-	int CHANGE_PLAYER= 4;
-       //test
+	int CHANGE_PLAYER= 3;
 }
