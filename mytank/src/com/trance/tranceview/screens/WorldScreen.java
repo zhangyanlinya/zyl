@@ -221,6 +221,8 @@ public class WorldScreen implements Screen, InputProcessor {
 							}else{
 								dto.setMap(MapData.baseMap.clone());
 							}
+							dto.setX(ox);
+							dto.setY(oy);
 							tranceGame.mapScreen.setPlayerDto(dto);
 							tranceGame.setScreen(tranceGame.mapScreen);
 						}

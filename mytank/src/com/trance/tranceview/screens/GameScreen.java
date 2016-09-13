@@ -302,7 +302,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("armys", vos);
-		params.put("destLv", playerDto.getLevel());
+		params.put("x", playerDto.getX());
+		params.put("y", playerDto.getY());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO
 		Request request = Request.valueOf(Module.Battle, BattleCmd.FINISH_BATTLE, params);
@@ -320,6 +321,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		
 		byte[] bytes = response.getValueBytes();
 		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
 		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
@@ -328,6 +330,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			finishBattle = true;
 			return;
 		}
+		
 		Object o = result.get("content");
 		if(o != null){
 			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);

@@ -36,9 +36,10 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
+import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.handler.BuildingCmd;
-import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.building.model.BuildingDto;
+import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
@@ -258,6 +259,34 @@ public class MapScreen implements Screen ,InputProcessor{
 			noArmy = true;
 			return;
 		}
+		
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("x", playerDto.getX());
+		params.put("y", playerDto.getY());
+		Request request = Request.valueOf(Module.Battle, BattleCmd.START_BATTLE, params);
+		Response response = SocketUtil.send(request, true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			MsgUtil.showMsg("网络连接失败");
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+		Object codeObject = result.get("result");
+		int code = Integer.valueOf(String.valueOf(codeObject));
+		if(code != Result.SUCCESS){
+			MsgUtil.showMsg(Module.Battle, code);
+			return;
+		}
+		
+		Object o = result.get("content");
+		if(o != null){
+			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
+			RewardService.executeRewards(valueResultSet);
+		}
+		
 		GameScreen.playerDto = playerDto;
 		game.setScreen(game.gameScreen);
 	}

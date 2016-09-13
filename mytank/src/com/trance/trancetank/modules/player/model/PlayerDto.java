@@ -78,6 +78,10 @@ public class PlayerDto{
 	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 	
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
+	
+	private int x;
+	
+	private int y;
 
 	public long getId() {
 		return id;
@@ -214,7 +218,20 @@ public class PlayerDto{
 		this.foods = foods;
 	}
 
+	public int getX() {
+		return x;
+	}
 
-	
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
 	
 }
