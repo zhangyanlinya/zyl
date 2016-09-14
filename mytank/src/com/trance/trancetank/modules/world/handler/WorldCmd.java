@@ -9,8 +9,10 @@ package com.trance.trancetank.modules.world.handler;
 public interface WorldCmd {
 	
 	int GET_PLAYER_WORLD = 1;
-	// 分配
+	
 	int ALLOCATION = 2;
 	
-	int CHANGE_PLAYER= 3;
+	int SPY = 3;
+	
+	int CHANGE_PLAYER= 4;
 }

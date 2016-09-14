@@ -61,11 +61,30 @@ public class WorldScreen implements Screen, InputProcessor {
 	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
-	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
+//	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
+	public static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	
 	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
-		
+	}
+	
+	public static PlayerDto getWorldPlayerDto(int x, int y) {
+		String key = createKey(x, y);
+		return worldPlayers.get(key);
+	}
+	
+	public static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
+		String key = createKey(x, y);
+		worldPlayers.put(key, newPlayerDto);
+	}
+	
+	public static void remove(int x, int y){
+		String key = createKey(x, y);
+		worldPlayers.remove(key);
+	}
+	
+	public static String createKey(int x ,int y){
+		return new StringBuilder().append(x).append("_").append(y).toString();
 	}
 
 	@Override
@@ -93,8 +112,8 @@ public class WorldScreen implements Screen, InputProcessor {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(MainActivity.player.getPlayerName());
-		if(!MainActivity.worldPlayers.isEmpty()){
-			for(PlayerDto dto : MainActivity.worldPlayers.values() ){
+		if(!worldPlayers.isEmpty()){
+			for(PlayerDto dto : worldPlayers.values() ){
 				String name = dto.getPlayerName();
 				sb.append(name);
 			}
@@ -162,7 +181,7 @@ public class WorldScreen implements Screen, InputProcessor {
 				if(x == BASE/2 && y == BASE/2){
 					dto = MainActivity.player;
 				}else{
-					dto = MainActivity.getWorldPlayerDto(x, y);
+					dto = getWorldPlayerDto(x, y);
 				}
 				
 				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me.png", Texture.class), font, dto);
@@ -174,8 +193,6 @@ public class WorldScreen implements Screen, InputProcessor {
 					location.setColor(255,0,255,1);
 				}
 				
-				String key = new StringBuilder().append(x).append("_").append(y).toString();
-				worldImages.put(key, location);
 				stage.addActor(location);
 				
 				final int ox = x;
@@ -184,16 +201,48 @@ public class WorldScreen implements Screen, InputProcessor {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						PlayerDto dto = location.getPlayerDto();
-						if(dto != null && ox == 5 && oy == 5){
-							dto.setMyself(true);
-							gotoHome();
+						if(dto != null ){
+							if( ox == 5 && oy == 5){
+								dto.setMyself(true);
+								gotoHome();
+							}else{//spy get the map
+								HashMap<String,Object> params = new HashMap<String,Object>();
+								params.put("x", ox);
+								params.put("y", oy);
+								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, params),true);
+								if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+									MsgUtil.showMsg("network error!");
+									return;
+								}
+								byte[] bytes = response.getValueBytes();
+								String text = new String(bytes);
+								@SuppressWarnings("unchecked")
+								HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
+								int code = (Integer) result.get("result");
+								if(code != Result.SUCCESS){
+									MsgUtil.showMsg(Module.WORLD, code);
+									return;
+								}
+								Object mobj = result.get("content");
+								if (mobj != null) {
+									int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
+									dto.setMap(map);
+								}else{
+									dto.setMap(MapData.baseMap.clone());
+								}
+								dto.setX(ox);
+								dto.setY(oy);
+								location.setPlayerDto(dto);
+								tranceGame.mapScreen.setPlayerDto(dto);
+								tranceGame.setScreen(tranceGame.mapScreen);
+							}
 						}else{
 							HashMap<String,Object> params = new HashMap<String,Object>();
 							params.put("x", ox);
 							params.put("y", oy);
 							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params),true);
 							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-								MsgUtil.showMsg("网络连接失败");
+								MsgUtil.showMsg("network error!");
 								return;
 							}
 							byte[] bytes = response.getValueBytes();
@@ -208,19 +257,6 @@ public class WorldScreen implements Screen, InputProcessor {
 							
 							Object pobj = result.get("content");
 							dto = JSON.parseObject(pobj.toString(), PlayerDto.class);
-							
-							Object mobj = result.get("mapJson");
-							if (mobj != null) {
-								int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
-								dto.setMap(map);
-							}else{
-								dto.setMap(MapData.baseMap.clone());
-							}
-							dto.setX(ox);
-							dto.setY(oy);
-							location.setPlayerDto(dto);
-							tranceGame.mapScreen.setPlayerDto(dto);
-							tranceGame.setScreen(tranceGame.mapScreen);
 					   }
 					}
 				});
@@ -321,7 +357,8 @@ public class WorldScreen implements Screen, InputProcessor {
 		if(music != null){
 			music.dispose();
 		}
-		worldImages.clear();
+//		worldImages.clear();
+		worldPlayers.clear();
 	}
 
 	@Override

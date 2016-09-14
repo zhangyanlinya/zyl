@@ -32,12 +32,17 @@ public class MsgUtil {
 	private final static Map<Integer,Msg> dailyreward = new HashMap<Integer,Msg>();
 	
 	
+	private final static String battle_json ="[{\"id\":-10001,\"msg\":\"正在被攻击中\"},{\"id\":-10002,\"msg\":\"攻击时间已过\"}]";
+	private final static Map<Integer,Msg> battle = new HashMap<Integer,Msg>();
+	
+	
 	public static void init(){
 		tomap(common_json,common);
 		tomap(player_json,player);
 		tomap(world_json,world);
 		tomap(building_json,building);
 		tomap(dailyreward_json,dailyreward);
+		tomap(battle_json,battle);
 	}
 	
 	public static void tomap(String jsonString, Map<Integer,Msg> map){
@@ -83,6 +88,8 @@ public class MsgUtil {
 				msg = building.get(code);
 			}else if(module == Module.DAILY_REWARD){
 				msg = dailyreward.get(code);
+			}else if(module == Module.BATTLE){
+				msg = battle.get(code);
 			}
 		}
 		

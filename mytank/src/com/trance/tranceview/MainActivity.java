@@ -1,8 +1,6 @@
 package com.trance.tranceview;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,7 +15,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
@@ -36,7 +33,6 @@ public class MainActivity extends AndroidApplication {
 	public TranceGame tranceGame;
 	public static String loginKey = "trance123";
 	public static PlayerDto player;
-	public static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
 	public static String userName;
 	private boolean isInit;
 	
@@ -103,7 +99,7 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		userName ="aaa";//TODO TEST;
+		userName ="bbb";//TODO TEST;
 		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  
@@ -124,17 +120,6 @@ public class MainActivity extends AndroidApplication {
 		MsgUtil.init();
 		BasedbService.init(this);
 		isInit = true;
-	}
-
-	
-	public static PlayerDto getWorldPlayerDto(int x, int y) {
-		String key = new StringBuilder().append(x).append("_").append(y).toString();
-		return worldPlayers.get(key);
-	}
-	
-	public static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
-		String key = new StringBuilder().append(x).append("_").append(y).toString();
-		worldPlayers.put(key, newPlayerDto);
 	}
 	
 	@Override

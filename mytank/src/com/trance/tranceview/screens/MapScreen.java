@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
@@ -231,33 +232,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
-	private void refreshCoolQueue(){
-		for(Actor actor : stage.getActors()){
-			if(actor instanceof ProgressImage){
-				actor.remove();
-			}
-		}
-		
-		int i = 0;
-		float side = width / 10;
-		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
-			CoolQueueDto dto = e.getValue();
-			int id = dto.getId();
-			if(id == 8){//TODO
-				id = 1;
-			}
-			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
-			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
-			if(elementUpgrade == null){
-				continue;
-			}
-			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(width/2 + side * i + length , control_height - length - ( i + 1) * 100 );
-			stage.addActor(image);
-			i++;
-		}
-	}
-	
 	/**
 	 *  地图是否可编辑
 	 * @return
@@ -336,10 +310,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		Object pobj = result.get("content");
 		if(pobj != null){
 			PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
-			String key = new StringBuilder().append(playerDto.getX()).append("_").append(playerDto.getY()).toString(); 
-			WorldImage image = WorldScreen.worldImages.get(key);
-			image.setPlayerDto(newPlayerDto);
-			MainActivity.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
+	
+			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
 			playerDto = newPlayerDto;
 		}
 	}
@@ -425,6 +397,16 @@ public class MapScreen implements Screen ,InputProcessor{
 	private void refreshLeftBuiding() {
 		float side = width/10;
 		int i = 0;
+		
+		Array<Actor> actors = stage.getActors();
+		for(Actor ac :actors){
+			if(ac instanceof Building){
+				Building build = (Building)ac;
+				if(build.getY() <= control_height - length){
+					build.remove();
+				}
+			}
+		}
 	
 		for(Entry<Integer, BuildingDto> e : buildings.entrySet()){
 			BuildingDto dto = e.getValue();
@@ -435,6 +417,33 @@ public class MapScreen implements Screen ,InputProcessor{
 			float y = control_height - (length * 2 + rate2 * length * 2 );
 			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto);
 			stage.addActor(buiding);
+			i++;
+		}
+	}
+	
+	private void refreshCoolQueue(){
+		for(Actor actor : stage.getActors()){
+			if(actor instanceof ProgressImage){
+				actor.remove();
+			}
+		}
+		
+		int i = 0;
+		float side = width / 10;
+		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
+			CoolQueueDto dto = e.getValue();
+			int id = dto.getId();
+			if(id == 8){//TODO
+				id = 1;
+			}
+			TextureRegion region = AssetsManager.getInstance().getBuildingTextureRegion(id);
+			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
+			if(elementUpgrade == null){
+				continue;
+			}
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
+			image.setPosition(width/2 + side * i + length , control_height - length - ( i + 1) * 100 );
+			stage.addActor(image);
 			i++;
 		}
 	}
@@ -482,7 +491,6 @@ public class MapScreen implements Screen ,InputProcessor{
 						if(pbd.getId() != BuildingType.OFFICE){
 							pbd.setAmount(playerBuildingDto.getLevel());
 						}
-						refreshLeftBuiding();
 					}
 				}
 			}
@@ -496,6 +504,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					  for(BuildingDto buildingDto : buildingDtos){
 						  buildings.put(buildingDto.getId(), buildingDto);
 					  }
+					  refreshLeftBuiding();
 				  }
 				}
 				

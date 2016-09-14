@@ -28,7 +28,6 @@ import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
-import com.trance.common.util.CryptUtil;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
@@ -174,7 +173,7 @@ public class LoginScreen implements Screen{
 				for (Entry<String, Object> e : players.entrySet()) {
 					String dto = JSON.toJSONString(e.getValue());
 					PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
-					MainActivity.worldPlayers.put(e.getKey(), value);
+					WorldScreen.worldPlayers.put(e.getKey(), value);
 				}
 			}
 			
