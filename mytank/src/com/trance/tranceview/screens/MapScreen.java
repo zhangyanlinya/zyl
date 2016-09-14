@@ -470,8 +470,10 @@ public class MapScreen implements Screen ,InputProcessor{
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					long now  = TimeUtil.getServerTime();
-					if(dto.getExpireTime() < now){
+					long now = TimeUtil.getServerTime();
+					System.out.println("now: " +now);
+					System.out.println("dto.getExpireTime(): " + dto.getExpireTime());
+					if(dto.getExpireTime() <= 0){
 						trainArmy(dto);
 					}else{
 						obtainArmy(dto);

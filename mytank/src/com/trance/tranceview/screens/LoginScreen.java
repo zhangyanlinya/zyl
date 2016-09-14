@@ -179,14 +179,14 @@ public class LoginScreen implements Screen{
 			
 			Object aobj = result.get("armys");
 			if(aobj == null){//默认数值
-				ArmyDto tank = new ArmyDto();
-				tank.setAmout(1);
-				tank.setId(ArmyType.TANK);
-				playerDto.addAmry(tank);
-				ArmyDto fat = new ArmyDto();
-				fat.setAmout(3);
-				fat.setId(ArmyType.FAT);
-				playerDto.addAmry(fat);
+//				ArmyDto tank = new ArmyDto();
+//				tank.setAmout(1);
+//				tank.setId(ArmyType.TANK);
+//				playerDto.addAmry(tank);
+//				ArmyDto fat = new ArmyDto();
+//				fat.setAmout(1);
+//				fat.setId(ArmyType.FAT);
+//				playerDto.addAmry(fat);
 			}else{
 				List<ArmyDto> armys = JSON.parseArray(aobj.toString(), ArmyDto.class);
 				for(ArmyDto dto : armys){

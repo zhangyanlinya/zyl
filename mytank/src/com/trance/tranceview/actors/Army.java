@@ -132,10 +132,10 @@ public class Army extends GameActor{
 		if(dto != null){
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
 			font.draw(batch, "n :"+ dto.getAmout(), getX(), getY() - getHeight()/2);
-//			font.draw(batch, "a :"+ dto.getAddAmount()+"", getX(), getY() - getHeight());
+			font.draw(batch, "a :"+ dto.getAddAmount(), getX(), getY() - getHeight());
 			long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
 			if(leftTime > 0 ){		
-				font.draw(batch, "e :" + leftTime , getX(), getY() - getHeight());
+				font.draw(batch, "e :" + leftTime , getX(), getY() - getHeight() + getHeight()/2);
 			}
 		}
 		
