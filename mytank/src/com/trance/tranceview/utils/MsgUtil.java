@@ -31,9 +31,11 @@ public class MsgUtil {
 	private final static String dailyreward_json ="[{\"id\":-10001,\"msg\":\"当天已经领取过奖励\"}]";
 	private final static Map<Integer,Msg> dailyreward = new HashMap<Integer,Msg>();
 	
-	
 	private final static String battle_json ="[{\"id\":-10001,\"msg\":\"正在被攻击中\"},{\"id\":-10002,\"msg\":\"攻击时间已过\"}]";
 	private final static Map<Integer,Msg> battle = new HashMap<Integer,Msg>();
+	
+	private final static String army_json ="[{\"id\":-10001,\"msg\":\"还在冷却中\"},{\"id\":-10002,\"msg\":\"部队不存在\"}]";
+	private final static Map<Integer,Msg> army = new HashMap<Integer,Msg>();
 	
 	
 	public static void init(){
@@ -43,6 +45,7 @@ public class MsgUtil {
 		tomap(building_json,building);
 		tomap(dailyreward_json,dailyreward);
 		tomap(battle_json,battle);
+		tomap(army_json,army);
 	}
 	
 	public static void tomap(String jsonString, Map<Integer,Msg> map){
@@ -82,14 +85,21 @@ public class MsgUtil {
 		}else{
 			if(module == Module.PLAYER){
 				msg = player.get(code);	
-			}else if(module == Module.WORLD){
+			}
+			else if(module == Module.WORLD){
 				msg = world.get(code);
-			}else if(module == Module.BUILDING){
+			}
+			else if(module == Module.BUILDING){
 				msg = building.get(code);
-			}else if(module == Module.DAILY_REWARD){
+			}
+			else if(module == Module.DAILY_REWARD){
 				msg = dailyreward.get(code);
-			}else if(module == Module.BATTLE){
+			}
+			else if(module == Module.BATTLE){
 				msg = battle.get(code);
+			}
+			else if(module == Module.ARMY){
+				msg = army.get(code);
 			}
 		}
 		

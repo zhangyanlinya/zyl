@@ -37,6 +37,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.army.handler.ArmyCmd;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.handler.BuildingCmd;
@@ -63,6 +64,7 @@ import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.SocketUtil;
+import com.trance.tranceview.utils.TimeUtil;
 
 public class MapScreen implements Screen ,InputProcessor{
 
@@ -187,7 +189,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置攻击等级金银币粮食没有可用部队" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置等级金银币粮食没有可用部队" + playerDto.getPlayerName(), Color.WHITE);
 		
 		noArmy = false;
 		stage.clear();
@@ -338,8 +340,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		}else{
 			renderPlayerInfo(spriteBatch,playerDto);
 		}
-		
-		font.draw(spriteBatch,"攻击", width-300,100);
 		spriteBatch.end();
 	}
 	
@@ -442,7 +442,7 @@ public class MapScreen implements Screen ,InputProcessor{
 				continue;
 			}
 			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(side * i + length , control_height - length - ( i + 1) * 10 );
+			image.setPosition(side * i + length , control_height - length * 2 - ( i + 1) * 10 );
 			stage.addActor(image);
 			i++;
 		}
@@ -456,7 +456,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		float side = width/10;
 		int i = 0;
 		for(Entry<Integer, ArmyDto> e : army_map.entrySet()){
-			ArmyDto dto = e.getValue();
+			final ArmyDto dto = e.getValue();
 			Army army = Army.armyPool.obtain();
 			int rate  = i % 5;
 			float x = rate * side + length + width/2;
@@ -465,6 +465,74 @@ public class MapScreen implements Screen ,InputProcessor{
 			army.init(null,army.armyId, x, y, length,length,null, font, dto);
 			stage.addActor(army);
 			i++;
+			
+			army.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					long now  = TimeUtil.getServerTime();
+					if(dto.getExpireTime() < now){
+						trainArmy(dto);
+					}else{
+						obtainArmy(dto);
+					}
+				}
+			});
+		}
+	}
+	
+	private void trainArmy(ArmyDto dto){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("armyId", dto.getId());
+		params.put("amount", 1);
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, params),true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			MsgUtil.showMsg("network error");
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.ARMY,code);
+				return ;
+			}
+			Object valueResult = result.get("content");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
+		}
+	}
+	
+	private void obtainArmy(ArmyDto dto) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("armyId", dto.getId());
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, params),true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			MsgUtil.showMsg("network error");
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.ARMY,code);
+				return ;
+			}
+			Object valueResult = result.get("content");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
 		}
 		
 	}

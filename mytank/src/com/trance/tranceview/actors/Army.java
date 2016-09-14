@@ -129,9 +129,9 @@ public class Army extends GameActor{
 				getScaleY(), getRotation());
 		
 		if(dto != null){
-			font.draw(batch, "lv" + dto.getLevel(), getX(), getY());
-			font.draw(batch,  dto.getAmout()+"", getX(), getY() - getHeight()/2);
-			font.draw(batch,  dto.getAddAmount()+"", getX(), getY() - getHeight()/4);
+			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
+			font.draw(batch, "n :"+ dto.getAmout()+"", getX(), getY() - getHeight()/2);
+			font.draw(batch, "a :"+ dto.getAddAmount()+"", getX(), getY() - getHeight());
 		}
 		
 		if(renderer != null){
