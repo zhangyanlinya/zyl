@@ -337,6 +337,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			RewardService.executeRewards(valueResultSet);
 		}
 		finishBattle = true;
+		//refresh world
+		WorldScreen.worldImages.remove(playerDto);
+		MainActivity.worldPlayers.remove(playerDto);
 	}
 
 	//DestoryBody
@@ -476,7 +479,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if (type > 0){
 					Building block = Building.buildingPool.obtain();
-					if(type == BuildingType.HORSE_MARKET){
+					if(type == BuildingType.HORSE_MARKET || type == BuildingType.BARRACKS
+							||  type == BuildingType.MARKET || type == BuildingType.FARM){
 						block.init(world,type, x, y, length,length,null);
 						buildings.add(block);
 						connons.add(block);

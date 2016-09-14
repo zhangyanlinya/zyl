@@ -103,7 +103,7 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		userName ="hhh";//TODO TEST;
+		userName ="ggg";//TODO TEST;
 		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  

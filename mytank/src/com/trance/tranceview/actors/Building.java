@@ -34,8 +34,6 @@ public class Building extends GameActor{
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 1000;
-	public long dirDelay = 10000;
-	public int level;
 	private BitmapFont font;
 	private BuildingDto dto;
 	
@@ -65,6 +63,34 @@ public class Building extends GameActor{
 		
 		this.role = 0;
 		this.maxhp = hp;
+		
+		switch(type){
+		case BuildingType.OFFICE:
+			break;
+		case BuildingType.HOUSE:
+			break;
+		case BuildingType.BARRACKS:
+			range = 600;
+			fireDelay = 2000;
+			atk = 5;
+			break;
+		case BuildingType.MARKET:
+			range = 100;
+			fireDelay = 200;
+			atk = 20;
+			break;
+		case BuildingType.FARM:
+			break;
+		case BuildingType.WATERWHEEL:
+			break;
+		case BuildingType.TREASURY:
+			break;
+		case BuildingType.BARN:
+			break;
+		case BuildingType.HORSE_MARKET:
+			break;
+		
+		}
 		
 		if(world == null){
 			body = null;

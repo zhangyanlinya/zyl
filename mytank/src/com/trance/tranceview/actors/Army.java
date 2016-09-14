@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.ArmyPool;
@@ -25,8 +26,6 @@ public class Army extends GameActor{
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 1000;
-	public long dirDelay = 10000;
-	public int level;
 	
 	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
@@ -41,6 +40,21 @@ public class Army extends GameActor{
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
+		
+		switch(armyId){
+		case ArmyType.TANK:
+			range = 400;
+			atk = 20;
+			fireDelay = 200;
+			speed = 2;
+			break;
+		case ArmyType.FAT:
+			range = 100;
+			maxhp = 100;
+			hp = 100;
+			break;
+		}
+		
 		if(world == null){
 			body = null;
 			return;
