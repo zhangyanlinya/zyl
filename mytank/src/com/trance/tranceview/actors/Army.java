@@ -43,7 +43,7 @@ public class Army extends GameActor{
 		
 		switch(armyId){
 		case ArmyType.TANK:
-			range = 400;
+			range = 300;
 			atk = 20;
 			fireDelay = 200;
 			speed = 2;

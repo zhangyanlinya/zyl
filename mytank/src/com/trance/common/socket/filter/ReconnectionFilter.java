@@ -55,18 +55,18 @@ public class ReconnectionFilter extends IoFilterAdapter{
      }
 
 	private boolean offlineReconnect() {
-		String src = MainActivity.userName + MainActivity.loginKey;
-		String LoginMD5 = null;
-		try {
-			LoginMD5 = CryptUtil.md5(src);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		String src = MainActivity.userName + MainActivity.loginKey;
+//		String LoginMD5 = null;
+//		try {
+//			LoginMD5 = CryptUtil.md5(src);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		//断线重连
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userName", MainActivity.userName);
-		params.put("loginKey", LoginMD5);
+//		params.put("loginKey", LoginMD5); //TODO 暂时不校验
 		params.put("server", "1");
 		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){

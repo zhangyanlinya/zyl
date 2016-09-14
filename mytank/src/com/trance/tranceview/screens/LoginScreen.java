@@ -118,16 +118,16 @@ public class LoginScreen implements Screen{
 	
 	@SuppressWarnings("unchecked")
 	protected void login() {
-		String src = MainActivity.userName + MainActivity.loginKey;
-		String loginMD5 = null;
-		try {
-			loginMD5 = CryptUtil.md5(src);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		String src = MainActivity.userName + MainActivity.loginKey;
+//		String loginMD5 = null;
+//		try {
+//			loginMD5 = CryptUtil.md5(src);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userName", MainActivity.userName);
-		params.put("loginKey", loginMD5);
+//		params.put("loginKey", loginMD5); //TODO 暂时不校验
 		params.put("server", "1");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
@@ -181,7 +181,7 @@ public class LoginScreen implements Screen{
 			Object aobj = result.get("armys");
 			if(aobj == null){//默认数值
 				ArmyDto tank = new ArmyDto();
-				tank.setAmout(6);
+				tank.setAmout(1);
 				tank.setId(ArmyType.TANK);
 				playerDto.addAmry(tank);
 				ArmyDto fat = new ArmyDto();
