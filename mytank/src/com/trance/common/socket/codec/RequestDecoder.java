@@ -1,12 +1,8 @@
 package com.trance.common.socket.codec;
 
-import static com.trance.common.socket.constant.CodecConstant.FLASH_POLICY_REQUEST;
-import static com.trance.common.socket.constant.CodecConstant.FLASH_POLICY_RESPONSE;
 import static com.trance.common.socket.constant.CodecConstant.PACKAGE_BODY_MAX_LENGTH;
 import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
 import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
-
-import java.util.Arrays;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.AttributeKey;
@@ -38,10 +34,10 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 	 */
 	private final AttributeKey DECODER_CONTEXT  = new AttributeKey(RequestDecoder.class, "context");
 	
-	/**
-	 * flash策略
-	 */
-	private final AttributeKey FLASH_POLICY = new AttributeKey(RequestDecoder.class, "FLASH_POLICY");
+//	/**
+//	 * flash策略
+//	 */
+//	private final AttributeKey FLASH_POLICY = new AttributeKey(RequestDecoder.class, "FLASH_POLICY");
 	
 	
 	/**
@@ -111,42 +107,42 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 		return true;
 	}
 	
-	/**
-	 * flash 策略请求
-	 * @return false-数据不足于解析  true-可以进行下一步操作
-	 */
-	private boolean doIfFlashPolicyRequest(IoSession session, IoBuffer in, ProtocolDecoderOutput out) {
-		if (session.containsAttribute(FLASH_POLICY)) {
-			return true;
-		}
-		
-		in.mark();		
-		byte c = in.get();		
-		in.reset();
-		
-		if (c == (byte) '<') {
-			byte[] policyBytes = FLASH_POLICY_REQUEST;			
-			int lengthOfPolicyBytes = policyBytes.length;
-			
-			if (in.remaining() < lengthOfPolicyBytes) {
-				return false;
-			}
-			
-			in.mark();			
-			byte[] bt = new byte[lengthOfPolicyBytes];
-			in.get(bt);
-			
-			if (Arrays.equals(bt, policyBytes)) {
-				logger.info("向Session[ID: {}] 发送安全策略信息！", session.getId());
-				session.write(FLASH_POLICY_RESPONSE);				
-			} else {
-				in.reset();	
-			}
-		} 
-		
-		session.setAttribute(FLASH_POLICY);
-		return true;
-	}
+//	/**
+//	 * flash 策略请求
+//	 * @return false-数据不足于解析  true-可以进行下一步操作
+//	 */
+//	private boolean doIfFlashPolicyRequest(IoSession session, IoBuffer in, ProtocolDecoderOutput out) {
+//		if (session.containsAttribute(FLASH_POLICY)) {
+//			return true;
+//		}
+//		
+//		in.mark();		
+//		byte c = in.get();		
+//		in.reset();
+//		
+//		if (c == (byte) '<') {
+//			byte[] policyBytes = FLASH_POLICY_REQUEST;			
+//			int lengthOfPolicyBytes = policyBytes.length;
+//			
+//			if (in.remaining() < lengthOfPolicyBytes) {
+//				return false;
+//			}
+//			
+//			in.mark();			
+//			byte[] bt = new byte[lengthOfPolicyBytes];
+//			in.get(bt);
+//			
+//			if (Arrays.equals(bt, policyBytes)) {
+//				logger.info("向Session[ID: {}] 发送安全策略信息！", session.getId());
+//				session.write(FLASH_POLICY_RESPONSE);				
+//			} else {
+//				in.reset();	
+//			}
+//		} 
+//		
+//		session.setAttribute(FLASH_POLICY);
+//		return true;
+//	}
 	
 	/**
 	 * 获取上下文

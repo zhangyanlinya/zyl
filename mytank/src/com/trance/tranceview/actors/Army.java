@@ -1,6 +1,7 @@
 package com.trance.tranceview.actors;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
@@ -26,6 +28,10 @@ public class Army extends GameActor{
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 1000;
+	
+	private ArmyDto dto;
+	private BitmapFont font;
+	
 	
 	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
@@ -62,6 +68,13 @@ public class Army extends GameActor{
 		body = WorldUtils.createArmy(world,armyId,x, y, width, height);
 		body.setUserData(this);
 	}
+	
+	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, ArmyDto dto){
+		init(world, armyId, x, y, width, height, renderer);
+		this.dto = dto;
+		this.font = font;
+	}
+	
 	
 	public void move() {
 		if(!MapData.gamerunning){
@@ -114,6 +127,12 @@ public class Army extends GameActor{
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
+		
+		if(dto != null){
+			font.draw(batch, "lv" + dto.getLevel(), getX(), getY());
+			font.draw(batch,  dto.getAmout()+"", getX(), getY() - getHeight()/2);
+			font.draw(batch,  dto.getAddAmount()+"", getX(), getY() - getHeight()/4);
+		}
 		
 		if(renderer != null){
 			batch.end();

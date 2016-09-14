@@ -2,9 +2,6 @@ package com.trance.common.socket.handler;
 
 import org.apache.mina.core.session.IoSession;
 
-import android.content.Context;
-import android.os.Message;
-
 import com.trance.common.socket.model.Response;
 
 /**

@@ -8,9 +8,7 @@ import com.trance.common.socket.handler.ResponseProcessorAdapter;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
-import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
-import com.trance.tranceview.screens.MapScreen;
 import com.trance.tranceview.utils.MsgUtil;
 
 

@@ -73,11 +73,11 @@ public class PlayerDto{
 	
 	private int[][] map;
 	
-	private ConcurrentMap<Integer,ArmyDto> armys = new ConcurrentHashMap<Integer,ArmyDto>();
+	private final ConcurrentMap<Integer,ArmyDto> armys = new ConcurrentHashMap<Integer,ArmyDto>();
 	
-	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
+	private final ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 	
-	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
+	private final ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	
 	private int x;
 	
@@ -169,20 +169,12 @@ public class PlayerDto{
 		return armys;
 	}
 
-	public void setArmys(ConcurrentMap<Integer, ArmyDto> armys) {
-		this.armys = armys;
-	}
-
 	public void addAmry(ArmyDto dto) {
 		armys.put(dto.getId(), dto);
 	}
 
 	public ConcurrentMap<Integer, BuildingDto> getBuildings() {
 		return buildings;
-	}
-
-	public void setBuildings(ConcurrentMap<Integer, BuildingDto> buildings) {
-		this.buildings = buildings;
 	}
 
 	public void addBuilding(BuildingDto dto) {
@@ -192,10 +184,6 @@ public class PlayerDto{
 
 	public ConcurrentMap<Integer, CoolQueueDto> getCoolQueues() {
 		return coolQueues;
-	}
-
-	public void setCoolQueues(ConcurrentMap<Integer, CoolQueueDto> coolQueues) {
-		this.coolQueues = coolQueues;
 	}
 	
 	public void addCoolQueue(CoolQueueDto dto) {

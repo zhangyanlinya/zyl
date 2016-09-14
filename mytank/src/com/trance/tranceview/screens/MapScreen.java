@@ -51,6 +51,7 @@ import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
@@ -213,6 +214,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(isEdit()){
 			refreshCoolQueue();
 			refreshLeftBuiding();
+			refreshArmy();
 			stage.addActor(rename);
 		}else{
 			stage.addActor(toChange);
@@ -396,7 +398,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private void refreshLeftBuiding() {
 		float side = width/10;
 		int i = 0;
-		
 		Array<Actor> actors = stage.getActors();
 		for(Actor ac :actors){
 			if(ac instanceof Building){
@@ -441,10 +442,31 @@ public class MapScreen implements Screen ,InputProcessor{
 				continue;
 			}
 			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
-			image.setPosition(width/2 + side * i + length , control_height - length - ( i + 1) * 100 );
+			image.setPosition(side * i + length , control_height - length - ( i + 1) * 10 );
 			stage.addActor(image);
 			i++;
 		}
+	}
+	
+	private void refreshArmy(){
+		ConcurrentMap<Integer, ArmyDto> army_map = playerDto.getArmys();
+		if(army_map.isEmpty()){
+			return;
+		}
+		float side = width/10;
+		int i = 0;
+		for(Entry<Integer, ArmyDto> e : army_map.entrySet()){
+			ArmyDto dto = e.getValue();
+			Army army = Army.armyPool.obtain();
+			int rate  = i % 5;
+			float x = rate * side + length + width/2;
+			int rate2 = i/5 + 1;
+			float y = control_height - (length * 2 + rate2 * length * 2 );
+			army.init(null,army.armyId, x, y, length,length,null, font, dto);
+			stage.addActor(army);
+			i++;
+		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -514,6 +536,7 @@ public class MapScreen implements Screen ,InputProcessor{
 						for(ArmyDto armyDto : armyDtos){
 							MainActivity.player.addAmry(armyDto);
 						}
+						refreshArmy();
 					}
 				}
 			}
