@@ -173,7 +173,7 @@ public class LoginScreen implements Screen{
 				for (Entry<String, Object> e : players.entrySet()) {
 					String dto = JSON.toJSONString(e.getValue());
 					PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
-					WorldScreen.worldPlayers.put(e.getKey(), value);
+					WorldScreen.playerDtos.put(e.getKey(), value);
 				}
 			}
 			

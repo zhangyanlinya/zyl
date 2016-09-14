@@ -54,7 +54,6 @@ import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
-import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;

@@ -61,8 +61,8 @@ public class WorldScreen implements Screen, InputProcessor {
 	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
-//	public final static Map<String,WorldImage> worldImages = new HashMap<String,WorldImage>();
-	public static Map<String,PlayerDto> worldPlayers = new HashMap<String,PlayerDto>();
+	public final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
+	public final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
 	
 	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -70,17 +70,19 @@ public class WorldScreen implements Screen, InputProcessor {
 	
 	public static PlayerDto getWorldPlayerDto(int x, int y) {
 		String key = createKey(x, y);
-		return worldPlayers.get(key);
+		return playerDtos.get(key);
 	}
 	
 	public static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
 		String key = createKey(x, y);
-		worldPlayers.put(key, newPlayerDto);
+		playerDtos.put(key, newPlayerDto);
+		locations.get(key).setPlayerDto(newPlayerDto);
 	}
 	
 	public static void remove(int x, int y){
 		String key = createKey(x, y);
-		worldPlayers.remove(key);
+		playerDtos.remove(key);
+		locations.get(key).setPlayerDto(null);
 	}
 	
 	public static String createKey(int x ,int y){
@@ -112,8 +114,8 @@ public class WorldScreen implements Screen, InputProcessor {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(MainActivity.player.getPlayerName());
-		if(!worldPlayers.isEmpty()){
-			for(PlayerDto dto : worldPlayers.values() ){
+		if(!playerDtos.isEmpty()){
+			for(PlayerDto dto : playerDtos.values() ){
 				String name = dto.getPlayerName();
 				sb.append(name);
 			}
@@ -193,6 +195,9 @@ public class WorldScreen implements Screen, InputProcessor {
 					location.setColor(255,0,255,1);
 				}
 				
+				String key = createKey(x, y);
+				locations.put(key, location);
+				
 				stage.addActor(location);
 				
 				final int ox = x;
@@ -257,6 +262,7 @@ public class WorldScreen implements Screen, InputProcessor {
 							
 							Object pobj = result.get("content");
 							dto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+							location.setPlayerDto(dto);
 					   }
 					}
 				});
@@ -296,8 +302,8 @@ public class WorldScreen implements Screen, InputProcessor {
 				
 				Object reward = result.get("content");
 				if(reward != null){
-				ValueResultSet valueResultSet = JSON.parseObject(reward.toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
+					ValueResultSet valueResultSet = JSON.parseObject(reward.toString(), ValueResultSet.class);
+					RewardService.executeRewards(valueResultSet);
 				}
 			}
 			
@@ -358,7 +364,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			music.dispose();
 		}
 //		worldImages.clear();
-		worldPlayers.clear();
+		playerDtos.clear();
 	}
 
 	@Override
