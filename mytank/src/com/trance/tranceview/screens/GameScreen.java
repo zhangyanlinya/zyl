@@ -341,7 +341,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		finishBattle = true;
 		//refresh world
-		WorldScreen.remove(playerDto.getX(), playerDto.getY());
+		if(win){
+			WorldScreen.remove(playerDto.getX(), playerDto.getY());
+		}
 	}
 
 	//DestoryBody
