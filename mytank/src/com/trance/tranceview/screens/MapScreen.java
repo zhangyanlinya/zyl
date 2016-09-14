@@ -509,6 +509,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			long expireTime = (Long) result.get("expireTime");
 			dto.setExpireTime(expireTime);
+			dto.setAddAmount(1);
 		}
 	}
 	
@@ -536,6 +537,8 @@ public class MapScreen implements Screen ,InputProcessor{
 				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
 				RewardService.executeRewards(valueResultSet);
 			}
+			dto.setExpireTime(0);
+			dto.setAddAmount(0);
 		}
 		
 	}
