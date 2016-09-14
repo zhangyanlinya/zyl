@@ -473,7 +473,7 @@ public class MapScreen implements Screen ,InputProcessor{
 					long now = TimeUtil.getServerTime();
 					System.out.println("now: " +now);
 					System.out.println("dto.getExpireTime(): " + dto.getExpireTime());
-					if(dto.getExpireTime() <= 0){
+					if(dto.getExpireTime() >  now){//未到期
 						trainArmy(dto);
 					}else{
 						obtainArmy(dto);
