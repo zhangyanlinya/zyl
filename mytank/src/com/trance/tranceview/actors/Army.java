@@ -16,6 +16,7 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.ArmyPool;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.TimeUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 
@@ -130,8 +131,12 @@ public class Army extends GameActor{
 		
 		if(dto != null){
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
-			font.draw(batch, "n :"+ dto.getAmout()+"", getX(), getY() - getHeight()/2);
-			font.draw(batch, "a :"+ dto.getAddAmount()+"", getX(), getY() - getHeight());
+			font.draw(batch, "n :"+ dto.getAmout(), getX(), getY() - getHeight()/2);
+//			font.draw(batch, "a :"+ dto.getAddAmount()+"", getX(), getY() - getHeight());
+			long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
+			if(leftTime > 0 ){		
+				font.draw(batch, "e :" + leftTime , getX(), getY() - getHeight());
+			}
 		}
 		
 		if(renderer != null){

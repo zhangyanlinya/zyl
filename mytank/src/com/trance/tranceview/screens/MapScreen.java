@@ -462,7 +462,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			float x = rate * side + length + width/2;
 			int rate2 = i/5 + 1;
 			float y = control_height - (length * 2 + rate2 * length * 2 );
-			army.init(null,army.armyId, x, y, length,length,null, font, dto);
+			army.init(null,dto.getId(), x, y, length,length,null, font, dto);
 			stage.addActor(army);
 			i++;
 			
@@ -506,6 +506,9 @@ public class MapScreen implements Screen ,InputProcessor{
 				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
 				RewardService.executeRewards(valueResultSet);
 			}
+			
+			long expireTime = (Long) result.get("expireTime");
+			dto.setExpireTime(expireTime);
 		}
 	}
 	
