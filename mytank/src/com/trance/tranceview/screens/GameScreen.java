@@ -252,7 +252,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		
 		armyDtos.clear();
 		for(ArmyDto dto : amrys.values()){
-			armyDtos.put(dto.getId(), dto);
+			if(dto.getAmout() > 0 ){
+				armyDtos.put(dto.getId(), dto);
+			}
 		}
 		
 		int i = 0;
@@ -260,6 +262,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(i == 0){
 				chooseArmyId = dto.getId();
 			}
+			
 			dto.setGo(false);
 			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);

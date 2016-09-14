@@ -473,8 +473,8 @@ public class MapScreen implements Screen ,InputProcessor{
 					long now = TimeUtil.getServerTime();
 					System.out.println("now: " +now);
 					System.out.println("dto.getExpireTime(): " + dto.getExpireTime());
-					if(dto.getExpireTime() >  now){//未到期
-						trainArmy(dto);
+					if(dto.getExpireTime() == 0 || dto.getExpireTime() >  now){//未到期
+						trainArmy(dto);//
 					}else{
 						obtainArmy(dto);
 					}
@@ -485,8 +485,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private void trainArmy(ArmyDto dto){
 		Map<String, Object> params = new HashMap<String, Object>();
+		int addAmount = 1;
 		params.put("armyId", dto.getId());
-		params.put("amount", 1);
+		params.put("amount", addAmount);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, params),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			MsgUtil.showMsg("network error");
@@ -511,7 +512,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			
 			long expireTime = (Long) result.get("expireTime");
 			dto.setExpireTime(expireTime);
-			dto.setAddAmount(1);
+			dto.setAddAmount(addAmount);
 		}
 	}
 	
@@ -540,6 +541,7 @@ public class MapScreen implements Screen ,InputProcessor{
 				RewardService.executeRewards(valueResultSet);
 			}
 			dto.setExpireTime(0);
+			dto.setAmout(dto.getAmout() + dto.getAddAmount());
 			dto.setAddAmount(0);
 		}
 		
