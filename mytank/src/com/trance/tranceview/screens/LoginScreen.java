@@ -31,7 +31,6 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
-import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.basedb.CityElement;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
