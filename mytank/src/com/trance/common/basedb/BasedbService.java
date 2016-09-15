@@ -44,6 +44,14 @@ public class BasedbService {
 			Enumeration<String> n = dex.entries();
 			while(n.hasMoreElements()){
 			    String entry = n.nextElement();
+			    if(entry== null || !entry.startsWith("com.trance.trancetank.modules.")){
+//			    	 System.out.println(entry);
+			    	 continue;
+			    }
+			    if(!entry.contains("basedb.")){
+			    	continue;
+			    }
+			    System.out.println("加载基础数据："+entry);
 				Class<?> clazz = dex.loadClass(entry, classLoader);
 				if(clazz == null){
 					continue;

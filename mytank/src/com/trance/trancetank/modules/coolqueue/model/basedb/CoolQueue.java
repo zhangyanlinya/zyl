@@ -1,4 +1,4 @@
-package com.trance.trancetank.modules.coolqueue.model;
+package com.trance.trancetank.modules.coolqueue.model.basedb;
 
 import com.trance.common.basedb.Basedb;
 
