@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -66,6 +68,7 @@ import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
@@ -278,10 +281,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
 		myArmys.clear();
-		for(ArmyDto dto : armyDtos.values()){
-			if(!dto.isGo()){
-				myArmys.put(dto.getId(), dto);
+		for(ArmyDto dto : armyDtos.values()){//原来的
+			if(dto.isGo()){
+				dto.setAmout(0);
 			}
+			myArmys.put(dto.getId(), dto);
 		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
@@ -290,10 +294,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			if(a != null){
 				a.setAmout(a.getAmout() + 1);
 			}else{
-				ArmyDto dto = new ArmyDto();
-				dto.setId(type);
-				dto.setAmout(1);
-				myArmys.put(type,dto);
+				Log.e(LogTag.TAG, "不存在的部队类型"+type);
 			}
 		}
 		
