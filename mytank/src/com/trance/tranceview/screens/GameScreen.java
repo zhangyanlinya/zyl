@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -66,7 +64,6 @@ import com.trance.tranceview.actors.Bullet;
 import com.trance.tranceview.actors.GameActor;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
-import com.trance.tranceview.constant.LogTag;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
@@ -295,10 +292,15 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			ArmyDto a = myArmys.get(type);
 			if(a != null){
 				a.setAmout(a.getAmout() + 1);
-			}else{
-				Log.e(LogTag.TAG, "不存在的部队类型"+type);
 			}
 		}
+		
+//		for(ArmyDto armyDto : readytogoArmy.values()){
+//			ArmyDto a = myArmys.get(armyDto.getId());
+//			if(a != null){
+//				a.setAmout(a.getAmout() + armyDto.getAmout());
+//			}
+//		}
 		
 		//转换
 		List<ArmyVo> vos = new ArrayList<ArmyVo>();
@@ -505,6 +507,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		int i = 0;
 		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){
+			if(dto.getAmout() == 0){
+				continue;
+			}
 			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
 			font.setColor(Color.BLUE);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
@@ -526,6 +531,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		//debug---
 		
 		scan();
+//		checkReadytogoArmy();
 		stage.draw();
 		stage.act(delta);
 		
@@ -569,6 +575,27 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			army.scan(buildings);
 		}
 	}
+	
+//	private void checkReadytogoArmy(){
+//		if(readytogoArmy.isEmpty()){
+//			return;
+//		}
+//		for(Entry<Point, ArmyDto> e : readytogoArmy.entrySet()){
+//			Point p = e.getKey();
+//			ArmyDto ad = e.getValue();
+//			if(ad.getAmout() <= 0){
+//				readytogoArmy.remove(p);
+//			}
+//			Actor a = stage.hit(p.x, p.y, true);
+//			if(a == null){
+//				Army army = Army.armyPool.obtain();
+//				army.init(world,ad.getId(), p.x , p.y, length,length,shapeRenderer);
+//				armys.add(army);
+//				stage.addActor(army);
+//				ad.setAmout(ad.getAmout() -1);
+//			}
+//		}
+//	}
 
 	@Override
     public void beginContact(Contact contact) {
@@ -635,6 +662,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     private Integer hitKeepArmy(float x, float y){
     	Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
     	for(ArmyDto dto : myArmys.values()){
+    		if(dto.getAmout() == 0){
+    			continue;
+    		}
     		if(dto.getRect().contains(x, y)){
     			return dto.getId();
     		}
@@ -643,6 +673,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     }
     
     public static boolean gobattle;
+    
+    /**
+     * 准备出发的部队
+     */
+//    private final static Map<Point,ArmyDto> readytogoArmy = new HashMap<Point,ArmyDto>();
+    
     
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -680,6 +716,9 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				armys.add(block);
 				stage.addActor(block);
 			}
+//			Point p = new Point(x, y);
+//			readytogoArmy.put(p, army);
+			
 			army.setGo(true);
 			gobattle = true;
 			
@@ -696,7 +735,16 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		
 		return true;
 	}
-
+	
+	class Point{
+		public float x;
+		public float y;
+		public Point (float x, float y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		
