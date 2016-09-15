@@ -1,29 +1,35 @@
 package com.trance.common.basedb;
 
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.trance.tranceview.constant.LogTag;
-
-import dalvik.system.DexFile;
-import dalvik.system.PathClassLoader;
+import com.trance.trancetank.modules.building.model.basedb.CityElement;
+import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
+import com.trance.trancetank.modules.coolqueue.model.basedb.CoolQueue;
 
 @SuppressWarnings("rawtypes")
 public class BasedbService {
 	
 	
 	private final static Map<Class, Map<Object,Basedb>> storage = new HashMap<Class, Map<Object,Basedb>>();
+	private final static Map<String, Class> clazzes = new HashMap<String, Class>();
 	
+	
+	@SuppressWarnings("unchecked")
 	public static void init(Context context){
+		//
+		clazzes.clear();
+		clazzes.put(CityElement.class.getSimpleName(), CityElement.class);
+		clazzes.put(CoolQueue.class.getSimpleName(), CoolQueue.class);
+		clazzes.put(ElementUpgrade.class.getSimpleName(), ElementUpgrade.class);
+		
 		storage.clear();
 		FileHandle fileHandle = Gdx.files.internal("xml_db");
 		FileHandle[] files = fileHandle.list();
@@ -36,57 +42,22 @@ public class BasedbService {
 			String name = file.name();
 			String className = name.substring(0, name.lastIndexOf("."));
 			filemap.put(className, file);
-		}
-		
-		PathClassLoader classLoader = (PathClassLoader) Thread.currentThread().getContextClassLoader();
-		try {
-			DexFile dex = new DexFile(context.getPackageCodePath());
-			Enumeration<String> n = dex.entries();
-			while(n.hasMoreElements()){
-			    String entry = n.nextElement();
-			    if(entry== null || !entry.startsWith("com.trance.trancetank.modules.")){
-//			    	 System.out.println(entry);
-			    	 continue;
-			    }
-			    if(!entry.contains("basedb.")){
-			    	continue;
-			    }
-			    System.out.println("加载基础数据："+entry);
-				Class<?> clazz = dex.loadClass(entry, classLoader);
-				if(clazz == null){
-					continue;
-				}
-				Class<?>[] interfaces = clazz.getInterfaces();
-				if(interfaces != null && interfaces.length > 0){
-					for(Class in : interfaces){
-						if(in == Basedb.class){
-							String key = clazz.getSimpleName();
-			            	FileHandle file = filemap.get(key);
-			            	if(file == null){
-			            		Log.e(LogTag.TAG, key+"没有JSON文件");
-			            		continue;
-			            	}
-			            	
-			            	@SuppressWarnings("unchecked")
-							List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
-			            	if(list != null){
-			            		Map<Object,Basedb> map = new HashMap<Object,Basedb>();
-			            		for(Basedb o :list){
-				            			map.put(o.getId(), o);
-			            		}
-			            		storage.put(clazz, map);
-			            	}
-						}
-					}
-				} 
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			Class clazz = clazzes.get(className);
+			List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
+        	if(list != null){
+        		Map<Object,Basedb> map = new HashMap<Object,Basedb>();
+        		for(Basedb o :list){
+            			map.put(o.getId(), o);
+        		}
+        		storage.put(clazz, map);
+        	}
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Class<T> clazz, Object id){
+		clazz.getSimpleName();
 		Map<Object, Basedb> map = storage.get(clazz);
 		if(map == null){
 			return null;
