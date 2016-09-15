@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -130,7 +128,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-	private final static ConcurrentMap<Integer,ArmyDto> armyDtos = new ConcurrentHashMap<Integer,ArmyDto>();
+//	private final static ConcurrentMap<Integer,ArmyDto> armyDtos = new ConcurrentHashMap<Integer,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -248,20 +246,24 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private int chooseArmyId;
 	private void initArmy(){
 		armys.clear();
-		Map<Integer,ArmyDto> amrys = MainActivity.player.getArmys();
-		if(amrys == null || amrys.isEmpty()){
+		Map<Integer,ArmyDto> amrys_map = MainActivity.player.getArmys();
+		if(amrys_map == null || amrys_map.isEmpty()){
 			return;
 		}
 		
-		armyDtos.clear();
-		for(ArmyDto dto : amrys.values()){
-			if(dto.getAmout() > 0 ){
-				armyDtos.put(dto.getId(), dto);
-			}
-		}
+//		armyDtos.clear();
+//		for(ArmyDto dto : amrys.values()){
+//			if(dto.getAmout() > 0 ){
+//				armyDtos.put(dto.getId(), dto);
+//			}
+//		}
 		
 		int i = 0;
-		for(ArmyDto dto : armyDtos.values()){
+		for(ArmyDto dto : amrys_map.values()){
+			if(dto.getAmout() <= 0){
+				continue;
+			}
+			
 			if(i == 0){
 				chooseArmyId = dto.getId();
 			}
@@ -280,12 +282,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return;
 		}
 		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
-		myArmys.clear();
-		for(ArmyDto dto : armyDtos.values()){//原来的
+//		myArmys.clear();
+		for(ArmyDto dto : myArmys.values()){//原来的
 			if(dto.isGo()){
 				dto.setAmout(0);
 			}
-			myArmys.put(dto.getId(), dto);
+			dto.setGo(false);
 		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
@@ -501,7 +503,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private void renderKeepArmys(SpriteBatch batch){
 		int i = 0;
-		for(ArmyDto dto : armyDtos.values()){
+		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
+		for(ArmyDto dto : myArmys.values()){
 			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
 			font.setColor(Color.BLUE);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
@@ -545,7 +548,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private void checkGameOver() {
 		if(armys.size == 0){
-			for(ArmyDto dto : armyDtos.values()){
+			Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
+			for(ArmyDto dto : myArmys.values()){
 				if(dto.isGo()){
 					continue;
 				}
@@ -629,7 +633,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     }
     
     private Integer hitKeepArmy(float x, float y){
-    	for(ArmyDto dto : armyDtos.values()){
+    	Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
+    	for(ArmyDto dto : myArmys.values()){
     		if(dto.getRect().contains(x, y)){
     			return dto.getId();
     		}
@@ -661,8 +666,8 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		if(actor != null){
 			return false;
 		}
-		
-		for(ArmyDto army : armyDtos.values()){
+		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
+		for(ArmyDto army : myArmys.values()){
 			if(army.isGo()){
 				continue;
 			}
@@ -681,7 +686,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		}
 		
 		//for the next choose type;
-		for(ArmyDto army : armyDtos.values()){
+		for(ArmyDto army : myArmys.values()){
 			if(army.isGo()){
 				continue;
 			}
