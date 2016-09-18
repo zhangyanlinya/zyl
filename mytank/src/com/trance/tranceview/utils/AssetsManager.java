@@ -17,8 +17,6 @@
 package com.trance.tranceview.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -74,20 +72,28 @@ public class AssetsManager extends AssetManager{
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
     	
+    	initAnimation();
+    	
 //    	ininSound();
     }
     
-    /**
-     * 初始化声音资源
-     */
-    private void ininSound() {
-    	load("audio/barrett.wav",Sound.class);
-    	load("audio/begin.mp3",Music.class);
-    	load("audio/game_over.mp3",Music.class);
-    	load("audio/get_bomber.mp3",Music.class);
-    	load("audio/get_barrett.mp3",Music.class);
-		
+    private void initAnimation() {
+    	 for (int i = 0; i < 11; i++) {
+    		 load("army/1/zoulu/01/"+i+".png", Texture.class);
+         }
 	}
+
+//	/**
+//     * 初始化声音资源
+//     */
+//    private void ininSound() {
+//    	load("audio/barrett.wav",Sound.class);
+//    	load("audio/begin.mp3",Music.class);
+//    	load("audio/game_over.mp3",Music.class);
+//    	load("audio/get_bomber.mp3",Music.class);
+//    	load("audio/get_barrett.mp3",Music.class);
+//		
+//	}
     
 	public TextureRegion getBlockTextureRegion(int value) {
     	if(textureAtlas == null){
@@ -111,6 +117,21 @@ public class AssetsManager extends AssetManager{
 			test = 7;
 		}
 		return getBlockTextureRegion(test);
+	}
+	
+	private TextureRegion[] army1;
+	
+	public TextureRegion[] getArmyAnimation(int armyId) {
+		if(army1 != null){
+			return army1;
+		}
+		army1 = new TextureRegion[11];
+        //把Texture转换下
+        for (int i = 0; i < 11; i++) {
+        	Texture animation = this.get("army/1/zoulu/01/"+i+".png", Texture.class);
+        	army1[i] = new TextureRegion(animation);
+        }
+		return army1;
 	}
     
     public  TextureRegion getBulletTextureRegion(int value) {

@@ -1,6 +1,8 @@
 package com.trance.tranceview.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -33,6 +35,12 @@ public class Army extends GameActor{
 	private ArmyDto dto;
 	private BitmapFont font;
 	
+	private TextureRegion[] girlRegion;
+    private float stateTime;
+    //当前帧
+    private TextureRegion currentFrame;
+    private Animation animation;
+	
 	
 	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
@@ -61,6 +69,7 @@ public class Army extends GameActor{
 			hp = 100;
 			break;
 		}
+		initAnimation(armyId);
 		
 		if(world == null){
 			body = null;
@@ -74,6 +83,12 @@ public class Army extends GameActor{
 		init(world, armyId, x, y, width, height, renderer);
 		this.dto = dto;
 		this.font = font;
+	}
+	
+	private void initAnimation(int armyId){
+		girlRegion = AssetsManager.getInstance().getArmyAnimation(armyId);
+        //0.06*11=0.66 大概就是1秒钟播放完这个动画。
+        animation = new Animation(0.1f, girlRegion);
 	}
 	
 	
@@ -125,7 +140,10 @@ public class Army extends GameActor{
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		batch.draw(textureRegion, getX(), getY(), hw,
+		stateTime += Gdx.graphics.getDeltaTime();
+        //下一帧
+        currentFrame = animation.getKeyFrame(stateTime, true);
+		batch.draw(currentFrame, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
 		
