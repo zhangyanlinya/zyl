@@ -50,6 +50,7 @@ public class Army extends GameActor{
 		this.move = true;
 		this.camp = 2;
 		this.hp = maxhp;
+		this.degrees = 0;
 		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(armyId);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
@@ -145,7 +146,7 @@ public class Army extends GameActor{
         currentFrame = animation.getKeyFrame(stateTime, true);
 		batch.draw(currentFrame, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
-				getScaleY(), getRotation());
+				getScaleY(), 0);
 		
 		if(dto != null){
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
