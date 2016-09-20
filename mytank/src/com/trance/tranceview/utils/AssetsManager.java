@@ -84,7 +84,6 @@ public class AssetsManager extends AssetManager{
 	}
 
 //	/**
-//     * 初始化声音资源
 //     */
 //    private void ininSound() {
 //    	load("audio/barrett.wav",Sound.class);
@@ -169,8 +168,6 @@ public class AssetsManager extends AssetManager{
     		texture = get(fileName, Texture.class);
     		break;
 		default:
-			fileName ="ui/dir.png"; 
-			texture = get(fileName, Texture.class);
 			break;
     	}
         return texture;

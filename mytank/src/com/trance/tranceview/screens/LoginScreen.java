@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.trance.common.basedb.BasedbService;
@@ -38,6 +39,7 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.dialog.ExitDialog;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
@@ -88,7 +90,13 @@ public class LoginScreen implements Screen{
 				   if(!finish){
 					   return;
 				   }
-				   login();
+//				   login();
+				   
+				   WindowStyle windowStyle = new WindowStyle(new BitmapFont(), Color.YELLOW, new TextureRegionDrawable(new TextureRegion(
+							AssetsManager.getInstance().get("world/tips.png",Texture.class))));  
+			       ExitDialog exitWindow = new ExitDialog("系统提示", windowStyle); 
+			       exitWindow.show(stage);
+
 			}
 		});
 		
