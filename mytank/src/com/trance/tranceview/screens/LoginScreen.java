@@ -91,12 +91,7 @@ public class LoginScreen implements Screen{
 					   return;
 				   }
 //				   login();
-				   
-				   WindowStyle windowStyle = new WindowStyle(new BitmapFont(), Color.YELLOW, new TextureRegionDrawable(new TextureRegion(
-							AssetsManager.getInstance().get("world/tips.png",Texture.class))));  
-			       ExitDialog exitWindow = new ExitDialog("系统提示", windowStyle); 
-			       exitWindow.show(stage);
-
+				   tranceGame.setScreen(new MenuScreen());
 			}
 		});
 		
