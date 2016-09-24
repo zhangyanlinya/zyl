@@ -90,8 +90,8 @@ public class LoginScreen implements Screen{
 				   if(!finish){
 					   return;
 				   }
-//				   login();
-				   tranceGame.setScreen(new MenuScreen());
+				   login();
+//				   tranceGame.setScreen(new MenuScreen());
 			}
 		});
 		
