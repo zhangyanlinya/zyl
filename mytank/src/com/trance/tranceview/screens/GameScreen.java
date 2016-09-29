@@ -66,7 +66,7 @@ import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
@@ -206,7 +206,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		shapeRenderer = new ShapeRenderer();
 		
 		//返回家
-		toWorld = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.WORLD));
+		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
 			
@@ -218,7 +218,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		
 		//提示框
 		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
-				AssetsManager.getInstance().get("world/tips.png",Texture.class)));
+				ResUtil.getInstance().get("world/tips.png",Texture.class)));
 		Drawable background = new TextureRegionDrawable(tips);
 		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
 		window = new Window("点赞",style);
@@ -266,7 +266,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			}
 			
 			dto.setGo(false);
-			dto.setRegion(AssetsManager.getInstance().getArmyTextureRegion(dto.getId()));
+			dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
@@ -433,12 +433,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			return;
 		}
 		
-		bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w ; x < stage.getWidth(); x += w){//background;
 			for(float y = -h ; y < stage.getHeight() ; y += h){
-				bg = new MapImage(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
 			}
@@ -448,7 +448,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			int index = RandomUtil.nextInt(4) + 1;
 			int x = RandomUtil.nextInt((int)width);
 			int y = RandomUtil.nextInt((int)height);
-			Image grass = new MapImage(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
 			grass.setPosition(x, y);
 			stage.addActor(grass);
 		}
@@ -464,24 +464,24 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if(i == 0 ){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == map.length - 1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x, y - length * 2);
 					stage.addActor(grass);
 				}
 				
 				if(j == 0){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
 				}else if(j == map[i].length -1){
 					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}

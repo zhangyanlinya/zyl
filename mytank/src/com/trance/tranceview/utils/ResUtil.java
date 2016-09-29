@@ -25,16 +25,16 @@ import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.ControlType;
 
-public class AssetsManager extends AssetManager{
+public class ResUtil extends AssetManager{
 	
 	public TextureAtlas textureAtlas;
 	public TextureAtlas textureAtlas2;
-	private static AssetsManager assetsManager;
-	public static AssetsManager getInstance(){
-		if(assetsManager == null){
-			assetsManager = new AssetsManager();
+	private static ResUtil resUtil;
+	public static ResUtil getInstance(){
+		if(resUtil == null){
+			resUtil = new ResUtil();
 		}
-		return assetsManager;
+		return resUtil;
 	}
 	
     public void init() {

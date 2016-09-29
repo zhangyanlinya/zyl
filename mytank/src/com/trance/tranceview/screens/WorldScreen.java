@@ -38,7 +38,7 @@ import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
@@ -129,12 +129,12 @@ public class WorldScreen implements Screen, InputProcessor {
 		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.setCamera(camera);
 		
-		Image bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+		Image bg = new Image(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w * 2 ; x <= sw + w; x += w){//background;
 			for(float y = -h * 4 ; y <= sh + h * 4 ; y += h){
-				bg = new Image(AssetsManager.getInstance().get("world/bg.jpg",Texture.class));
+				bg = new Image(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
 			}
@@ -145,7 +145,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			int index = RandomUtil.nextInt(5) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/grass" + index +".png", Texture.class));
+			Image grass = new Image(ResUtil.getInstance().get("world/grass" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -153,7 +153,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			int index = RandomUtil.nextInt(4) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/soil" + index +".png", Texture.class));
+			Image grass = new Image(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -162,7 +162,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			int index = RandomUtil.nextInt(2) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/stone" + index +".png", Texture.class));
+			Image grass = new Image(ResUtil.getInstance().get("world/stone" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -171,7 +171,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			int index = RandomUtil.nextInt(5) + 1;
 			int x = RandomUtil.nextInt((int)sw);
 			int y = RandomUtil.nextInt((int)sh);
-			Image grass = new Image(AssetsManager.getInstance().get("world/tree" + index +".png", Texture.class));
+			Image grass = new Image(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 			grass.setPosition(x,y);
 			stage.addActor(grass);
 		}
@@ -186,7 +186,7 @@ public class WorldScreen implements Screen, InputProcessor {
 					dto = getWorldPlayerDto(x, y);
 				}
 				
-				final WorldImage location = new WorldImage(AssetsManager.getInstance().get("world/me1.png", Texture.class), font, dto);
+				final WorldImage location = new WorldImage(ResUtil.getInstance().get("world/me1.png", Texture.class), font, dto);
 				float opx =  x * 480 +(x ^ y) * 20;
 				float opy =  y * 800 + ((BASE - x) ^ (BASE - y)) * 40;
 				location.setPosition(opx , opy);
@@ -270,11 +270,11 @@ public class WorldScreen implements Screen, InputProcessor {
 		}
 	
 		//Home
-		home = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
+		home = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
 		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
 		
 		//Home
-		dailyReward = new Image(AssetsManager.getInstance().getControlTextureRegion(ControlType.HOME));
+		dailyReward = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
 		int x = RandomUtil.betweenValue(20, 480);
 		int y = RandomUtil.betweenValue(20, 800);
 		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);

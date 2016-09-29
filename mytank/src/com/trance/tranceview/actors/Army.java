@@ -17,7 +17,7 @@ import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.ArmyPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.TimeUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
@@ -51,7 +51,7 @@ public class Army extends GameActor{
 		this.camp = 2;
 		this.hp = maxhp;
 		this.degrees = 0;
-		textureRegion = AssetsManager.getInstance().getArmyTextureRegion(armyId);
+		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyId);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
@@ -87,7 +87,7 @@ public class Army extends GameActor{
 	}
 	
 	private void initAnimation(int armyId){
-		girlRegion = AssetsManager.getInstance().getArmyAnimation(armyId);
+		girlRegion = ResUtil.getInstance().getArmyAnimation(armyId);
         //0.06*11=0.66 大概就是1秒钟播放完这个动画。
         animation = new Animation(0.1f, girlRegion);
 	}

@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.tranceview.pools.BulletPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
@@ -40,7 +40,7 @@ public class Bullet extends GameActor{
 		this.gameActor = gameActor;
 		this.degrees = gameActor.degrees;
 		this.role = 1;
-		textureRegion = AssetsManager.getInstance().getBulletTextureRegion(type);
+		textureRegion = ResUtil.getInstance().getBulletTextureRegion(type);
 		
 		camp = gameActor.camp;
 		if(width == 0 && height == 0){

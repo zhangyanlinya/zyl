@@ -15,7 +15,7 @@ import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.utils.AssetsManager;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
@@ -55,7 +55,7 @@ public class Building extends GameActor{
 			textureRegion = null;
 			return;
 		}
-		textureRegion = AssetsManager.getInstance().getBuildingTextureRegion(type);
+		textureRegion = ResUtil.getInstance().getBuildingTextureRegion(type);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());

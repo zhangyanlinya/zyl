@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.trance.common.basedb.BasedbService;
@@ -39,11 +38,10 @@ import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.dialog.ExitDialog;
 import com.trance.tranceview.mapdata.MapData;
-import com.trance.tranceview.utils.AssetsManager;
 import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
+import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.TimeUtil;
 
@@ -56,7 +54,7 @@ public class LoginScreen implements Screen{
 	private Stage stage;
 	private boolean init;
 	private TranceGame tranceGame;
-	private AssetsManager assetsManager;
+	private ResUtil resUtil;
 	//画笔
   	public ShapeRenderer renderer;
   	
@@ -68,8 +66,8 @@ public class LoginScreen implements Screen{
 	
 	public void init(){
 		renderer = new ShapeRenderer(); 
-		assetsManager = AssetsManager.getInstance();
-		assetsManager.init();
+		resUtil = ResUtil.getInstance();
+		resUtil.init();
 		
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		spriteBatch = new SpriteBatch();
@@ -91,7 +89,6 @@ public class LoginScreen implements Screen{
 					   return;
 				   }
 				   login();
-//				   tranceGame.setScreen(new MenuScreen());
 			}
 		});
 		
@@ -106,6 +103,7 @@ public class LoginScreen implements Screen{
 		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+
 	}
 
 	@Override
@@ -244,7 +242,7 @@ public class LoginScreen implements Screen{
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
-		if(assetsManager.update()){
+		if(resUtil.update()){
 			spriteBatch.begin();
 			font.setColor(Color.GREEN);
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
@@ -253,7 +251,7 @@ public class LoginScreen implements Screen{
 		}
 		
 		//draw progress
-		float percent = assetsManager.getProgress(); 
+		float percent = resUtil.getProgress(); 
 		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
 		renderer.rect(Gdx.graphics.getWidth() / 4 , 100, Gdx.graphics.getWidth() / 2, 40);
@@ -300,7 +298,7 @@ public class LoginScreen implements Screen{
 		stage.dispose();
 		spriteBatch.dispose();
 		font.dispose();
-		assetsManager.dispose();
+		resUtil.dispose();
 		renderer.dispose();
 	}
 	
