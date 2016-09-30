@@ -68,14 +68,25 @@ public class FontUtil {
 		return font;
 	}
 	
+	public BitmapFont getFont(){
+		BitmapFont font = getFont(25);
+		font.setColor(Color.WHITE);
+		return font;
+	}
+	
 	public BitmapFont getFont(int size, Color color){
+		BitmapFont font = getFont(size);
+		font.setColor(color);
+		return font;
+	}
+	
+	public BitmapFont getFont(int size){
 		generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("font/font.ttf"));
 		FreeTypeBitmapFontData fontData = generator.generateData(size,
 				FreeTypeFontGenerator.DEFAULT_CHARS, false);
 		generator.dispose();
 		BitmapFont font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
-		font.setColor(color);
 		return font;
 	}
 	

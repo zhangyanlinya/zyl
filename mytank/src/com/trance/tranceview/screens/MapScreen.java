@@ -57,6 +57,7 @@ import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.dialog.DialogStage;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.FontUtil;
@@ -106,6 +107,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
+	 /** 4. 退出确认舞台 */
+    private DialogStage dialogStage;
+	
 	public MapScreen(TranceGame game){
 		this.game = game;
 	}
@@ -127,6 +131,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer(); 
+		
+		dialogStage = new DialogStage(game);
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
@@ -341,6 +347,10 @@ public class MapScreen implements Screen ,InputProcessor{
 			renderPlayerInfo(spriteBatch,playerDto);
 		}
 		spriteBatch.end();
+		
+		
+		dialogStage.act();
+		dialogStage.draw();
 	}
 	
 	public void renderPlayerInfo(SpriteBatch spriteBatch, PlayerDto playerDto){
@@ -870,6 +880,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		if(font != null){
 			font.dispose();
+		}
+		if(dialogStage != null){
+			dialogStage.dispose();
 		}
 	}
 }
