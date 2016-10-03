@@ -70,7 +70,7 @@ public class DialogStage extends BaseStage {
         	@Override
         	public void clicked(InputEvent event, float x, float y) {
         		// 点击取消按钮, 隐藏对话框（隐藏退出确认舞台, 返回主游戏舞台）
-//        		getTranceGame().getGameScreen().setShowExitConfirmStage(false);
+        		getTranceGame().mapScreen.setShowDailogStage(false);
         	}
         });
     	
@@ -80,23 +80,23 @@ public class DialogStage extends BaseStage {
     	/*
     	 * 添加舞台输入监听器
     	 */
-    	addListener(new InputListenerImpl());
+//    	addListener(new InputListenerImpl());
     }
     
-    /**
-     * 输入事件监听器
-     */
-    private class InputListenerImpl extends InputListener {
-        @Override
-        public boolean keyUp(InputEvent event, int keycode) {
-            if (keycode == Input.Keys.BACK) {
-                // 按返回键, 隐藏退出确认舞台（返回主游戏舞台）
-//                getTranceGame().getGameScreen().setShowExitConfirmStage(false);
-                return true;
-            }
-            return super.keyUp(event, keycode);
-        }
-    }
+//    /**
+//     * 输入事件监听器
+//     */
+//    private class InputListenerImpl extends InputListener {
+//        @Override
+//        public boolean keyUp(InputEvent event, int keycode) {
+//            if (keycode == Input.Keys.BACK) {
+//                // 按返回键, 隐藏退出确认舞台（返回主游戏舞台）
+////                getTranceGame().getGameScreen().setShowExitConfirmStage(false);
+//                return true;
+//            }
+//            return super.keyUp(event, keycode);
+//        }
+//    }
 
 }
 
