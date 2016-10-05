@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.constant.UiType;
 
 public class ResUtil extends AssetManager{
 	
@@ -54,7 +55,13 @@ public class ResUtil extends AssetManager{
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
-    	load("ui/gotofight.png", Texture.class);
+    	load("ui/rename.png", Texture.class);
+    	
+    	//UI
+       	load("ui/level.png", Texture.class);
+       	load("ui/gold.png", Texture.class);
+       	load("ui/foods.png", Texture.class);
+       	load("ui/silver.png", Texture.class);
     	
     	load("world/me1.png", Texture.class);
     	load("world/tips.png", Texture.class);
@@ -84,6 +91,15 @@ public class ResUtil extends AssetManager{
     	initAnimation();
     	
 //    	ininSound();
+    }
+    
+    /**
+     * 获得UI
+     * @param UiType
+     * @return
+     */
+    public Texture getUi(UiType uiType){
+    	return this.get(uiType.getVlaue(),Texture.class);
     }
     
     private void initAnimation() {
@@ -156,8 +172,8 @@ public class ResUtil extends AssetManager{
     	Texture texture = null;
     	String fileName = null;
     	switch(value){
-    	case GOTOFIGHT:
-    		fileName = "ui/gotofight.png";
+    	case RENAME:
+    		fileName = "ui/rename.png";
     		texture = get(fileName, Texture.class);
     		break;
     	case ATTACK:

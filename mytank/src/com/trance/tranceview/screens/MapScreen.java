@@ -56,7 +56,9 @@ import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
+import com.trance.tranceview.actors.ResImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.DialogStage;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
@@ -152,7 +154,7 @@ public class MapScreen implements Screen ,InputProcessor{
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				change();
+//				change();
 			}
 		});
 		
@@ -168,7 +170,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		//Rename
 		listener = new RenameInputListener();
-		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.GOTOFIGHT));
+		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
 		rename.setBounds(10 + toWorld.getWidth() + toWorld.getWidth()/2, 10, rename.getWidth() + rename.getWidth()/2, rename.getHeight() + rename.getHeight()/2);
 		rename.addListener(new ClickListener(){
 			
@@ -228,6 +230,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(toChange);
 			stage.addActor(attack);
 		}
+		refreshPlayerInfo(playerDto);
 		
 		stage.addActor(toWorld);
 		
@@ -322,6 +325,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
 			playerDto = newPlayerDto;
+//			show();
 		}
 	}
 	
@@ -342,9 +346,9 @@ public class MapScreen implements Screen ,InputProcessor{
 			font.draw(spriteBatch,"没有可用部队",0,100);
 		}
 		if(playerDto.isMyself()){
-			renderPlayerInfo(spriteBatch,MainActivity.player);
+			font.draw(spriteBatch, MainActivity.player.getPlayerName(),0,height - length);
 		}else{
-			renderPlayerInfo(spriteBatch,playerDto);
+			font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		}
 		spriteBatch.end();
 		
@@ -365,12 +369,21 @@ public class MapScreen implements Screen ,InputProcessor{
         }
 	}
 	
-	public void renderPlayerInfo(SpriteBatch spriteBatch, PlayerDto playerDto){
-		font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
-		font.draw(spriteBatch, "等级：  " + playerDto.getLevel(), 0 , height - length * 2);
-		font.draw(spriteBatch, "金币：  " + playerDto.getGold(), 0 , height - length * 3);
-		font.draw(spriteBatch, "粮食: " + playerDto.getFoods(), 0 , height - length * 4);
-		font.draw(spriteBatch, "银币: " + playerDto.getSilver(), 0 , height - length * 5);
+	
+	public void refreshPlayerInfo(PlayerDto playerDto){
+		int side = width / 5;
+		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, String.valueOf( playerDto.getLevel()));
+		level.setBounds(side, height - length , length, length);
+		stage.addActor(level);
+		ResImage gold = new ResImage(ResUtil.getInstance().getUi(UiType.GOLD),font, String.valueOf( playerDto.getGold()));
+		gold.setBounds(side * 2, height - length, length, length);
+		stage.addActor(gold);
+		ResImage silver = new ResImage(ResUtil.getInstance().getUi(UiType.SILVER),font, String.valueOf( playerDto.getSilver()));
+		silver.setBounds(side * 3,  height - length, length, length);
+		stage.addActor(silver);
+		ResImage foods = new ResImage(ResUtil.getInstance().getUi(UiType.FOODS),font, String.valueOf( playerDto.getFoods()));
+		foods.setBounds(side * 4, height - length, length, length);
+		stage.addActor(foods);
 	}
 	
 	// 初始化关卡地图
@@ -455,9 +468,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
 			CoolQueueDto dto = e.getValue();
 			int id = dto.getId();
-			if(id == 8){//TODO
-				id = 1;
-			}
 			TextureRegion region = ResUtil.getInstance().getBuildingTextureRegion(id);
 			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
 			if(elementUpgrade == null){

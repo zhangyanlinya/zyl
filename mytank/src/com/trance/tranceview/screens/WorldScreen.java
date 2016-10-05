@@ -209,6 +209,7 @@ public class WorldScreen implements Screen, InputProcessor {
 						if(dto != null ){
 							if( ox == 5 && oy == 5){
 								dto.setMyself(true);
+								location.setColor(Color.MAGENTA);
 								gotoHome();
 							}else{//spy get the map
 								HashMap<String,Object> params = new HashMap<String,Object>();

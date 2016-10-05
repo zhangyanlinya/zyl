@@ -22,7 +22,7 @@ public enum ControlType {
 	
 	HOME(9),
 	
-	GOTOFIGHT(10);
+	RENAME(10);
 
 	private final int value;
 
