@@ -70,24 +70,26 @@ public class Building extends GameActor{
 		case BuildingType.HOUSE:
 			break;
 		case BuildingType.BARRACKS:
-			range = 600;
-			fireDelay = 2000;
-			atk = 5;
 			break;
-		case BuildingType.MARKET:
-			range = 100;
+		case BuildingType.CANNON:
+			range = 400;
 			fireDelay = 200;
 			atk = 20;
 			break;
-		case BuildingType.FARM:
+		case BuildingType.ROCKET:
+			range = 2000;
+			atk = 3;
 			break;
-		case BuildingType.WATERWHEEL:
+		case BuildingType.FLAME:
+			range = 100;
+			atk = 30;
 			break;
-		case BuildingType.TREASURY:
+		case BuildingType.GUN:
 			break;
-		case BuildingType.BARN:
+		case BuildingType.TOWER:
+			range = 250;
 			break;
-		case BuildingType.HORSE_MARKET:
+		case BuildingType.MORTAR:
 			break;
 		
 		}

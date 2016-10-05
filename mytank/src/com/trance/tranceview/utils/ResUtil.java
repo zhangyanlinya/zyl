@@ -41,7 +41,15 @@ public class ResUtil extends AssetManager{
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
     	load("block/block.pack", TextureAtlas.class);
     	load("blocks/pic.pack", TextureAtlas.class);
-    	load("block/pao.png", Texture.class);
+    	load("building/1.png", Texture.class);
+    	load("building/2.png", Texture.class);
+    	load("building/3.png", Texture.class);
+    	load("building/4.png", Texture.class);
+    	load("building/5.png", Texture.class);
+    	load("building/6.png", Texture.class);
+    	load("building/7.png", Texture.class);
+    	load("building/8.png", Texture.class);
+    	load("building/9.png", Texture.class);
     	load("ui/bullet.png", Texture.class);
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
@@ -104,12 +112,7 @@ public class ResUtil extends AssetManager{
     }
 	
 	public TextureRegion getBuildingTextureRegion(int value) {
-		if(textureAtlas2 == null){
-//			textureAtlas2 = this.get("blocks/pic.pack", TextureAtlas.class);
-		}
-//		AtlasRegion atlasRegion = textureAtlas2.findRegion("f-"+value);
-		return new TextureRegion(this.get("block/pao.png",Texture.class));
-//		return atlasRegion;
+		return new TextureRegion(this.get("building/"+value+".png",Texture.class));
 	}
 	
 	public TextureRegion getArmyTextureRegion(int armyId) {

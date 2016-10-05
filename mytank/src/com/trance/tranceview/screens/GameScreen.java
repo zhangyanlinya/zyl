@@ -113,7 +113,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
     
-    private Box2DDebugRenderer debugRenderer;
+//    private Box2DDebugRenderer debugRenderer;
 	
 	public final static Array<GameActor> buildings = new Array<GameActor>();
 	
@@ -488,15 +488,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				
 				if (type > 0){
 					Building block = Building.buildingPool.obtain();
-					if(type == BuildingType.HORSE_MARKET || type == BuildingType.BARRACKS
-							||  type == BuildingType.MARKET || type == BuildingType.FARM){
-						block.init(world,type, x, y, length,length,null);
-						buildings.add(block);
+					if(type >= BuildingType.CANNON){
 						connons.add(block);
-					}else{
-						block.init(world,type, x,y, length,length,null);
-						buildings.add(block);
 					}
+					block.init(world,type, x, y, length,length,null);
+					buildings.add(block);
 					stage.addActor(block);
 				}
 			}
