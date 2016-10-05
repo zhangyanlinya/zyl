@@ -437,7 +437,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h ; y < stage.getHeight() ; y += h){
+			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
 				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
@@ -803,4 +803,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		Building.buildingPool.clear();
 		
 	}
+
+
 }

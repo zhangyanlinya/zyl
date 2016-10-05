@@ -348,9 +348,21 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		spriteBatch.end();
 		
-		
-		dialogStage.act();
-		dialogStage.draw();
+		if(dialogVisible){
+			dialogStage.act();
+			dialogStage.draw();
+		}
+	}
+	
+	private boolean dialogVisible;
+	
+	public void setShowDailogStage(boolean visible) {
+		dialogStage.setVisible(visible);
+        if (dialogStage.isVisible()) {
+            Gdx.input.setInputProcessor(dialogStage);
+        } else {
+            Gdx.input.setInputProcessor(stage);
+        }
 	}
 	
 	public void renderPlayerInfo(SpriteBatch spriteBatch, PlayerDto playerDto){
@@ -885,4 +897,5 @@ public class MapScreen implements Screen ,InputProcessor{
 			dialogStage.dispose();
 		}
 	}
+
 }
