@@ -36,6 +36,7 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.WorldImage;
 import com.trance.tranceview.constant.ControlType;
+import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.utils.ResUtil;
@@ -209,7 +210,7 @@ public class WorldScreen implements Screen, InputProcessor {
 						if(dto != null ){
 							if( ox == 5 && oy == 5){
 								dto.setMyself(true);
-								location.setColor(Color.MAGENTA);
+								location.setColor(255, 165, 0, 1);
 								gotoHome();
 							}else{//spy get the map
 								HashMap<String,Object> params = new HashMap<String,Object>();
@@ -274,8 +275,8 @@ public class WorldScreen implements Screen, InputProcessor {
 		home = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
 		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
 		
-		//Home
-		dailyReward = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
+		//itembox
+		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
 		int x = RandomUtil.betweenValue(20, 480);
 		int y = RandomUtil.betweenValue(20, 800);
 		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);

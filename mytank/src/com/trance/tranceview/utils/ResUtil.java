@@ -62,6 +62,7 @@ public class ResUtil extends AssetManager{
        	load("ui/gold.png", Texture.class);
        	load("ui/foods.png", Texture.class);
        	load("ui/silver.png", Texture.class);
+       	load("ui/itembox.png", Texture.class);
     	
     	load("world/me1.png", Texture.class);
     	load("world/tips.png", Texture.class);

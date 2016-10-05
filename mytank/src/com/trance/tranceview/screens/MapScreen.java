@@ -154,7 +154,7 @@ public class MapScreen implements Screen ,InputProcessor{
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-//				change();
+				change();
 			}
 		});
 		
@@ -325,7 +325,15 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
 			playerDto = newPlayerDto;
-//			show();
+			int[][] map = null;
+			Object mobj = result.get("mapdata");
+			if (mobj == null) {
+				map = MapData.baseMap;
+			}else{
+				map = JSON.parseObject(mobj.toString(), int[][].class);
+			}
+			playerDto.setMap(map);
+			show();
 		}
 	}
 	
