@@ -374,13 +374,11 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		spriteBatch.end();
 		
-		if(dialogVisible){
+		if(dialogStage.isVisible()){
 			dialogStage.act();
 			dialogStage.draw();
 		}
 	}
-	
-	private boolean dialogVisible;
 	
 	public void setShowDailogStage(boolean visible) {
 		dialogStage.setVisible(visible);
