@@ -97,6 +97,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image attack;
 	private Image toWorld;
 	private Image toChange;
+	private Image toTrain;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -158,6 +159,16 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
+		toTrain = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toTrain.setPosition(width - toTrain.getWidth() * 6, toTrain.getHeight());
+		toTrain.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				train();
+			}
+		});
+		
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
@@ -197,7 +208,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置等级金银币粮食没有可用部队" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		
 		noArmy = false;
 		stage.clear();
@@ -226,6 +237,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			refreshLeftBuiding();
 			refreshArmy();
 			stage.addActor(rename);
+			stage.addActor(toTrain);
 		}else{
 			stage.addActor(toChange);
 			stage.addActor(attack);
@@ -338,6 +350,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
+	private void train(){
+		setShowDailogStage(true);
+	}
+	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
 	}
@@ -350,9 +366,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch,"可拖动建筑放置",0,height -10);
-		}
-		if(noArmy){
-			font.draw(spriteBatch,"没有可用部队",0,100);
 		}
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch, MainActivity.player.getPlayerName(),0,height - length);

@@ -10,6 +10,7 @@ import android.content.Context;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.trance.trancetank.modules.army.model.basedb.ArmyOpenLv;
 import com.trance.trancetank.modules.building.model.basedb.CityElement;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.basedb.CoolQueue;
@@ -26,6 +27,7 @@ public class BasedbService {
 	public static void init(Context context){
 		//
 		clazzes.clear();
+		clazzes.put(ArmyOpenLv.class.getSimpleName(), ArmyOpenLv.class);
 		clazzes.put(CityElement.class.getSimpleName(), CityElement.class);
 		clazzes.put(CoolQueue.class.getSimpleName(), CoolQueue.class);
 		clazzes.put(ElementUpgrade.class.getSimpleName(), ElementUpgrade.class);

@@ -218,7 +218,7 @@ public class WorldScreen implements Screen, InputProcessor {
 								params.put("y", oy);
 								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, params),true);
 								if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-									MsgUtil.showMsg("network error!");
+									MsgUtil.showMsg("network error! " + response != null ? response.getStatus(): " null");
 									return;
 								}
 								byte[] bytes = response.getValueBytes();
@@ -249,7 +249,7 @@ public class WorldScreen implements Screen, InputProcessor {
 							params.put("y", oy);
 							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params),true);
 							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-								MsgUtil.showMsg("network error!");
+								MsgUtil.showMsg("network error! " + response != null ? response.getStatus(): " null");
 								return;
 							}
 							byte[] bytes = response.getValueBytes();

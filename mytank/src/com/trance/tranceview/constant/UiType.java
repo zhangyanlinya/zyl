@@ -8,6 +8,9 @@ public enum UiType {
 	SILVER("ui/silver.png"),
 	ITEMBOX("ui/itembox.png"),
 	CHANGE("ui/change.png"),
+	TRAIN("ui/train.png"),
+	BLANK("ui/blank.png"),
+	CLOSE("ui/close.png"),
 	;
 	
 	private final String value;
