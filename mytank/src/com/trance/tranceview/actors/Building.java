@@ -77,8 +77,8 @@ public class Building extends GameActor{
 			atk = 20;
 			break;
 		case BuildingType.ROCKET:
-			range = 1500;
-			atk = 3;
+			range = 1000;
+			atk = 2;
 			break;
 		case BuildingType.FLAME:
 			range = 100;
