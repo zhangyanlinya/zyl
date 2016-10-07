@@ -7,6 +7,7 @@ public enum UiType {
 	GOLD("ui/gold.png"),
 	SILVER("ui/silver.png"),
 	ITEMBOX("ui/itembox.png"),
+	CHANGE("ui/change.png"),
 	;
 	
 	private final String value;

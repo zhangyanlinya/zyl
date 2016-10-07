@@ -148,7 +148,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
-		toChange = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
+		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
 		toChange.setPosition(width - toChange.getWidth() * 4, toChange.getHeight());
 		toChange.addListener(new ClickListener(){
 
@@ -322,7 +322,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		Object pobj = result.get("content");
 		if(pobj != null){
 			PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
-	
+			newPlayerDto.setX(playerDto.getX());
+			newPlayerDto.setY(playerDto.getY());
 			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
 			playerDto = newPlayerDto;
 			int[][] map = null;
