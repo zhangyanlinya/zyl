@@ -1,7 +1,9 @@
 package com.trance.tranceview.dialog;
 
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.trance.tranceview.TranceGame;
@@ -39,6 +41,8 @@ public class DialogStage extends BaseStage {
 			}
         });
         addActor(close);
+        this.bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 0.5F)));
+        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
     }
 }
 
