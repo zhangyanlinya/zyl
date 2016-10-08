@@ -40,6 +40,7 @@ import com.trance.tranceview.utils.TimeUtil;
 public class DialogStage extends BaseStage {
 
     private Image bgImage;
+    private ShapeRenderer renderer;
 
     public DialogStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -66,10 +67,11 @@ public class DialogStage extends BaseStage {
         addActor(close);
         bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
 //        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
-        refreshActors();
+        
+        renderer = new ShapeRenderer();
     }
     
-    private void refreshActors(){
+    public void refreshArmy(){
     	Collection<ArmyTrain> armyTrains = BasedbService.listAll(ArmyTrain.class);
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
     	int index = 0;
@@ -80,7 +82,6 @@ public class DialogStage extends BaseStage {
 	    	if(armyDto != null){
 	    		expireTime = armyDto.getExpireTime();
 	    	}
-	    	ShapeRenderer renderer = new ShapeRenderer(); 
 	    	ProgressImage image = new ProgressImage(region,renderer,armyTrain.getPerTime(),expireTime);
 	    	image.setPosition(bgImage.getX() + image.getWidth()/2,  bgImage.getHeight() - image.getHeight() * index);
 	    	addActor(image);
@@ -172,6 +173,11 @@ public class DialogStage extends BaseStage {
 				armyDto.setAddAmount(0);
 			}
 		}
+	}
+	
+	public void dispose(){
+		super.dispose();
+		renderer.dispose();
 	}
 }
 

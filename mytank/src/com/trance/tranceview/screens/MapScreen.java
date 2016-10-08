@@ -45,6 +45,7 @@ import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
+import com.trance.trancetank.modules.dailyreward.handler.DailyRewardCmd;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
@@ -110,7 +111,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
-	 /** 4. 退出确认舞台 */
     private DialogStage dialogStage;
 	
 	public MapScreen(TranceGame game){
@@ -235,7 +235,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(isEdit()){
 			refreshCoolQueue();
 			refreshLeftBuiding();
-			refreshArmy();
+			dialogStage.refreshArmy();
 			stage.addActor(rename);
 			stage.addActor(toTrain);
 		}else{
@@ -499,105 +499,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			i++;
 		}
 	}
-	
-	private void refreshArmy(){
-		ConcurrentMap<Integer, ArmyDto> army_map = playerDto.getArmys();
-		if(army_map.isEmpty()){
-			return;
-		}
-		float side = width/10;
-		int i = 0;
-		for(Entry<Integer, ArmyDto> e : army_map.entrySet()){
-			final ArmyDto dto = e.getValue();
-			Army army = Army.armyPool.obtain();
-			int rate  = i % 5;
-			float x = rate * side + length + width/2;
-			int rate2 = i/5 + 1;
-			float y = control_height - (length * 2 + rate2 * length * 2 );
-			army.init(null,dto.getId(), x, y, length,length,null, font, dto);
-			stage.addActor(army);
-			i++;
-			
-			army.addListener(new ClickListener(){
 
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					long now = TimeUtil.getServerTime();
-					System.out.println("now: " +now);
-					System.out.println("dto.getExpireTime(): " + dto.getExpireTime());
-					if(dto.getExpireTime() == 0 || dto.getExpireTime() >  now){//未到期
-						trainArmy(dto);//
-					}else{
-						obtainArmy(dto);
-					}
-				}
-			});
-		}
-	}
-	
-	private void trainArmy(ArmyDto dto){
-		Map<String, Object> params = new HashMap<String, Object>();
-		int addAmount = 1;
-		params.put("armyId", dto.getId());
-		params.put("amount", addAmount);
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, params),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("network error");
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
-			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.ARMY,code);
-				return ;
-			}
-			Object valueResult = result.get("content");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
-			}
-			
-			long expireTime = (Long) result.get("expireTime");
-			dto.setExpireTime(expireTime);
-			dto.setAddAmount(addAmount);
-		}
-	}
-	
-	private void obtainArmy(ArmyDto dto) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("armyId", dto.getId());
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, params),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("network error");
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
-			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.ARMY,code);
-				return ;
-			}
-			Object valueResult = result.get("content");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
-			}
-			dto.setExpireTime(0);
-			dto.setAmout(dto.getAmout() + dto.getAddAmount());
-			dto.setAddAmount(0);
-		}
-		
-	}
 	
 	@SuppressWarnings("unchecked")
 	private void updateBuilding(BuildingDto dto){
@@ -666,7 +568,7 @@ public class MapScreen implements Screen ,InputProcessor{
 						for(ArmyDto armyDto : armyDtos){
 							MainActivity.player.addAmry(armyDto);
 						}
-						refreshArmy();
+						 dialogStage.refreshArmy();
 					}
 				}
 			}

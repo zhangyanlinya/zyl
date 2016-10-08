@@ -30,12 +30,7 @@ public enum ResponseStatus {
 	/**
 	 * 验证码错
 	 */
-	AUTH_CODE_ERROR(4),
-	
-	/**
-	 * 网络连接失败
-	 */
-	CONNECT_FAIL(5);
+	AUTH_CODE_ERROR(4);
 	
 	/**
 	 * 状态码

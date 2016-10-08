@@ -1,13 +1,28 @@
 package com.trance.tranceview.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.os.Handler;
 
+import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
+import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.player.handler.PlayerCmd;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.net.ClientService;
 import com.trance.tranceview.net.ClientServiceImpl;
 
 public class SocketUtil {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(SocketUtil.class);
 	
 	private static ClientService clientService;
 	
@@ -33,7 +48,13 @@ public class SocketUtil {
 	 */
 	
 	public static Response send(Request request, boolean showDialog) {
-		return clientService.send(request,showDialog);
+		Response response = clientService.send(request,showDialog);
+		if(response != null){ 
+			if(response.getStatus() == ResponseStatus.NO_RIGHT){
+				offlineReconnect();
+			}
+		}
+		return response;
 	}
 	
 	 /**
@@ -47,5 +68,36 @@ public class SocketUtil {
 	public static void destroy() {
 		clientService.destroy();
 	}
-
+	
+	public static boolean offlineReconnect() {
+//		String src = MainActivity.userName + MainActivity.loginKey;
+//		String LoginMD5 = null;
+//		try {
+//			LoginMD5 = CryptUtil.md5(src);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		//断线重连
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userName", MainActivity.userName);
+//		params.put("loginKey", LoginMD5); //TODO 暂时不校验
+		params.put("server", "1");
+		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			return false;
+		}
+		byte[] bytes = response.getValueBytes();
+		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
+		if(result != null){
+			if(result.getCode() != Result.SUCCESS && result.getCode()!= -10005){//-10005 重连被禁止
+				MsgUtil.showMsg(Module.PLAYER, result.getCode());
+				logger.error("断线重连失败 code =" + result.getCode());
+				return false;
+			}
+		}
+		logger.error("断线重连成功");
+		return true;
+	
+	}  
 }

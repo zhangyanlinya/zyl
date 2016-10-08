@@ -29,10 +29,14 @@ public class TranceGame extends Game {
 		mapScreen.setPlayerDto(MainActivity.player);
 		this.setScreen(mapScreen);
 	}
+	
+	public void reLogin(){
+		this.dispose();
+		this.setScreen(loginScreen);
+	}
 
 	@Override
 	public void dispose() {
-		loginScreen.dispose();
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
