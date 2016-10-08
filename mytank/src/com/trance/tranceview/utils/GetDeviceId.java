@@ -79,12 +79,12 @@ public class GetDeviceId {
 		String m_szWLANMAC=getWLANMAC();
 		String m_szBTMAC=getBTMAC();		
 		String m_szLongID=szImei+m_szDevIDShort+m_szAndroidID+m_szWLANMAC+m_szBTMAC;
-		Log.i("szImei","cccc|"+szImei);
-		Log.i("m_szDevIDShort","cccc|"+m_szDevIDShort);
-		Log.i("m_szAndroidID","cccc|"+m_szAndroidID);
-		Log.i("m_szWLANMAC","cccc|"+m_szWLANMAC);
-		Log.i("m_szBTMAC","cccc|"+m_szBTMAC);
-		Log.i("m_szLongID","cccc|"+m_szLongID);
+		Log.v("szImei","cccc|"+szImei);
+		Log.v("m_szDevIDShort","cccc|"+m_szDevIDShort);
+		Log.v("m_szAndroidID","cccc|"+m_szAndroidID);
+		Log.v("m_szWLANMAC","cccc|"+m_szWLANMAC);
+		Log.v("m_szBTMAC","cccc|"+m_szBTMAC);
+		Log.v("m_szLongID","cccc|"+m_szLongID);
 		// compute md5     
 		MessageDigest m = null;   
 		try {

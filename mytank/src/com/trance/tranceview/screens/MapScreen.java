@@ -493,7 +493,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			if(elementUpgrade == null){
 				continue;
 			}
-			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto);
+			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto.getExpireTime());
 			image.setPosition(side * i + length , control_height - length * 2 - ( i + 1) * 10 );
 			stage.addActor(image);
 			i++;

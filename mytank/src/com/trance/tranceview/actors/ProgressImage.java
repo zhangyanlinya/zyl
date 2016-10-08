@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.tranceview.utils.TimeUtil;
 
 public class ProgressImage extends Image{
@@ -16,13 +15,13 @@ public class ProgressImage extends Image{
 	
 	private long needTime;
 	
-	private CoolQueueDto dto;
+	private long expireTime;
 	
-	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, CoolQueueDto dto) {
+	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, long expireTime) {
 		super(region);
 		this.renderer = shapeRenderer;
 		this.needTime = needTime;
-		this.dto = dto;
+		this.expireTime = expireTime;
 	}
 	
 		
@@ -37,7 +36,7 @@ public class ProgressImage extends Image{
 //		System.out.println("服务器当前时间："+strBeginDate);
 //		String  expireTimeStr = dateTimeformat.format(new Date(dto.getExpireTime()));
 //		System.out.println("队列到期时间: "+expireTimeStr);
-		long leftTime = dto.getExpireTime() - TimeUtil.getServerTime();
+		long leftTime = expireTime - TimeUtil.getServerTime();
 		if(leftTime < 0){
 			leftTime = 0;
 		}
@@ -45,7 +44,7 @@ public class ProgressImage extends Image{
 		float percent = (needTime - leftTime) / (float)needTime;
 //		System.out.println(percent);
 		if(percent < 0){
-			percent = 0;
+			percent = 2;
 		}
 		if(percent >= 1.0){
 			this.remove();
