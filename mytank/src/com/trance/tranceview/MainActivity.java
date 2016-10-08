@@ -99,7 +99,7 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-//		userName ="大熊大战09";//TODO TEST;
+		userName ="CCC";//TODO TEST;
 		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  
@@ -151,7 +151,14 @@ public class MainActivity extends AndroidApplication {
 					
 					@Override
 					public void run() {
-						tranceGame.setScreen(tranceGame.worldScreen);
+						if(tranceGame.mapScreen.dialogArmyStage.isVisible()){
+							tranceGame.mapScreen.setArmyDailog(false);
+						}else
+						if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){
+							tranceGame.mapScreen.setBuildingDailog(false);
+						}else{
+							tranceGame.setScreen(tranceGame.worldScreen);
+						}
 					}
 				});
 				return;

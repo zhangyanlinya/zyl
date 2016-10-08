@@ -1,7 +1,6 @@
 package com.trance.tranceview.screens;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -31,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -39,11 +36,7 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
-import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.BuildingDto;
-import com.trance.trancetank.modules.building.model.BuildingType;
-import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
-import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
@@ -53,7 +46,6 @@ import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
-import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.actors.ResImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.UiType;
@@ -106,12 +98,12 @@ public class MapScreen implements Screen ,InputProcessor{
 //	private GestureController controller;
 	
 	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
-	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
+//	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
 	private InputMultiplexer inputMultiplexer;
-    private DialogArmyStage dialogArmyStage;
-    private DialogBuildingStage dialogBuildingStage;
+    public DialogArmyStage dialogArmyStage;
+    public DialogBuildingStage dialogBuildingStage;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -140,48 +132,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
-		attack = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
-		attack.setPosition(width - attack.getWidth() * 2, attack.getHeight());
-		attack.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				attack();
-			}
-		});
-		
-		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
-		toChange.setPosition(width - toChange.getWidth() * 4, toChange.getHeight());
-		toChange.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				change();
-			}
-		});
-		
-		toTrain = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
-		toTrain.setPosition(width - toTrain.getWidth() * 6, toTrain.getHeight());
-		toTrain.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				train();
-			}
-		});
-		
-		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
-		toUpBuilding.setPosition(width - toUpBuilding.getWidth() * 8, toUpBuilding.getHeight());
-		toUpBuilding.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				upBuilding();
-			}
-		});
+		int side = width/6;
 		
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
-		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
+		toWorld.setBounds(0, 0, side, side);
 		toWorld.addListener(new ClickListener(){
 			
 			@Override
@@ -193,16 +147,58 @@ public class MapScreen implements Screen ,InputProcessor{
 		//Rename
 		listener = new RenameInputListener();
 		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
-		rename.setBounds(10 + toWorld.getWidth() + toWorld.getWidth()/2, 10, rename.getWidth() + rename.getWidth()/2, rename.getHeight() + rename.getHeight()/2);
+		rename.setBounds(side * 1, 0, side, side);
 		rename.addListener(new ClickListener(){
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.input.getTextInput(listener, "请输入要改的名字", MainActivity.player.getPlayerName());
+				Gdx.input.getTextInput(listener, "请输入新名字", MainActivity.player.getPlayerName());
 			}
 		});
 		
-		coolQueues = playerDto.getCoolQueues();
+		toTrain = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toTrain.setBounds(side * 2, 0, side, side);
+		toTrain.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				train();
+			}
+		});
+		
+		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toUpBuilding.setBounds(side * 3, 0, side, side);
+		toUpBuilding.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				upBuilding();
+			}
+		});
+		
+
+		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
+		toChange.setBounds(side * 4, 0, side, side);
+		toChange.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				change();
+			}
+		});
+		
+		attack = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
+		attack.setBounds(side * 5, 0, side, side);
+		attack.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				attack();
+			}
+		});
+		
+		
+//		coolQueues = playerDto.getCoolQueues();
 		buildings = playerDto.getBuildings();
 	}
 	
@@ -243,7 +239,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		initMap();//初始化地图
 		if(isEdit()){
-			refreshCoolQueue();
+//			refreshCoolQueue();
 			refreshLeftBuiding();
 			dialogArmyStage.refresh();
 			dialogBuildingStage.refresh();
@@ -379,7 +375,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.draw();
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch,"可拖动建筑放置",0,control_height/2 -10);
+			font.draw(spriteBatch,"可拖动建筑放置",length,control_height -length * 2);
 		}
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch, MainActivity.player.getPlayerName(),0,height - length);
@@ -511,105 +507,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
-	private void refreshCoolQueue(){
-		for(Actor actor : stage.getActors()){
-			if(actor instanceof ProgressImage){
-				actor.remove();
-			}
-		}
-		
-		int i = 0;
-		float side = width / 10;
-		for(Entry<Integer, CoolQueueDto> e : coolQueues.entrySet()){
-			CoolQueueDto dto = e.getValue();
-			int id = dto.getId();
-			TextureRegion region = ResUtil.getInstance().getBuildingTextureRegion(id);
-			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, dto.getType());
-			if(elementUpgrade == null){
-				continue;
-			}
-			Image image = new ProgressImage(region,shapeRenderer,elementUpgrade.getTime(), dto.getExpireTime());
-			image.setPosition(side * i + length , control_height - length * 2 - ( i + 1) * 10 );
-			stage.addActor(image);
-			i++;
-		}
-	}
-
-	
-	@SuppressWarnings("unchecked")
-	private void updateBuilding(BuildingDto dto){
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("buildingId", dto.getId());
-		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
-			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.BUILDING,code);
-				return ;
-			}
-			Object valueResult = result.get("valueResultSet");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
-			}
-			
-			Object coolQueue = result.get("coolQueueDto");
-			if(coolQueue != null){
-				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
-				if(coolQueueDto != null){
-					coolQueues.put(coolQueueDto.getId(),coolQueueDto);
-					refreshCoolQueue();
-				}
-			}
-			
-			Object building = result.get("content");
-			if(building != null){
-				BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
-				if(playerBuildingDto != null){
-					BuildingDto pbd = buildings.get(playerBuildingDto.getId());
-					if(pbd != null){
-						pbd.setLevel(playerBuildingDto.getLevel());
-						if(pbd.getId() != BuildingType.OFFICE){
-							pbd.setAmount(playerBuildingDto.getLevel());
-						}
-					}
-				}
-			}
-			
-			//如果是主城升级的话  可能有新的建筑和部队
-			if(dto.getId() == BuildingType.OFFICE){
-				Object newBuildings  = result.get("newBuildingDtos");
-				if(newBuildings != null){
-				  List<BuildingDto> buildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), BuildingDto.class);
-				  if(buildingDtos != null){
-					  for(BuildingDto buildingDto : buildingDtos){
-						  buildings.put(buildingDto.getId(), buildingDto);
-					  }
-					  refreshLeftBuiding();
-				  }
-				}
-				
-				Object newArmys = result.get("newArmyDtos");
-				if(newArmys != null){
-					List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
-					if(armyDtos != null){
-						for(ArmyDto armyDto : armyDtos){
-							MainActivity.player.addAmry(armyDto);
-						}
-						 dialogArmyStage.refresh();
-					}
-				}
-			}
-		}
-	}
-	
 	private Building a ;
 	private float oldx;
 	private float oldy;
@@ -639,7 +536,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		Building b = (Building) actor;
 		if(actor.getY() <= control_height - length){//增加
 			BuildingDto dto = playerDto.getBuildings().get(b.type);
-			updateBuilding(dto);
+//			updateBuilding(dto);
 			if(dto.getLeftAmount() <= 0){//不够建造物
 				return false;
 			}

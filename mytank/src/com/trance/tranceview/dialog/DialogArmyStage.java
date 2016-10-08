@@ -48,7 +48,7 @@ public class DialogArmyStage extends BaseStage {
 
     private void init() {
     	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
-        bgImage.getColor().a = 0.1f;
+//        bgImage.getColor().a = 0.1f;
         bgImage.setWidth(getWidth() * 0.8f);
         bgImage.setHeight(getHeight() * 0.8f);
         bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
