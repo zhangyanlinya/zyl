@@ -246,6 +246,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			refreshCoolQueue();
 			refreshLeftBuiding();
 			dialogArmyStage.refresh();
+			dialogBuildingStage.refresh();
 			stage.addActor(rename);
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
@@ -402,8 +403,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(visible){
 			inputMultiplexer.addProcessor(dialogArmyStage);
 			inputMultiplexer.removeProcessor(stage);
+			inputMultiplexer.removeProcessor(this);
 		}else{
 			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogArmyStage);
 		}
 	}
@@ -413,8 +416,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(visible){
 			inputMultiplexer.addProcessor(dialogBuildingStage);
 			inputMultiplexer.removeProcessor(stage);
+			inputMultiplexer.removeProcessor(this);
 		}else{
 			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogBuildingStage);
 		}
 	}
@@ -857,6 +862,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		if(dialogArmyStage != null){
 			dialogArmyStage.dispose();
+		}
+		if(dialogBuildingStage != null){
+			dialogBuildingStage.dispose();
 		}
 	}
 

@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.trance.common.basedb.BasedbService;
@@ -49,7 +48,7 @@ public class DialogArmyStage extends BaseStage {
 
     private void init() {
     	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
-        bgImage.getColor().a = 0.9f;
+        bgImage.getColor().a = 0.1f;
         bgImage.setWidth(getWidth() * 0.8f);
         bgImage.setHeight(getHeight() * 0.8f);
         bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
@@ -65,7 +64,7 @@ public class DialogArmyStage extends BaseStage {
 			}
         });
         addActor(close);
-        bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
+//        bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
 //        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
         
         renderer = new ShapeRenderer();
