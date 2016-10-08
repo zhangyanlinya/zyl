@@ -37,12 +37,12 @@ import com.trance.tranceview.utils.TimeUtil;
 /**
  *
  */
-public class DialogStage extends BaseStage {
+public class DialogArmyStage extends BaseStage {
 
     private Image bgImage;
     private ShapeRenderer renderer;
 
-    public DialogStage(TranceGame tranceGame) {
+    public DialogArmyStage(TranceGame tranceGame) {
         super(tranceGame);
         init();
     }
@@ -61,7 +61,7 @@ public class DialogStage extends BaseStage {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				getTranceGame().mapScreen.setShowDailogStage(false);
+				getTranceGame().mapScreen.setArmyDailog(false);
 			}
         });
         addActor(close);
@@ -71,7 +71,7 @@ public class DialogStage extends BaseStage {
         renderer = new ShapeRenderer();
     }
     
-    public void refreshArmy(){
+    public void refresh(){
     	Collection<ArmyTrain> armyTrains = BasedbService.listAll(ArmyTrain.class);
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
     	int index = 0;

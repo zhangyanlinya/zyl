@@ -37,7 +37,6 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
-import com.trance.trancetank.modules.army.handler.ArmyCmd;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
 import com.trance.trancetank.modules.building.handler.BuildingCmd;
@@ -45,7 +44,6 @@ import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
-import com.trance.trancetank.modules.dailyreward.handler.DailyRewardCmd;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
@@ -53,14 +51,14 @@ import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.trancetank.modules.world.handler.WorldCmd;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.actors.Army;
 import com.trance.tranceview.actors.Building;
 import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.actors.ResImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.UiType;
-import com.trance.tranceview.dialog.DialogStage;
+import com.trance.tranceview.dialog.DialogArmyStage;
+import com.trance.tranceview.dialog.DialogBuildingStage;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.FontUtil;
@@ -68,7 +66,6 @@ import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.SocketUtil;
-import com.trance.tranceview.utils.TimeUtil;
 
 public class MapScreen implements Screen ,InputProcessor{
 
@@ -99,6 +96,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image toWorld;
 	private Image toChange;
 	private Image toTrain;
+	private Image toUpBuilding;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -111,7 +109,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
-    private DialogStage dialogStage;
+	private InputMultiplexer inputMultiplexer;
+    private DialogArmyStage dialogArmyStage;
+    private DialogBuildingStage dialogBuildingStage;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -135,7 +135,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer(); 
 		
-		dialogStage = new DialogStage(game);
+		dialogArmyStage = new DialogArmyStage(game);
+		dialogBuildingStage = new DialogBuildingStage(game);
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
@@ -166,6 +167,16 @@ public class MapScreen implements Screen ,InputProcessor{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				train();
+			}
+		});
+		
+		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toUpBuilding.setPosition(width - toUpBuilding.getWidth() * 8, toUpBuilding.getHeight());
+		toUpBuilding.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				upBuilding();
 			}
 		});
 		
@@ -210,7 +221,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		//文字 
 		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		
-		noArmy = false;
 		stage.clear();
 		float w = bg.getWidth();
 		float h = bg.getHeight();
@@ -235,9 +245,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(isEdit()){
 			refreshCoolQueue();
 			refreshLeftBuiding();
-			dialogStage.refreshArmy();
+			dialogArmyStage.refresh();
 			stage.addActor(rename);
 			stage.addActor(toTrain);
+			stage.addActor(toUpBuilding);
 		}else{
 			stage.addActor(toChange);
 			stage.addActor(attack);
@@ -246,7 +257,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		stage.addActor(toWorld);
 		
-		InputMultiplexer inputMultiplexer = new InputMultiplexer(); 
+		inputMultiplexer = new InputMultiplexer(); 
 //		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 //		camera.position.set(width/2, height/2, 0);
 //		GestureDetector gestureHandler = new GestureDetector(controller);
@@ -264,7 +275,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		return(playerDto.isMyself());//
 	}
 	
-	boolean noArmy = false;
 	
 	/**
 	 * attack other player
@@ -272,7 +282,6 @@ public class MapScreen implements Screen ,InputProcessor{
 	private void attack(){
 		Map<Integer,ArmyDto> armys = MainActivity.player.getArmys();
 		if(armys == null || armys.isEmpty()){
-			noArmy = true;
 			return;
 		}
 		
@@ -351,7 +360,11 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	private void train(){
-		setShowDailogStage(true);
+		setArmyDailog(true);
+	}
+	
+	private void upBuilding(){
+		setBuildingDailog(true);
 	}
 	
 	private void toWorld(){
@@ -365,7 +378,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		stage.draw();
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch,"可拖动建筑放置",0,height -10);
+			font.draw(spriteBatch,"可拖动建筑放置",0,control_height/2 -10);
 		}
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch, MainActivity.player.getPlayerName(),0,height - length);
@@ -374,19 +387,36 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		spriteBatch.end();
 		
-		if(dialogStage.isVisible()){
-			dialogStage.act();
-			dialogStage.draw();
+		if(dialogArmyStage.isVisible()){
+			dialogArmyStage.act();
+			dialogArmyStage.draw();
+		}
+		if(dialogBuildingStage.isVisible()){
+			dialogBuildingStage.act();
+			dialogBuildingStage.draw();
 		}
 	}
 	
-	public void setShowDailogStage(boolean visible) {
-		dialogStage.setVisible(visible);
-        if (dialogStage.isVisible()) {
-            Gdx.input.setInputProcessor(dialogStage);
-        } else {
-            Gdx.input.setInputProcessor(stage);
-        }
+	public void setArmyDailog(boolean visible) {
+		dialogArmyStage.setVisible(visible);
+		if(visible){
+			inputMultiplexer.addProcessor(dialogArmyStage);
+			inputMultiplexer.removeProcessor(stage);
+		}else{
+			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.removeProcessor(dialogArmyStage);
+		}
+	}
+	
+	public void setBuildingDailog(boolean visible) {
+		dialogBuildingStage.setVisible(visible);
+		if(visible){
+			inputMultiplexer.addProcessor(dialogBuildingStage);
+			inputMultiplexer.removeProcessor(stage);
+		}else{
+			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.removeProcessor(dialogBuildingStage);
+		}
 	}
 	
 	
@@ -568,7 +598,7 @@ public class MapScreen implements Screen ,InputProcessor{
 						for(ArmyDto armyDto : armyDtos){
 							MainActivity.player.addAmry(armyDto);
 						}
-						 dialogStage.refreshArmy();
+						 dialogArmyStage.refresh();
 					}
 				}
 			}
@@ -825,8 +855,8 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(font != null){
 			font.dispose();
 		}
-		if(dialogStage != null){
-			dialogStage.dispose();
+		if(dialogArmyStage != null){
+			dialogArmyStage.dispose();
 		}
 	}
 
