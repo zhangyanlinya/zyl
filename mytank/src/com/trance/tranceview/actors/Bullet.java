@@ -111,12 +111,12 @@ public class Bullet extends GameActor{
 
 	@Override
 	protected void fire() {
-		
+		//do nothing
 	}
 
 	@Override
 	protected void move() {
-		
+		//do nothing
 	}
 }
 	
