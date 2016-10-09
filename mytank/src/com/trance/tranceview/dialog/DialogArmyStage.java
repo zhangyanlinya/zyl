@@ -76,7 +76,7 @@ public class DialogArmyStage extends BaseStage {
     	this.setVisible(true);
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
     	int i = 0;
-    	float side = bgImage.getWidth() / 4;
+    	float side = bgImage.getWidth() / armyTrains.size();
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
@@ -87,7 +87,7 @@ public class DialogArmyStage extends BaseStage {
 	    	ProgressImage image = new ProgressImage(region,renderer,armyTrain.getPerTime(),expireTime);
 	    	image.setWidth(side);
 	    	image.setHeight(side);
-	    	image.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 *  -side * i);
+	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 * - side * i);
 	    	addActor(image);
 	    	i ++;
 	    	image.addListener(new ClickListener(){
@@ -95,8 +95,6 @@ public class DialogArmyStage extends BaseStage {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					long now = TimeUtil.getServerTime();
-					System.out.println("now: " +now);
-					System.out.println("dto.getExpireTime(): " + armyDto.getExpireTime());
 					if(armyDto != null && (armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now)){//未到期
 						trainArmy(armyTrain.getId());//
 					}else{
