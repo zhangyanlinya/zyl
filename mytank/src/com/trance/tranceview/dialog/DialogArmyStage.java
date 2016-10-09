@@ -40,6 +40,7 @@ public class DialogArmyStage extends BaseStage {
 
     private Image bgImage;
     private ShapeRenderer renderer;
+    private Collection<ArmyTrain> armyTrains;
 
     public DialogArmyStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -49,8 +50,8 @@ public class DialogArmyStage extends BaseStage {
     private void init() {
     	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
 //        bgImage.getColor().a = 0.1f;
-        bgImage.setWidth(getWidth() * 0.8f);
-        bgImage.setHeight(getHeight() * 0.8f);
+        bgImage.setWidth(getWidth() * 0.6f);
+        bgImage.setHeight(getHeight() * 0.5f);
         bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
         addActor(bgImage);
         
@@ -68,12 +69,14 @@ public class DialogArmyStage extends BaseStage {
 //        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
         
         renderer = new ShapeRenderer();
+        armyTrains = BasedbService.listAll(ArmyTrain.class);
     }
     
-    public void refresh(){
-    	Collection<ArmyTrain> armyTrains = BasedbService.listAll(ArmyTrain.class);
+    public void show(){
+    	this.setVisible(true);
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
-    	int index = 0;
+    	int i = 0;
+    	float side = bgImage.getWidth() / 4;
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
@@ -82,9 +85,11 @@ public class DialogArmyStage extends BaseStage {
 	    		expireTime = armyDto.getExpireTime();
 	    	}
 	    	ProgressImage image = new ProgressImage(region,renderer,armyTrain.getPerTime(),expireTime);
-	    	image.setPosition(bgImage.getX() + image.getWidth()/2,  bgImage.getHeight() - image.getHeight() * index);
+	    	image.setWidth(side);
+	    	image.setHeight(side);
+	    	image.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 *  -side * i);
 	    	addActor(image);
-	    	index += 2;
+	    	i ++;
 	    	image.addListener(new ClickListener(){
 
 				@Override
@@ -102,6 +107,9 @@ public class DialogArmyStage extends BaseStage {
     	}
     }
     
+    public void hide(){
+    	this.setVisible(false);
+    }
     
     private void trainArmy(int armyId){
 		Map<String, Object> params = new HashMap<String, Object>();

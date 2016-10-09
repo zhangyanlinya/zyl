@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -32,9 +34,11 @@ import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
+import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.base.BaseStage;
+import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -46,7 +50,8 @@ public class DialogBuildingStage extends BaseStage {
 
     private Image bgImage;
     private ShapeRenderer renderer;
-    private Map<Integer,ProgressImage> images = new HashMap<Integer,ProgressImage>();
+    private BitmapFont font;
+    private Collection<CityElement> buildings ;
 
     public DialogBuildingStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -71,30 +76,25 @@ public class DialogBuildingStage extends BaseStage {
 			}
         });
         addActor(close);
-//        bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
-        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
-        
         renderer = new ShapeRenderer();
+        font = FontUtil.getInstance().getFont();
+        buildings = BasedbService.listAll(CityElement.class);
     }
     
-    public void refresh(){
-    	Collection<CityElement> buildings = BasedbService.listAll(CityElement.class);
-    	ConcurrentMap<Integer, CoolQueueDto> cool_map = MainActivity.player.getCoolQueues();
+//    public void show(){
+//    	bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
+//    	bgImage.addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
+//    }
+//    
+    public void show(){
+    	this.setVisible(true);
+    	ConcurrentMap<Integer, BuildingDto> building_map = MainActivity.player.getBuildings();
     	int i = 0;
     	float side = bgImage.getWidth() / 4;
     	for(final CityElement building : buildings){
-			TextureRegion region = ResUtil.getInstance().getBuildingTextureRegion(building.getId());
-			ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, building.getId());
-			if(elementUpgrade == null){
-				continue;
-			}
-			CoolQueueDto dto = cool_map.get(building.getId());
-			long expireTime = 0;
-			if(dto != null){
-				expireTime = dto.getExpireTime();
-			}
-			
-			ProgressImage image = new ProgressImage(region,renderer,elementUpgrade.getTime(), expireTime);
+			Texture texture = ResUtil.getInstance().getBuildingTexture(building.getId());
+			BuildingDto dto = building_map.get(building.getId());
+			BuildingImage image = new BuildingImage(texture,font,dto);
 			image.setWidth(side);
 			image.setHeight(side);
 			
@@ -107,7 +107,6 @@ public class DialogBuildingStage extends BaseStage {
 			
 			image.setPosition(x,y);
 			addActor(image);
-			images.put(building.getId(), image);
 			i ++;
 			
 			image.addListener(new ClickListener(){
@@ -118,6 +117,10 @@ public class DialogBuildingStage extends BaseStage {
 				}
 			});
     	}
+    }
+    
+    public void hide(){
+    	this.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -149,10 +152,14 @@ public class DialogBuildingStage extends BaseStage {
 				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
 				if(coolQueueDto != null){
 					MainActivity.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-//					refreshCoolQueue();
-					ProgressImage image = images.get(buildingId);
-					image.setExpireTime(coolQueueDto.getExpireTime());
 					
+					ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, buildingId);
+					if(elementUpgrade != null){
+						Texture texture = ResUtil.getInstance().getBuildingTexture(buildingId);
+						ProgressImage image = new ProgressImage(new TextureRegion(texture), renderer, elementUpgrade.getTime(), coolQueueDto.getExpireTime());
+						image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
+						addActor(image);
+					}
 				}
 			}
 			
@@ -200,6 +207,7 @@ public class DialogBuildingStage extends BaseStage {
 	public void dispose(){
 		super.dispose();
 		renderer.dispose();
+		font.dispose();
 	}
 }
 

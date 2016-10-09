@@ -45,10 +45,10 @@ public class ProgressImage extends Image{
 		float percent = (needTime - leftTime) / (float)needTime;
 //		System.out.println(percent);
 		if(percent < 0){
-			percent = 2;
+			percent = 1;
 		}
 		if(percent >= 1.0){
-			percent= 0;
+			this.remove();
 		}
 			
 		renderer.setColor(Color.BLUE);

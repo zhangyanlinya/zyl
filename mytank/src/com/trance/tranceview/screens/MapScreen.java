@@ -239,10 +239,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		initMap();//初始化地图
 		if(isEdit()){
-//			refreshCoolQueue();
 			refreshLeftBuiding();
-			dialogArmyStage.refresh();
-			dialogBuildingStage.refresh();
 			stage.addActor(rename);
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
@@ -395,12 +392,13 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	public void setArmyDailog(boolean visible) {
-		dialogArmyStage.setVisible(visible);
 		if(visible){
+			dialogArmyStage.show();
 			inputMultiplexer.addProcessor(dialogArmyStage);
 			inputMultiplexer.removeProcessor(stage);
 			inputMultiplexer.removeProcessor(this);
 		}else{
+			dialogArmyStage.hide();
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogArmyStage);
@@ -408,12 +406,13 @@ public class MapScreen implements Screen ,InputProcessor{
 	}
 	
 	public void setBuildingDailog(boolean visible) {
-		dialogBuildingStage.setVisible(visible);
 		if(visible){
+			dialogBuildingStage.show();
 			inputMultiplexer.addProcessor(dialogBuildingStage);
 			inputMultiplexer.removeProcessor(stage);
 			inputMultiplexer.removeProcessor(this);
 		}else{
+			dialogBuildingStage.hide();
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogBuildingStage);
@@ -496,6 +495,9 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 		for(Entry<Integer, BuildingDto> e : buildings.entrySet()){
 			BuildingDto dto = e.getValue();
+			if(dto.getLeftAmount() <= 0){
+				continue;
+			}
 			Building buiding = Building.buildingPool.obtain();
 			int rate  = i % 5;
 			float x = rate * side + length;

@@ -133,7 +133,11 @@ public class ResUtil extends AssetManager{
     }
 	
 	public TextureRegion getBuildingTextureRegion(int value) {
-		return new TextureRegion(this.get("building/"+value+".png",Texture.class));
+		return new TextureRegion(getBuildingTexture(value));
+	}
+	
+	public Texture getBuildingTexture(int value) {
+		return this.get("building/"+value+".png",Texture.class);
 	}
 	
 	public TextureRegion getArmyTextureRegion(int armyId) {
