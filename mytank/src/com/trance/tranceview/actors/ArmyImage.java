@@ -2,59 +2,65 @@ package com.trance.tranceview.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.trance.trancetank.modules.army.model.ArmyDto;
+import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.TimeUtil;
 
-public class ProgressImage extends Image{
+public class ArmyImage extends Image {
+
 	
 	private ShapeRenderer renderer;
 	
 	private long needTime;
 	
-	private long expireTime;
+	private ArmyDto armyDto;
 	
-	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, long expireTime) {
+	private BitmapFont font;
+	
+	public ArmyImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, ArmyDto armyDto) {
 		super(region);
 		this.renderer = shapeRenderer;
 		this.needTime = needTime;
-		this.expireTime = expireTime;
+		this.armyDto = armyDto;
+		this.font = FontUtil.getSingleFont();
 	}
 	
 		
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		
 		batch.end();
-//		long serverTime = TimeUtil.getServerTime();
-//		DateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		String strBeginDate = dateTimeformat.format(new Date(serverTime));
-//		System.out.println("服务器当前时间："+strBeginDate);
-//		String  expireTimeStr = dateTimeformat.format(new Date(dto.getExpireTime()));
-//		System.out.println("队列到期时间: "+expireTimeStr);
-		
+		long expireTime = 0;
+		if(armyDto != null){
+			expireTime = armyDto.getExpireTime();
+			batch.begin();
+			font.draw(batch, "level: " + armyDto.getLevel() +" amount:" + armyDto.getAmout() + " add: " + armyDto.getAddAmount(),
+					this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 + 12 );
+			batch.end();
+		}
 		long leftTime = expireTime - TimeUtil.getServerTime();
 		if(leftTime < 0){
 			leftTime = 0;
 		}
 		
 		float percent = (needTime - leftTime) / (float)needTime;
-//		System.out.println(percent);
 		if(percent < 0){
 			percent = 0;
 		}
 		
 		if(percent >= 1.0){
-			this.remove();
+			percent = 0;
 		}
 			
 		renderer.setColor(Color.BLUE);
 		renderer.begin(ShapeType.Line);
-		renderer.rect(this.getX() + getWidth() + 10, this.getY(), Gdx.graphics.getWidth() / 4, 40);
+		renderer.rect(this.getX() + getWidth() + 10, this.getY() +2, Gdx.graphics.getWidth() / 4, 40);
 		renderer.end();
 		if(percent < 0.2){ 
 			renderer.setColor(Color.RED);
@@ -64,26 +70,9 @@ public class ProgressImage extends Image{
 			renderer.setColor(Color.GREEN);
 		}
 		renderer.begin(ShapeType.Filled);
-		renderer.rect(2 + this.getX() + getWidth() + 10, this.getY() + 4, percent * Gdx.graphics.getWidth()/4 - 6, 34);
+		renderer.rect(2 + this.getX() + getWidth() + 10, this.getY() + 6, percent * Gdx.graphics.getWidth()/4 -6, 34);
 		renderer.end();
 		batch.begin();
 	}
 
-
-	public long getNeedTime() {
-		return needTime;
-	}
-
-	public void setNeedTime(long needTime) {
-		this.needTime = needTime;
-	}
-
-	public long getExpireTime() {
-		return expireTime;
-	}
-
-	public void setExpireTime(long expireTime) {
-		this.expireTime = expireTime;
-	}
-	
 }

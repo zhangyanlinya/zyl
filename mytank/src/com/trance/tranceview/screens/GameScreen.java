@@ -183,7 +183,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
-		font = FontUtil.getInstance().getFont(35, "点赞倒计时：", Color.RED);
+		font = FontUtil.getFont(35, "点赞倒计时：", Color.RED);
 //		music = AssetsManager.getInstance().get("audio/begin.mp3");
 //		music.play();
 		width = Gdx.graphics.getWidth(); // 720

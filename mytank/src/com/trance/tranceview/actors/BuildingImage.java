@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.trance.trancetank.modules.building.model.BuildingDto;
+import com.trance.tranceview.utils.FontUtil;
 
 public class BuildingImage extends Image{
 	
@@ -12,10 +13,10 @@ public class BuildingImage extends Image{
 	
 	private BuildingDto dto ;
 	
-	public BuildingImage(Texture texture, BitmapFont font, BuildingDto dto) {
+	public BuildingImage(Texture texture, BuildingDto dto) {
 		super(texture);
-		this.font = font;
 		this.dto = dto;
+		font = FontUtil.getSingleFont();
 	}
 
 	@Override

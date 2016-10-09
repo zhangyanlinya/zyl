@@ -7,6 +7,7 @@ import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.RewardResult;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.tranceview.MainActivity;
+import com.trance.tranceview.utils.MsgUtil;
 
 public class RewardService {
 	
@@ -17,27 +18,33 @@ public class RewardService {
 			return;
 		}
 		
-		PlayerDto dto = MainActivity.player;
+		PlayerDto player = MainActivity.player;
+		StringBuilder sb = new StringBuilder("");
 		for(RewardResult<?> rewardResult : list){
 			RewardType type = RewardType.valueOf(rewardResult.getType());
 			switch(type){
 			case GOLD:
-				long gold = dto.getGold();
-				dto.setGold(gold + rewardResult.getActualCount());
+				long gold = player.getGold();
+				player.setGold(gold + rewardResult.getActualCount());
+				sb.append("金币 : ");
 				break;
 			case SILVER:
-				long silver = dto.getSilver();
-				dto.setSilver(silver + rewardResult.getActualCount());
+				long silver = player.getSilver();
+				player.setSilver(silver + rewardResult.getActualCount());
+				sb.append("银币 : ");
 				break;
 			case FOODS:
-				long foods = dto.getFoods();
-				dto.setFoods(foods + rewardResult.getActualCount());
+				long foods = player.getFoods();
+				player.setFoods(foods + rewardResult.getActualCount());
+				sb.append("粮食 : ");
 				break;
 			default:
 				break;
 			}
+			sb.append(rewardResult.getActualCount() + " ");
 		}
 		
+		MsgUtil.showMsg(sb.toString());
 		//TODO 
 	}
 }

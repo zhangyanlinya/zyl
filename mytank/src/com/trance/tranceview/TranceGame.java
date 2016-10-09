@@ -5,6 +5,8 @@ import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.MapScreen;
 import com.trance.tranceview.screens.WorldScreen;
+import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.ResUtil;
 
 public class TranceGame extends Game {
 	
@@ -29,17 +31,16 @@ public class TranceGame extends Game {
 		mapScreen.setPlayerDto(MainActivity.player);
 		this.setScreen(mapScreen);
 	}
-	
-	public void reLogin(){
-		this.dispose();
-		this.setScreen(loginScreen);
-	}
 
+	
 	@Override
 	public void dispose() {
+		loginScreen.dispose();
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
+		FontUtil.dispose();
+		ResUtil.getInstance().dispose();
 		super.dispose();
 	}
 }

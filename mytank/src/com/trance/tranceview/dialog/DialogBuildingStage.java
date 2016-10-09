@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -36,7 +35,6 @@ import com.trance.tranceview.actors.BuildingImage;
 import com.trance.tranceview.actors.ProgressImage;
 import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.base.BaseStage;
-import com.trance.tranceview.utils.FontUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.SocketUtil;
@@ -48,7 +46,6 @@ public class DialogBuildingStage extends BaseStage {
 
     private Image bgImage;
     private ShapeRenderer renderer;
-    private BitmapFont font;
     private Collection<CityElement> buildings ;
 
     public DialogBuildingStage(TranceGame tranceGame) {
@@ -75,7 +72,6 @@ public class DialogBuildingStage extends BaseStage {
         });
         addActor(close);
         renderer = new ShapeRenderer();
-        font = FontUtil.getInstance().getFont();
         buildings = BasedbService.listAll(CityElement.class);
     }
     
@@ -92,7 +88,7 @@ public class DialogBuildingStage extends BaseStage {
     	for(final CityElement building : buildings){
 			Texture texture = ResUtil.getInstance().getBuildingTexture(building.getId());
 			BuildingDto dto = building_map.get(building.getId());
-			BuildingImage image = new BuildingImage(texture,font,dto);
+			BuildingImage image = new BuildingImage(texture,dto);
 			image.setWidth(side);
 			image.setHeight(side);
 			
@@ -205,7 +201,6 @@ public class DialogBuildingStage extends BaseStage {
 	public void dispose(){
 		super.dispose();
 		renderer.dispose();
-		font.dispose();
 	}
 }
 

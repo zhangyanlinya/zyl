@@ -12,9 +12,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitm
 
 public class FontUtil {
 	
-	private static FontUtil fontUtil;
-	private FreeTypeFontGenerator generator;
-	private Set<String> set = new HashSet<String>();
+	private static BitmapFont font;
+	private static FreeTypeFontGenerator generator;
+	private final static Set<String> set = new HashSet<String>();
 	private static String[] Surname= {"赵","钱","孙","李","周","吴","郑","王","冯","陈","褚","卫","蒋","沈","韩","杨","朱","秦","尤","许",
 			  "何","吕","施","张","孔","曹","严","华","金","魏","陶","姜","戚","谢","邹","柏","水","窦","章","云","苏","潘","葛","奚","范","彭",
 			  "鲁","韦","昌","马","苗","凤","花","方","俞","任","袁","柳","酆","鲍","史","唐","费","廉","岑","薛","雷","贺","倪","汤","滕","殷",
@@ -31,11 +31,12 @@ public class FontUtil {
 			  "闾","辜","纵","侴","万俟","司马","上官","欧阳","夏侯","诸葛","闻人","东方","赫连","皇甫","羊舌","尉迟","公羊","澹台","公冶","宗正",
 			  "濮阳","淳于","单于","太叔","申屠","公孙","仲孙","轩辕","令狐","钟离","宇文","长孙","慕容","鲜于","闾丘","司徒","司空","兀官","司寇"};
 	
-	public static FontUtil getInstance(){
-		if(fontUtil == null){
-			fontUtil = new FontUtil();
+	
+	public static BitmapFont getSingleFont(){
+		if(font == null){
+			font = getFont();
 		}
-		return fontUtil;
+		return font;
 	}
 	
 	/**
@@ -46,7 +47,7 @@ public class FontUtil {
 	 * @param color   font color
 	 * @return
 	 */
-	public BitmapFont getFont(int size, String append, Color color){
+	public static BitmapFont getFont(int size, String append, Color color){
 		set.clear();
 		for(int i = 0; i < append.length(); i++){
 			char c = append.charAt(i);
@@ -68,7 +69,7 @@ public class FontUtil {
 		return font;
 	}
 	
-	public BitmapFont getFont(){
+	public static BitmapFont getFont(){
 		BitmapFont font = getFont(25);
 		font.setColor(Color.WHITE);
 		return font;
@@ -80,7 +81,7 @@ public class FontUtil {
 		return font;
 	}
 	
-	public BitmapFont getFont(int size){
+	public static BitmapFont getFont(int size){
 		generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("font/font.ttf"));
 		FreeTypeBitmapFontData fontData = generator.generateData(size,
@@ -118,4 +119,9 @@ public class FontUtil {
 		return str;
 	}
 	
+	public static void dispose(){
+		if(font != null){
+			font.dispose();
+		}
+	}
 }

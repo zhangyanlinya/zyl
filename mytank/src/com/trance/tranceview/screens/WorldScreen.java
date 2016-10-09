@@ -122,7 +122,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			}
 		}
 		
-		font = FontUtil.getInstance().getFont(25, sb.toString(), Color.WHITE);;
+		font = FontUtil.getFont(25, sb.toString(), Color.WHITE);;
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(sw, sh);
@@ -210,7 +210,7 @@ public class WorldScreen implements Screen, InputProcessor {
 						if(dto != null ){
 							if( ox == 5 && oy == 5){
 								dto.setMyself(true);
-								location.setColor(255, 165, 0, 1);
+								location.setColor(255, 255, 0, 1);
 								gotoHome();
 							}else{//spy get the map
 								HashMap<String,Object> params = new HashMap<String,Object>();
@@ -218,7 +218,6 @@ public class WorldScreen implements Screen, InputProcessor {
 								params.put("y", oy);
 								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, params),true);
 								if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-									MsgUtil.showMsg("network error!");
 									return;
 								}
 								byte[] bytes = response.getValueBytes();
@@ -249,7 +248,6 @@ public class WorldScreen implements Screen, InputProcessor {
 							params.put("y", oy);
 							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params),true);
 							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-								MsgUtil.showMsg("network error!");
 								return;
 							}
 							byte[] bytes = response.getValueBytes();
@@ -277,8 +275,8 @@ public class WorldScreen implements Screen, InputProcessor {
 		
 		//itembox
 		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
-		int x = RandomUtil.betweenValue(20, 480);
-		int y = RandomUtil.betweenValue(20, 800);
+		int x = RandomUtil.betweenValue(20, (int)sw -20);
+		int y = RandomUtil.betweenValue(20, (int)sh -20);
 		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);
 		stage.addActor(dailyReward);
 		
@@ -288,7 +286,6 @@ public class WorldScreen implements Screen, InputProcessor {
 			public void clicked(InputEvent event, float x, float y) {
 				Response response = SocketUtil.send(Request.valueOf(Module.DAILY_REWARD, DailyRewardCmd.GET_DAILY_REWARD, null),true);
 				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-					MsgUtil.showMsg("网络连接失败");
 					return;
 				}
 				

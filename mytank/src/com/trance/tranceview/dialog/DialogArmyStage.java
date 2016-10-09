@@ -25,7 +25,7 @@ import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
-import com.trance.tranceview.actors.ProgressImage;
+import com.trance.tranceview.actors.ArmyImage;
 import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.base.BaseStage;
 import com.trance.tranceview.utils.MsgUtil;
@@ -41,6 +41,7 @@ public class DialogArmyStage extends BaseStage {
     private Image bgImage;
     private ShapeRenderer renderer;
     private Collection<ArmyTrain> armyTrains;
+    
 
     public DialogArmyStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -75,16 +76,12 @@ public class DialogArmyStage extends BaseStage {
     public void show(){
     	this.setVisible(true);
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
-    	int i = 0;
-    	float side = bgImage.getWidth() / armyTrains.size();
+    	int i = 1;
+    	float side = bgImage.getHeight() / armyTrains.size();
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
-	    	long expireTime = 0;
-	    	if(armyDto != null){
-	    		expireTime = armyDto.getExpireTime();
-	    	}
-	    	ProgressImage image = new ProgressImage(region,renderer,armyTrain.getPerTime(),expireTime);
+	    	ArmyImage image = new ArmyImage(region,renderer,armyTrain.getPerTime(),armyDto);
 	    	image.setWidth(side);
 	    	image.setHeight(side);
 	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i);
@@ -116,7 +113,6 @@ public class DialogArmyStage extends BaseStage {
 		params.put("amount", addAmount);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, params),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("network error");
 			return;
 		}
 		
@@ -151,7 +147,6 @@ public class DialogArmyStage extends BaseStage {
 		params.put("armyId", armyId);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, params),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("network error");
 			return;
 		}
 		

@@ -205,13 +205,5 @@ public class ResUtil extends AssetManager{
 
     public void dispose() {
     	super.dispose();
-    	if(textureAtlas != null){
-    		textureAtlas.dispose();
-    	}
-    	if(textureAtlas2 != null){
-    		textureAtlas2.dispose();
-    	}
     }
-
-
 }

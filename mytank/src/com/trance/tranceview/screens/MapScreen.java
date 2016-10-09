@@ -215,7 +215,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getInstance().getFont(30, "可拖动建筑放置等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getFont(30, "可拖动建筑放置等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
 		
 		stage.clear();
 		float w = bg.getWidth();
@@ -285,7 +285,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("网络连接失败");
 			return;
 		}
 		
@@ -320,7 +319,6 @@ public class MapScreen implements Screen ,InputProcessor{
 		Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("网络连接失败");
 			return;
 		}
 		byte[] bytes = response.getValueBytes();

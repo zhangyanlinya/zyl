@@ -53,6 +53,8 @@ public class SocketUtil {
 			if(response.getStatus() == ResponseStatus.NO_RIGHT){
 				offlineReconnect();
 			}
+		}else{
+			MsgUtil.showMsg("网络连接失败！");
 		}
 		return response;
 	}
