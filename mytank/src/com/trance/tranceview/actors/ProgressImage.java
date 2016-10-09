@@ -49,12 +49,12 @@ public class ProgressImage extends Image{
 		}
 		
 		if(percent >= 1.0){
-			percent = 1.0f;
+			percent = 0.1f;
 		}
 			
 		renderer.setColor(Color.BLUE);
 		renderer.begin(ShapeType.Line);
-		renderer.rect(this.getX() + getWidth() + 10, this.getY() + getHeight()/2, Gdx.graphics.getWidth() / 4, 40);
+		renderer.rect(this.getX() + getWidth() + 10, this.getY(), Gdx.graphics.getWidth() / 4, 40);
 		renderer.end();
 		if(percent < 0.2){ 
 			renderer.setColor(Color.RED);
@@ -64,7 +64,7 @@ public class ProgressImage extends Image{
 			renderer.setColor(Color.GREEN);
 		}
 		renderer.begin(ShapeType.Filled);
-		renderer.rect(2 + this.getX() + getWidth() + 10, this.getY() + getHeight()/2, percent * Gdx.graphics.getWidth()/4 - 6, 34);
+		renderer.rect(2 + this.getX() + getWidth() + 10, this.getY(), percent * Gdx.graphics.getWidth()/4 - 6, 34);
 		renderer.end();
 		batch.begin();
 	}

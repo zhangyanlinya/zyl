@@ -87,7 +87,7 @@ public class DialogArmyStage extends BaseStage {
 	    	ProgressImage image = new ProgressImage(region,renderer,armyTrain.getPerTime(),expireTime);
 	    	image.setWidth(side);
 	    	image.setHeight(side);
-	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 * - side * i);
+	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i);
 	    	addActor(image);
 	    	i ++;
 	    	image.addListener(new ClickListener(){
