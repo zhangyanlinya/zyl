@@ -52,6 +52,11 @@ public class PlayerDto{
 	private long up;
 	
 	/**
+	 * 经验
+	 */
+	private long experience;
+	
+	/**
 	 * 注册时间
 	 */
 	public long registerTime;
@@ -147,6 +152,14 @@ public class PlayerDto{
 
 	public void setUp(long up) {
 		this.up = up;
+	}
+
+	public long getExperience() {
+		return experience;
+	}
+
+	public void setExperience(long experience) {
+		this.experience = experience;
 	}
 
 	public boolean isMyself() {

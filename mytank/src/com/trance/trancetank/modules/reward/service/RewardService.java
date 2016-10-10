@@ -21,21 +21,22 @@ public class RewardService {
 		PlayerDto player = MainActivity.player;
 		StringBuilder sb = new StringBuilder("");
 		for(RewardResult<?> rewardResult : list){
+			int count = rewardResult.getActualCount();
 			RewardType type = RewardType.valueOf(rewardResult.getType());
 			switch(type){
 			case GOLD:
 				long gold = player.getGold();
-				player.setGold(gold + rewardResult.getActualCount());
+				player.setGold(gold + count);
 				sb.append("金币 : ");
 				break;
 			case SILVER:
 				long silver = player.getSilver();
-				player.setSilver(silver + rewardResult.getActualCount());
+				player.setSilver(silver + count);
 				sb.append("银币 : ");
 				break;
 			case FOODS:
 				long foods = player.getFoods();
-				player.setFoods(foods + rewardResult.getActualCount());
+				player.setFoods(foods + count);
 				sb.append("粮食 : ");
 				break;
 			case PLAYER_EXP:
@@ -43,7 +44,10 @@ public class RewardService {
 			default:
 				break;
 			}
-			sb.append(rewardResult.getActualCount() + " ");
+			if(count > 0){
+				sb.append("+");
+			}
+			sb.append(count + " ");
 		}
 		
 		MsgUtil.showMsg(sb.toString());

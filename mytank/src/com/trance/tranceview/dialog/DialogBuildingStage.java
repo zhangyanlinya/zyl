@@ -172,6 +172,8 @@ public class DialogBuildingStage extends BaseStage {
 				}
 			}
 			
+			this.getTranceGame().mapScreen.refreshPlayerDtoData();
+			
 			//如果是主城升级的话  可能有新的建筑和部队
 			if(buildingId == BuildingType.OFFICE){
 				Object newBuildings  = result.get("newBuildingDtos");

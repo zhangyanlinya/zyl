@@ -54,6 +54,7 @@ import com.trance.tranceview.dialog.DialogBuildingStage;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.FontUtil;
+import com.trance.tranceview.utils.FormulaUtil;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.ResUtil;
@@ -239,6 +240,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		initMap();//初始化地图
 		if(isEdit()){
+			refreshPlayerDtoData();
 			refreshLeftBuiding();
 			stage.addActor(rename);
 			stage.addActor(toTrain);
@@ -247,7 +249,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(toChange);
 			stage.addActor(attack);
 		}
-		refreshPlayerInfo(playerDto);
+		initPlayerInfo();
 		
 		stage.addActor(toWorld);
 		
@@ -261,6 +263,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
+
 	/**
 	 *  地图是否可编辑
 	 * @return
@@ -374,6 +377,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch, MainActivity.player.getPlayerName(),0,height - length);
+			font.draw(spriteBatch, MainActivity.player.getExperience()+"/"+levelExp ,0,height - length * 2);
 		}else{
 			font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
 		}
@@ -417,8 +421,9 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
+	private long levelExp;
 	
-	public void refreshPlayerInfo(PlayerDto playerDto){
+	private void initPlayerInfo(){
 		int side = width / 5;
 		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, String.valueOf( playerDto.getLevel()));
 		level.setBounds(side, height - length , length, length);
@@ -432,6 +437,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		ResImage foods = new ResImage(ResUtil.getInstance().getUi(UiType.FOODS),font, String.valueOf( playerDto.getFoods()));
 		foods.setBounds(side * 4, height - length, length, length);
 		stage.addActor(foods);
+	}
+	
+	public void refreshPlayerDtoData(){
+		levelExp = FormulaUtil.getExpByLevel(playerDto.getLevel() + 1);// 下一级所需经验
 	}
 	
 	// 初始化关卡地图
@@ -598,11 +607,11 @@ public class MapScreen implements Screen ,InputProcessor{
 			a.setIndex(b.i, b.j);
 			playerDto.getMap()[b.i][b.j] = oldType; 
 			
-//			if(dto.getLeftAmount() > 0){
+			if(dto.getLeftAmount() > 0){
 				Building block = Building.buildingPool.obtain();
 				block.init(null,oldType, oldx, oldy, length, length, null, font, dto);
 				stage.addActor(block);
-//			}
+			}
 			
 			StringBuilder to = new StringBuilder();
 			to.append(b.i).append("|").append(b.j).append("|").append(oldType);
@@ -626,7 +635,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		b.setIndex(oldi, oldj);
 		playerDto.getMap()[oldi][oldj] = b.type;
 		
-		System.out.println(oldType  +" 与 " + b.type +" 进行了交换~ ");
+//		System.out.println(oldType  +" 与 " + b.type +" 进行了交换~ ");
 		
 		StringBuilder from = new StringBuilder();
 		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
