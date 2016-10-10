@@ -234,7 +234,7 @@ public class WorldScreen implements Screen, InputProcessor {
 									int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
 									dto.setMap(map);
 								}else{
-									dto.setMap(MapData.baseMap.clone());
+									dto.setMap(MapData.clonemap());
 								}
 								dto.setX(ox);
 								dto.setY(oy);

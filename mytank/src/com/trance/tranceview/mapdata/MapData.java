@@ -17,7 +17,7 @@ public class MapData extends Application {
 
 	// 解决异常：Application在整个应用中，只要进程存在，Application的静态成员变量就不会被回收，不会造成null pointer异常
 	// @link{BlockType}
-	public final static int[][] baseMap =
+	private final static int[][] base =
 	{
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -40,10 +40,19 @@ public class MapData extends Application {
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 	};
-
 	
 	/**
 	 * game over
 	 */
 	public static boolean gamerunning;
+	
+	public static int[][] clonemap() {//
+		int raw = base.length;
+		int col = base[0].length;
+		int result[][] = new int[raw][col];
+		for (int i = 0; i < raw; i++) {
+			System.arraycopy(base[i], 0, result[i], 0, col);
+		}
+		return result;
+	}
 }

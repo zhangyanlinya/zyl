@@ -342,7 +342,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			int[][] map = null;
 			Object mobj = result.get("mapdata");
 			if (mobj == null) {
-				map = MapData.baseMap;
+				map = MapData.clonemap();
 			}else{
 				map = JSON.parseObject(mobj.toString(), int[][].class);
 			}
