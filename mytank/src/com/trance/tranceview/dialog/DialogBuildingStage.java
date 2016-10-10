@@ -183,7 +183,7 @@ public class DialogBuildingStage extends BaseStage {
 					  for(BuildingDto buildingDto : buildingDtos){
 						  buildings.put(buildingDto.getId(), buildingDto);
 					  }
-//					  refreshLeftBuiding();
+//					 this.getTranceGame().mapScreen.refreshLeftBuiding();
 				  }
 				}
 				

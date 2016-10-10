@@ -487,7 +487,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		}
 	}
 	
-	private void refreshLeftBuiding() {
+	public void refreshLeftBuiding() {
 		float side = width/10;
 		int i = 0;
 		Array<Actor> actors = stage.getActors();
