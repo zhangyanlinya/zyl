@@ -32,7 +32,7 @@ public class ReconnectionFilter extends IoFilterAdapter{
 				if (success) {
 					break;
 				}
-				logger.error("重连服务器登录失败,3秒再连接一次");
+				logger.error("reconnect after 3 socond...");
 			}
      }
 }

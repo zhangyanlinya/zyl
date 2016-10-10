@@ -3,7 +3,7 @@ package com.trance.trancetank.constant;
 /**
  * 奖励类型
  * 
- * @author zhangyl
+ * @author trance
  */
 public enum RewardType {
 	
@@ -43,70 +43,15 @@ public enum RewardType {
 	ITEM(6),
 
 	/**
-	 * 武将装备
+	 * 水晶
 	 */
-	HERO_EQUIP(7),
+	CRYSTAL(7),
 	
 	/**
 	 * 主公经验
 	 */
 	PLAYER_EXP(8),
-	
-	/**
-	 * 武将经验
-	 */
-	SOUL(9),
-	
-	/**
-	 * 水晶
-	 */
-	CRYSTAL(10),
-	
-	/**
-	 * 声望
-	 */
-	FAME(11),
-	
-	/**
-	 * 功勋
-	 */	
-	EXPLOIT(12),
-	
-	/**
-	 * 积分
-	 */
-	CREDIT(13),
-	
-	/**
-	 * 体力
-	 */
-	ENERGY(14),
-	
-	/**
-	 * 体力buff
-	 */
-	ENERGY_BUFF(15),
-	
-	/**
-	 * 战魂
-	 */
-	DRILL_EXP(16),
-	
-	/**
-	 * 命签（不支持奖励串格式，走命签宝箱）
-	 */
-	DIVINATION(17),
-	
-	/**
-	 * 主公装备
-	 */
-	PLAYER_EQUIP(18),
-	
-	/**
-	 * 锯子令
-	 */
-	JZL(19),
-	
+
 	/**
 	 * 金钱混合(主要用在混合扣的情况, 顺序：返还金币-内币-金币)
 	 */
