@@ -38,6 +38,8 @@ public class RewardService {
 				player.setFoods(foods + rewardResult.getActualCount());
 				sb.append("粮食 : ");
 				break;
+			case PLAYER_EXP:
+				sb.append("经验 : ");
 			default:
 				break;
 			}
