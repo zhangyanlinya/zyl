@@ -578,14 +578,14 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		Building b = compute(x,y);
 		if(b == null){//移除
-			System.out.println("b = null");
+//			System.out.println("b = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
 			a = null;
 			return true;
 		}
 		
 		if(oldy <= control_height - length){//增加
-			System.out.println("开始增加...");
+//			System.out.println("开始增加...");
 			if(b.type != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
 				a = null;
