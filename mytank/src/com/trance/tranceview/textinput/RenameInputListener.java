@@ -34,9 +34,7 @@ public class RenameInputListener implements TextInputListener{
 		
 		text = removeEmoji(text);
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("newName", text);
-		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, params),true);
+		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, text),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
