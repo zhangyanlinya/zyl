@@ -1,7 +1,5 @@
 package com.trance.tranceview.textinput;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -21,7 +19,7 @@ public class RenameInputListener implements TextInputListener{
 
 	@Override
 	public void input(String text) {
-		if(text == null || text.trim().length() <= 0 || text.trim().length() > 10){
+		if(text == null || text.trim().length() < 2 || text.trim().length() > 10){
 			return;
 		}
 		if(text.equals(MainActivity.player.getPlayerName())){
