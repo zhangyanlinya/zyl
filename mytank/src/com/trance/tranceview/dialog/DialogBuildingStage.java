@@ -169,6 +169,7 @@ public class DialogBuildingStage extends BaseStage {
 							pbd.setAmount(playerBuildingDto.getLevel());
 						}
 					}
+					this.getTranceGame().mapScreen.refreshLeftBuiding();
 				}
 			}
 			
@@ -183,7 +184,7 @@ public class DialogBuildingStage extends BaseStage {
 					  for(BuildingDto buildingDto : buildingDtos){
 						  buildings.put(buildingDto.getId(), buildingDto);
 					  }
-//					 this.getTranceGame().mapScreen.refreshLeftBuiding();
+					 this.getTranceGame().mapScreen.refreshLeftBuiding();
 				  }
 				}
 				

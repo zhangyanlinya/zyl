@@ -3,8 +3,6 @@ package com.trance.tranceview.screens;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -98,7 +96,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image bg;
 //	private GestureController controller;
 	
-	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
+//	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 //	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
@@ -200,7 +198,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		
 //		coolQueues = playerDto.getCoolQueues();
-		buildings = playerDto.getBuildings();
+//		buildings = playerDto.getBuildings();
 	}
 	
 	public void setPlayerDto(PlayerDto playerDto){
@@ -500,7 +498,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		}
 	
-		for(Entry<Integer, BuildingDto> e : buildings.entrySet()){
+		for(Entry<Integer, BuildingDto> e : MainActivity.player.getBuildings().entrySet()){
 			BuildingDto dto = e.getValue();
 			if(dto.getLeftAmount() <= 0){
 				continue;

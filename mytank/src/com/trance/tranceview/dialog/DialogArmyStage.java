@@ -81,7 +81,7 @@ public class DialogArmyStage extends BaseStage {
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
-	    	ArmyImage image = new ArmyImage(region,renderer,armyTrain.getPerTime(),armyDto);
+	    	ArmyImage image = new ArmyImage(region,renderer,armyTrain.getPerTime() * 1000 ,armyDto); //按毫秒算
 	    	image.setWidth(side);
 	    	image.setHeight(side);
 	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i);

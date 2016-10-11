@@ -37,25 +37,33 @@ public class ArmyImage extends Image {
 		super.draw(batch, parentAlpha);
 		batch.end();
 		long expireTime = 0;
-		if(armyDto != null){
+		if(armyDto != null ){
 			expireTime = armyDto.getExpireTime();
 			batch.begin();
 			font.draw(batch, "level: " + armyDto.getLevel() +" amount:" + armyDto.getAmout() + " add: " + armyDto.getAddAmount(),
 					this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 + 12 );
 			batch.end();
 		}
+		
 		long leftTime = expireTime - TimeUtil.getServerTime();
 		if(leftTime < 0){
 			leftTime = 0;
 		}
-		
 		float percent = (needTime - leftTime) / (float)needTime;
 		if(percent < 0){
 			percent = 0;
 		}
 		
 		if(percent >= 1.0){
-			percent = 0;
+			if(armyDto != null){
+				if(armyDto.getAddAmount() == 0){
+					percent = 0;
+				}else{
+					percent = 1.0f;
+				}
+			}else{
+				percent = 0;
+			}
 		}
 			
 		renderer.setColor(Color.BLUE);
