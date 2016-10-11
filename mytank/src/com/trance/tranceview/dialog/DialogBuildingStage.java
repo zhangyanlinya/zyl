@@ -119,9 +119,7 @@ public class DialogBuildingStage extends BaseStage {
 
     @SuppressWarnings("unchecked")
 	private void updateBuilding(int buildingId){
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("buildingId", buildingId);
-		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, params),true);
+		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, buildingId),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
