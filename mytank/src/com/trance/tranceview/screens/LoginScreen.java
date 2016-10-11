@@ -135,7 +135,6 @@ public class LoginScreen implements Screen{
 		int cmd = PlayerCmd.LOGIN;
 		Response response = SocketUtil.send(Request.valueOf(module, cmd, params),true);
 		if(response == null){
-			MsgUtil.showMsg("网络连接失败");
 			return;
 		}
 		
