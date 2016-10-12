@@ -21,6 +21,7 @@ import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.handler.ArmyCmd;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.basedb.ArmyTrain;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
@@ -49,23 +50,6 @@ public class DialogArmyStage extends BaseStage {
     }
 
     private void init() {
-    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
-//        bgImage.getColor().a = 0.1f;
-        bgImage.setWidth(getWidth() * 0.6f);
-        bgImage.setHeight(getHeight() * 0.5f);
-        bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
-        addActor(bgImage);
-        
-        Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
-        close.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2);
-        close.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				getTranceGame().mapScreen.setArmyDailog(false);
-			}
-        });
-        addActor(close);
 //        bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
 //        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
         
@@ -74,37 +58,110 @@ public class DialogArmyStage extends BaseStage {
     }
     
     public void show(){
+    	this.clear();
     	this.setVisible(true);
+    	
+    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
+        bgImage.getColor().a = 0.6f;
+	    bgImage.setWidth(getWidth() * 0.6f);
+	    bgImage.setHeight(getHeight() * 0.5f);
+	    bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
+	    addActor(bgImage);
+	      
+	    Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
+	    close.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2);
+	    close.addListener(new ClickListener(){
+	
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+					getTranceGame().mapScreen.setArmyDailog(false);
+			}
+	    });
+	    addActor(close);
+    	
+    	
+    	
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
     	int i = 1;
     	float side = bgImage.getHeight() / armyTrains.size();
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
+	    	if(armyDto == null){
+	    		continue;
+	    	}
 	    	ArmyImage image = new ArmyImage(region,renderer,armyTrain.getPerTime() * 1000 ,armyDto); //按毫秒算
-	    	image.setWidth(side);
-	    	image.setHeight(side);
-	    	image.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i);
+	    	image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
 	    	addActor(image);
-	    	i ++;
+	    	
 	    	image.addListener(new ClickListener(){
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					long now = TimeUtil.getServerTime();
-					if(armyDto != null && (armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now)){//未到期
+					if(armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now){//未到期
 						trainArmy(armyTrain.getId());//
 					}else{
 						obtainArmy(armyTrain.getId());
 					}
 				}
-	    	});	
+	    	});
+	    	
+	    	Image levelup  = new Image(ResUtil.getInstance().getUi(UiType.LEVELUP));
+	    	levelup.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side * 2,  getHeight()/2 + bgImage.getHeight()/2 - side * i , side, side);
+	    	levelup.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					levelup(armyTrain.getId());
+				}
+	    	});
+	    	addActor(levelup);
+	    	i ++;
     	}
     }
-    
-    public void hide(){
+
+	public void hide(){
     	this.setVisible(false);
     }
+	
+    protected void levelup(int armyId) {
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.UPGRADE_LEVEL, armyId),true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.ARMY,code);
+				return ;
+			}
+			
+			ArmyDto armyDto = MainActivity.player.getArmys().get(armyId);
+			if(armyDto != null){
+				armyDto.setLevel(armyDto.getLevel() + 1);
+			}
+			
+			Object cobj = result.get("coolQueueDto");
+			if(cobj != null){
+				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(cobj).toString(), CoolQueueDto.class);
+				MainActivity.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
+				//TODO
+			}
+			
+			Object valueResult = result.get("valueResultSet");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
+		}
+	}
+
     
     private void trainArmy(int armyId){
 		Map<String, Object> params = new HashMap<String, Object>();

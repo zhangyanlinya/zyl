@@ -11,6 +11,7 @@ public enum UiType {
 	TRAIN("ui/train.png"),
 	BLANK("ui/blank.png"),
 	CLOSE("ui/close.png"),
+	LEVELUP("ui/levelup.png"),
 	;
 	
 	private final String value;

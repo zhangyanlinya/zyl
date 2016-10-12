@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.ArmyType;
+import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.ArmyPool;
@@ -56,7 +57,6 @@ public class Army extends GameActor{
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
-		
 		switch(armyId){
 		case ArmyType.TANK:
 			range = 300;
@@ -70,6 +70,12 @@ public class Army extends GameActor{
 			hp = 100;
 			break;
 		}
+		
+		ArmyDto dto = MainActivity.player.getArmys().get(armyId);
+		if(dto.getLevel() > 0){
+			atk *= dto.getLevel();//等级加成
+		}
+		
 		initAnimation(armyId);
 		
 		if(world == null){

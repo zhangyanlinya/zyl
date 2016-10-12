@@ -4,7 +4,6 @@ package com.trance.tranceview.dialog;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import com.alibaba.fastjson.JSON;
@@ -54,23 +53,6 @@ public class DialogBuildingStage extends BaseStage {
     }
 
     private void init() {
-    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
-//        bgImage.getColor().a = 0.1f;
-        bgImage.setWidth(getWidth() * 0.6f);
-        bgImage.setHeight(getHeight() * 0.5f);
-        bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
-        addActor(bgImage);
-        
-        Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
-        close.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2);
-        close.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				getTranceGame().mapScreen.setBuildingDailog(false);
-			}
-        });
-        addActor(close);
         renderer = new ShapeRenderer();
         buildings = BasedbService.listAll(CityElement.class);
     }
@@ -82,6 +64,26 @@ public class DialogBuildingStage extends BaseStage {
 //    
     public void show(){
     	this.setVisible(true);
+    	this.clear();
+    	
+    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
+        bgImage.getColor().a = 0.6f;
+	    bgImage.setWidth(getWidth() * 0.6f);
+	    bgImage.setHeight(getHeight() * 0.5f);
+	    bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
+	    addActor(bgImage);
+	      
+	    Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
+	    close.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2);
+	    close.addListener(new ClickListener(){
+	
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+					getTranceGame().mapScreen.setBuildingDailog(false);
+			}
+	    });
+	    addActor(close);
+    	
     	ConcurrentMap<Integer, BuildingDto> building_map = MainActivity.player.getBuildings();
     	int i = 0;
     	float side = bgImage.getWidth() / 4;

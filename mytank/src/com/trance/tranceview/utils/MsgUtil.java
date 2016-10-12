@@ -34,7 +34,7 @@ public class MsgUtil {
 	private final static String battle_json ="[{\"id\":-10001,\"msg\":\"正在被攻击中(等侍4分钟)\"},{\"id\":-10002,\"msg\":\"攻击时间已过\"},{\"id\":-10003,\"msg\":\"没有可用部队\"}]";
 	private final static Map<Integer,Msg> battle = new HashMap<Integer,Msg>();
 	
-	private final static String army_json ="[{\"id\":-10001,\"msg\":\"还在冷却中\"},{\"id\":-10002,\"msg\":\"部队不存在\"},{\"id\":-10003,\"msg\":\"部队未训练完成\"},{\"id\":-10004,\"msg\":\"已达到最大训练数量\"},{\"id\":-10005,\"msg\":\"等级未开放\"}]";
+	private final static String army_json ="[{\"id\":-10001,\"msg\":\"还在冷却中\"},{\"id\":-10002,\"msg\":\"部队不存在\"},{\"id\":-10003,\"msg\":\"部队未训练完成\"},{\"id\":-10004,\"msg\":\"已达到最大训练数量\"},{\"id\":-10005,\"msg\":\"等级未开放\"},{\"id\":-10006,\"msg\":\"冷却队列已满\"}]";
 	private final static Map<Integer,Msg> army = new HashMap<Integer,Msg>();
 	
 	

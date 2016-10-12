@@ -9,7 +9,6 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.trancetank.config.Module;
 import com.trance.tranceview.MainActivity;
-import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.SocketUtil;
 

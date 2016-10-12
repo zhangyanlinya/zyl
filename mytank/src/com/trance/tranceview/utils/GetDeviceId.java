@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class GetDeviceId {
 	
@@ -79,12 +78,6 @@ public class GetDeviceId {
 		String m_szWLANMAC=getWLANMAC();
 		String m_szBTMAC=getBTMAC();		
 		String m_szLongID=szImei+m_szDevIDShort+m_szAndroidID+m_szWLANMAC+m_szBTMAC;
-		Log.v("szImei","cccc|"+szImei);
-		Log.v("m_szDevIDShort","cccc|"+m_szDevIDShort);
-		Log.v("m_szAndroidID","cccc|"+m_szAndroidID);
-		Log.v("m_szWLANMAC","cccc|"+m_szWLANMAC);
-		Log.v("m_szBTMAC","cccc|"+m_szBTMAC);
-		Log.v("m_szLongID","cccc|"+m_szLongID);
 		// compute md5     
 		MessageDigest m = null;   
 		try {
@@ -105,7 +98,6 @@ public class GetDeviceId {
 		// add number to string    
 		    m_szUniqueID+=Integer.toHexString(b); 
 		   }   // hex string to uppercase   
-		m_szUniqueID= m_szUniqueID.toUpperCase();
 		return m_szUniqueID;
 	}
 	
