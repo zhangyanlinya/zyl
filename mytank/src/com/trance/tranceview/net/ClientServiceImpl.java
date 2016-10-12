@@ -70,11 +70,6 @@ public class ClientServiceImpl implements ClientService{
 	}
 	
 	@Override
-	public Response send(Request request){
-		return send(request,false);
-	}
-	
-	@Override
 	public Response send(Request request, boolean showDialog) {
 		if(showDialog){
 			Message msg = Message.obtain();
@@ -84,11 +79,6 @@ public class ClientServiceImpl implements ClientService{
 		
 		try {
 			Response response = this.socketClient.send(request);
-			if(showDialog && response == null){
-				Message msg = Message.obtain();
-				msg.what = -1;
-				handler.sendMessage(msg);
-			}
 			return response;
 		} catch (Exception ex) {
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());

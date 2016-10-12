@@ -228,6 +228,7 @@ public class LoginScreen implements Screen{
 			MainActivity.player = playerDto;
 			
 			loginSuccess = true;
+			SocketUtil.heartbeat = true;
 			Gdx.app.postRunnable(new Runnable() {
 				
 				@Override

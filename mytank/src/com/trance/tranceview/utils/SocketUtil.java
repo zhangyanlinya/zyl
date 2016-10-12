@@ -26,6 +26,8 @@ public class SocketUtil {
 	
 	private static ClientService clientService;
 	
+	public static boolean heartbeat; 
+	
 	public static void init(Handler handler){
 		clientService = new ClientServiceImpl(handler);
 		clientService.init();
@@ -37,7 +39,7 @@ public class SocketUtil {
 	 * @return
 	 */
 	public static Response send(Request request) {
-		return clientService.send(request);
+		return send(request, false);
 	}
 	
 	/**
@@ -49,13 +51,19 @@ public class SocketUtil {
 	
 	public static Response send(Request request, boolean showDialog) {
 		Response response = clientService.send(request,showDialog);
-		if(response != null){ 
-			if(response.getStatus() == ResponseStatus.NO_RIGHT){
-				offlineReconnect();
-			}
-		}else{
-			MsgUtil.showMsg("网络连接失败！");
+		if(response == null){ 
+			MsgUtil.showMsg("连接服务器失败！");
+			return null;
 		}
+		
+		if(response.getStatus() == ResponseStatus.NO_RIGHT){
+			if(!heartbeat){//心跳死了。
+				MsgUtil.showMsg("请重新登录");
+				return null;
+			}
+			offlineReconnect();
+		}
+		
 		return response;
 	}
 	
@@ -79,6 +87,10 @@ public class SocketUtil {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+		
+		if(!heartbeat){//心跳死了。
+			return true;
+		}
 		
 		//断线重连
 		Map<String, Object> params = new HashMap<String, Object>();

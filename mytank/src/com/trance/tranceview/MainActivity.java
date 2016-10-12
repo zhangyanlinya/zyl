@@ -49,9 +49,6 @@ public class MainActivity extends AndroidApplication {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case -1:
-				Toast.makeText(reference.get(), "网络连接失败", Toast.LENGTH_SHORT).show();
-				break;
 			case 1:
 				dialog.show();
 				break;
@@ -99,7 +96,7 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-		userName ="cc";//TODO TEST;
+//		userName ="cc";//TODO TEST;
 		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  

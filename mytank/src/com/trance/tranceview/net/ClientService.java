@@ -18,8 +18,6 @@ public interface ClientService {
 	 * @param request Request
 	 * @return Response
 	 */
-	Response send(Request request);
-	
 	Response send(Request request, boolean showDialog);
 	
 	/**
