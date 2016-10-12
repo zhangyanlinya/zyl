@@ -1,5 +1,8 @@
 package com.trance.tranceview.actors;
 
+import java.util.HashMap;
+
+import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,14 +11,26 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
+import com.trance.trancetank.config.Module;
+import com.trance.trancetank.model.Result;
+import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
+import com.trance.trancetank.modules.reward.result.ValueResultSet;
+import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
+import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.ResUtil;
+import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
@@ -45,7 +60,7 @@ public class Building extends GameActor{
 	 * @param width
 	 * @param height
 	 */
-	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer){
+	public void init(World world, final int type, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.renderer = renderer;
 		this.alive = true;
@@ -68,6 +83,13 @@ public class Building extends GameActor{
 		case BuildingType.OFFICE:
 			break;
 		case BuildingType.HOUSE:
+			this.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					harvist(type);
+				}
+			});
 			break;
 		case BuildingType.BARRACKS:
 			break;
@@ -104,6 +126,35 @@ public class Building extends GameActor{
 		body.setUserData(this);
 		
 	}
+	
+	/**
+	 * harvist
+	 * @param buildingId
+	 */
+	private void harvist(int buildingId){
+		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, buildingId),true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.BUILDING,code);
+				return ;
+			}
+			Object valueResult = result.get("content");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
+		}
+	}
+	
 	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, BuildingDto dto){
 		init(world, type, x, y, width, height, renderer);
 		this.font = font;

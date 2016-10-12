@@ -30,4 +30,9 @@ public interface BuildingCmd {
 	 */
 	int UPGRADE_BUILDING_LEVEL = 2;
 	
+	/**
+	 * 收割
+	 */
+	int HARVIST = 3;
+	
 }
