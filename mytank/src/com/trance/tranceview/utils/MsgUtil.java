@@ -25,7 +25,7 @@ public class MsgUtil {
 	private final static String world_json ="[{\"id\":-10001,\"msg\":\"暂时没有玩家\"},{\"id\":-10002,\"msg\":\"CD时间中\"},{\"id\":-10003,\"msg\":\"已分配\"}]";
 	private final static Map<Integer,Msg> world = new HashMap<Integer,Msg>();
 	
-	private final static String building_json ="[{\"id\":-10001,\"msg\":\"建筑不存在\"},{\"id\":-10002,\"msg\":\"等级不足\"},{\"id\":-10003,\"msg\":\"主城等级不足\"},{\"id\":-10004,\"msg\":\"冷却队列已满\"}]";
+	private final static String building_json ="[{\"id\":-10001,\"msg\":\"建筑不存在\"},{\"id\":-10002,\"msg\":\"等级不足\"},{\"id\":-10003,\"msg\":\"主城等级不足\"},{\"id\":-10004,\"msg\":\"冷却队列已满\"},{\"id\":-10005,\"msg\":\"CD时间中\"}]";
 	private final static Map<Integer,Msg> building = new HashMap<Integer,Msg>();
 	
 	private final static String dailyreward_json ="[{\"id\":-10001,\"msg\":\"当天已经领取过奖励\"}]";
