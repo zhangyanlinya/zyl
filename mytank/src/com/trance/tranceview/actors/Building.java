@@ -92,6 +92,13 @@ public class Building extends GameActor{
 			});
 			break;
 		case BuildingType.BARRACKS:
+			this.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					harvist(type);
+				}
+			});
 			break;
 		case BuildingType.CANNON:
 			range = 400;
