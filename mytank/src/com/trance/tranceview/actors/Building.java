@@ -1,8 +1,5 @@
 package com.trance.tranceview.actors;
 
-import java.util.HashMap;
-
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,27 +8,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pool;
-import com.trance.common.socket.model.Request;
-import com.trance.common.socket.model.Response;
-import com.trance.common.socket.model.ResponseStatus;
-import com.trance.trancetank.config.Module;
-import com.trance.trancetank.model.Result;
-import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
-import com.trance.trancetank.modules.reward.result.ValueResultSet;
-import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
-import com.trance.tranceview.utils.MsgUtil;
 import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.ResUtil;
-import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
 
 /**
