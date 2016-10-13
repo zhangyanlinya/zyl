@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -34,7 +35,9 @@ import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.Result;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.battle.handler.BattleCmd;
+import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.BuildingDto;
+import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.mapdata.handler.MapDataCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
@@ -47,6 +50,7 @@ import com.trance.tranceview.actors.MapImage;
 import com.trance.tranceview.actors.ResImage;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.UiType;
+import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.dialog.DialogArmyStage;
 import com.trance.tranceview.dialog.DialogBuildingStage;
 import com.trance.tranceview.mapdata.MapData;
@@ -94,10 +98,8 @@ public class MapScreen implements Screen ,InputProcessor{
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
 	private Image bg;
-//	private GestureController controller;
+	private GestureController controller;
 	
-//	private ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
-//	private ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
 	public ShapeRenderer shapeRenderer;
 	
 	private InputMultiplexer inputMultiplexer;
@@ -165,7 +167,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
-		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.UPBUILDING));
 		toUpBuilding.setBounds(side * 3, 0, side, side);
 		toUpBuilding.addListener(new ClickListener(){
 			
@@ -195,10 +197,6 @@ public class MapScreen implements Screen ,InputProcessor{
 				attack();
 			}
 		});
-		
-		
-//		coolQueues = playerDto.getCoolQueues();
-//		buildings = playerDto.getBuildings();
 	}
 	
 	public void setPlayerDto(PlayerDto playerDto){
@@ -220,7 +218,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		float w = bg.getWidth();
 		float h = bg.getHeight();
 		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h ; y < stage.getHeight() ; y += h){
+			for(float y = -h * 5 ; y < stage.getHeight()  + h* 5; y += h){
 				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 				bg.setPosition(x, y);
 				stage.addActor(bg);
@@ -248,14 +246,15 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(attack);
 		}
 		initPlayerInfo();
-		
 		stage.addActor(toWorld);
+		initHarvist();
 		
 		inputMultiplexer = new InputMultiplexer(); 
-//		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-//		camera.position.set(width/2, height/2, 0);
-//		GestureDetector gestureHandler = new GestureDetector(controller);
-//		inputMultiplexer.addProcessor(gestureHandler);
+		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+		camera.position.set(width/2, height/2, 0);
+		controller.setCanPan(false);
+		GestureDetector gestureHandler = new GestureDetector(controller);
+		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -416,6 +415,56 @@ public class MapScreen implements Screen ,InputProcessor{
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogBuildingStage);
+		}
+	}
+	
+	private void initHarvist(){
+		addHarvist(BuildingType.HOUSE, 0);
+		addHarvist(BuildingType.BARRACKS, 1);
+	}
+	
+	private void addHarvist(final int buildingId, int index){
+		float side = width / 10;
+		BuildingDto dto = MainActivity.player.getBuildings().get(buildingId);
+		Building buiding = Building.buildingPool.obtain();
+		float x = index * side + length + width/2;
+		float y = control_height - (length * 2 +  length * 2 );
+		buiding.init(null,dto.getId(), x, y, length,length,null, font, dto);
+		stage.addActor(buiding);
+		buiding.addListener( new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				harvist(buildingId);
+			}
+		});
+	}
+	
+	/**
+	 * harvist
+	 * @param buildingId
+	 */
+	private void harvist(int buildingId){
+		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, buildingId),true);
+		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+			return;
+		}
+		
+		byte[] bytes = response.getValueBytes();
+		String text = new String(bytes);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		if(result != null){
+			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			if(code != Result.SUCCESS){
+				MsgUtil.showMsg(Module.BUILDING,code);
+				return ;
+			}
+			Object valueResult = result.get("content");
+			if(valueResult != null){
+				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+				RewardService.executeRewards(valueResultSet);
+			}
 		}
 	}
 	

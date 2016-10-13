@@ -84,22 +84,8 @@ public class Building extends GameActor{
 		case BuildingType.OFFICE:
 			break;
 		case BuildingType.HOUSE:
-			this.addListener(new ClickListener(){
-
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					harvist(type);
-				}
-			});
 			break;
 		case BuildingType.BARRACKS:
-			this.addListener(new ClickListener(){
-
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					harvist(type);
-				}
-			});
 			break;
 		case BuildingType.CANNON:
 			range = 400;
@@ -107,7 +93,7 @@ public class Building extends GameActor{
 			atk = 20;
 			break;
 		case BuildingType.ROCKET:
-			range = 800;
+			range = 600;
 			fireDelay = 1500;
 			atk = 2;
 			break;
@@ -133,34 +119,6 @@ public class Building extends GameActor{
 		body = WorldUtils.createBlock(world, x, y, width, height);
 		body.setUserData(this);
 		
-	}
-	
-	/**
-	 * harvist
-	 * @param buildingId
-	 */
-	private void harvist(int buildingId){
-		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, buildingId),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
-			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.BUILDING,code);
-				return ;
-			}
-			Object valueResult = result.get("content");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
-			}
-		}
 	}
 	
 	public void init(World world, int type, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, BuildingDto dto){
@@ -191,15 +149,23 @@ public class Building extends GameActor{
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	
-	private long faceDelay = 2000;
+//	private long faceDelay = 3000;
+	
+	private float tmpRotation = RandomUtil.nextInt(360) ;
+	private boolean flag = RandomUtil.nextBoolean();
 	private long faceTime;
 	private void randomDir(){
+		setRotation(tmpRotation);
 		long now = System.currentTimeMillis();
-		if((now - faceTime) < faceDelay){
+		if((now - faceTime) < RandomUtil.betweenValue(50, 100)){
 			return;
 		}
 		faceTime = now;
-		setRotation(RandomUtil.nextInt(360));
+		if(flag){
+			tmpRotation ++;
+		}else{
+			tmpRotation --;
+		}
 	}
 	
 	
@@ -265,10 +231,6 @@ public class Building extends GameActor{
 			renderer.end();
 			batch.begin();
 		}
-
-		if(!firing && type > 3 && type < 9){
-			randomDir();
-		}
 		
 		if(!MapData.gamerunning){
 			return;
@@ -279,6 +241,10 @@ public class Building extends GameActor{
 		
 		if(move){
 			move();
+		}
+		
+		if(!firing && type > 3 && type < 9){
+			randomDir();
 		}
 		
 	}

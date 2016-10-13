@@ -43,7 +43,7 @@ public class SocketUtil {
 	}
 	
 	public static Response send(Request request, boolean showDialog) {
-		return send(request, false, true);
+		return send(request, showDialog, true);
 	}
 	
 	/**

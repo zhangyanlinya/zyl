@@ -12,6 +12,7 @@ public enum UiType {
 	BLANK("ui/blank.png"),
 	CLOSE("ui/close.png"),
 	LEVELUP("ui/levelup.png"),
+	UPBUILDING("ui/upbuilding.png"),
 	;
 	
 	private final String value;
