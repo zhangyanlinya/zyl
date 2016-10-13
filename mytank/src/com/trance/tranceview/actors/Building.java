@@ -29,6 +29,7 @@ import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.pools.BuildingPool;
 import com.trance.tranceview.screens.GameScreen;
 import com.trance.tranceview.utils.MsgUtil;
+import com.trance.tranceview.utils.RandomUtil;
 import com.trance.tranceview.utils.ResUtil;
 import com.trance.tranceview.utils.SocketUtil;
 import com.trance.tranceview.utils.WorldUtils;
@@ -190,6 +191,18 @@ public class Building extends GameActor{
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	
+	private long faceDelay = 2000;
+	private long faceTime;
+	private void randomDir(){
+		long now = System.currentTimeMillis();
+		if((now - faceTime) < faceDelay){
+			return;
+		}
+		faceTime = now;
+		setRotation(RandomUtil.nextInt(360));
+	}
+	
+	
 	private long time;
 	
 	public void fire() {
@@ -252,6 +265,10 @@ public class Building extends GameActor{
 			renderer.end();
 			batch.begin();
 		}
+
+		if(!firing && type > 3 && type < 9){
+			randomDir();
+		}
 		
 		if(!MapData.gamerunning){
 			return;
@@ -263,6 +280,7 @@ public class Building extends GameActor{
 		if(move){
 			move();
 		}
+		
 	}
 	
 	

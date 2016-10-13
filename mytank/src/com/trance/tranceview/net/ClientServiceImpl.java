@@ -37,7 +37,7 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * 远程主机端口号
 	 */
-	private int port = 10101;
+	private int port = 10001;
 	
 //	/**
 //	 * 上次重连时间

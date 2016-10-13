@@ -32,6 +32,8 @@ public abstract class GameActor extends Actor{
 	public float hw;
 	public float hh;
 	
+	public boolean firing;
+	
 	
 	public void init(float x, float y, float width,
 			float height) {
@@ -106,11 +108,17 @@ public abstract class GameActor extends Actor{
 			if(min < range){
 				stop();
 				fire();
+				firing = true;
+			}else{
+				firing = false;
 			}
 		}else{
 			if(min < range){
 				faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
 				fire();
+				firing = true;
+			}else{
+				firing = false;
 			}
 		}
 		

@@ -42,6 +42,10 @@ public class SocketUtil {
 		return send(request, false);
 	}
 	
+	public static Response send(Request request, boolean showDialog) {
+		return send(request, false, true);
+	}
+	
 	/**
 	 * 同步发送请求
 	 * @param request
@@ -49,9 +53,9 @@ public class SocketUtil {
 	 * @return
 	 */
 	
-	public static Response send(Request request, boolean showDialog) {
+	public static Response send(Request request, boolean showDialog, boolean showMsg) {
 		Response response = clientService.send(request,showDialog);
-		if(response == null){ 
+		if(response == null && showMsg){ 
 			MsgUtil.showMsg("连接服务器失败！");
 			return null;
 		}
@@ -97,20 +101,25 @@ public class SocketUtil {
 		params.put("userName", MainActivity.userName);
 //		params.put("loginKey", LoginMD5); //TODO 暂时不校验
 		params.put("server", "1");
-		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params));
+		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params), false, false);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return false;
 		}
 		byte[] bytes = response.getValueBytes();
 		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
 		if(result != null){
-			if(result.getCode() != Result.SUCCESS && result.getCode()!= -10005){//-10005 重连被禁止
+			if(result.getCode() != Result.SUCCESS){
+				if(result.getCode() == -10005){//-10005 重连被禁止
+					heartbeat = false;
+					return true;
+				}
 				MsgUtil.showMsg(Module.PLAYER, result.getCode());
 				logger.error("断线重连失败 code =" + result.getCode());
 				return false;
 			}
 		}
 		logger.error("断线重连成功");
+		MsgUtil.showMsg("重新连接服务器成功");
 		return true;
 	
 	}  
