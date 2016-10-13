@@ -27,10 +27,10 @@ public class Army extends GameActor{
 	
 	public final static Pool<Army> armyPool = new ArmyPool();
 	public Body body;
-	public int armyId;
+	public ArmyType armyType;
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
-	public float speed = 3;
+	public float speed = 2;
 	public long fireDelay = 1000;
 	
 	private ArmyDto dto;
@@ -43,51 +43,53 @@ public class Army extends GameActor{
     private Animation animation;
 	
 	
-	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer){
+	public void init(World world,ArmyType armyType, float x , float y,float width,float height,ShapeRenderer renderer){
 		super.init(x, y, width, height);
-		this.armyId = armyId;
+		this.armyType = armyType;
 		this.renderer = renderer;
 		this.alive = true;
 		this.move = true;
 		this.camp = 2;
 		this.hp = maxhp;
 		this.degrees = 0;
-		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyId);
+		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
-		switch(armyId){
-		case ArmyType.TANK:
+		switch(armyType){
+		case TANK:
 			range = 300;
 			atk = 20;
 			fireDelay = 200;
 			speed = 2;
 			break;
-		case ArmyType.FAT:
+		case FAT:
 			range = 100;
 			maxhp = 100;
 			hp = 100;
 			break;
+		default:
+			break;
 		}
 		
-		ArmyDto dto = MainActivity.player.getArmys().get(armyId);
+		ArmyDto dto = MainActivity.player.getArmys().get(armyType.id);
 		if(dto.getLevel() > 0){
 			atk *= dto.getLevel();//等级加成
 		}
 		
-		initAnimation(armyId);
+		initAnimation(armyType.id);
 		
 		if(world == null){
 			body = null;
 			return;
 		}
-		body = WorldUtils.createArmy(world,armyId,x, y, width, height);
+		body = WorldUtils.createArmy(world,armyType.id, x, y, width, height);
 		body.setUserData(this);
 	}
 	
-	public void init(World world,int armyId, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, ArmyDto dto){
-		init(world, armyId, x, y, width, height, renderer);
+	public void init(World world,ArmyType armyType, float x , float y,float width,float height,ShapeRenderer renderer, BitmapFont font, ArmyDto dto){
+		init(world, armyType, x, y, width, height, renderer);
 		this.dto = dto;
 		this.font = font;
 	}

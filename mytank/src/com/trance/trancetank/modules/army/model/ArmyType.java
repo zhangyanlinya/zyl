@@ -1,13 +1,28 @@
 package com.trance.trancetank.modules.army.model;
 
 
-public interface ArmyType {
-	int TANK = 1;
+
+public enum ArmyType {
+	TANK(1),
 	
-	int FAT =2;
+	FAT (2),
 	
-	int SISTER = 3;
+	SISTER (3),
 	
-	int FOOT = 4;
+	FOOT(4);
 	
+	public final int id;
+	
+	private ArmyType(int id) {
+		this.id = id;
+	}
+	
+	public static ArmyType valueOf(int id){
+		for(ArmyType type :ArmyType.values()){
+			if(type.id == id){
+				return type;
+			}
+		}
+		return null;
+	}
 }

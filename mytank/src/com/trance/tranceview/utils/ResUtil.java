@@ -16,16 +16,20 @@
 
 package com.trance.tranceview.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import android.annotation.SuppressLint;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.trancetank.modules.army.model.ArmyType;
 import com.trance.tranceview.constant.BulletType;
 import com.trance.tranceview.constant.ControlType;
 import com.trance.tranceview.constant.UiType;
 
+@SuppressLint("UseSparseArrays") 
 public class ResUtil extends AssetManager{
 	
 	public TextureAtlas textureAtlas;
@@ -40,8 +44,6 @@ public class ResUtil extends AssetManager{
 	
     public void init() { 
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
-    	load("block/block.pack", TextureAtlas.class);
-    	load("blocks/pic.pack", TextureAtlas.class);
     	load("building/1.png", Texture.class);
     	load("building/2.png", Texture.class);
     	load("building/3.png", Texture.class);
@@ -109,9 +111,11 @@ public class ResUtil extends AssetManager{
     }
     
     private void initAnimation() {
-    	 for (int i = 0; i < 11; i++) {
-    		 load("army/1/zoulu/01/"+i+".png", Texture.class);
+    	for(ArmyType type :ArmyType.values()){
+    	 for (int i = 0; i < 6; i++) {
+    		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
          }
+    	}
 	}
 
 //	/**
@@ -124,14 +128,6 @@ public class ResUtil extends AssetManager{
 //    	load("audio/get_barrett.mp3",Music.class);
 //		
 //	}
-    
-	public TextureRegion getBlockTextureRegion(int value) {
-    	if(textureAtlas == null){
-    		textureAtlas = this.get("block/block.pack", TextureAtlas.class);
-    	}
-    	AtlasRegion atlasRegion = textureAtlas.findRegion("b", value);
-        return atlasRegion;
-    }
 	
 	public TextureRegion getBuildingTextureRegion(int value) {
 		return new TextureRegion(getBuildingTexture(value));
@@ -142,26 +138,25 @@ public class ResUtil extends AssetManager{
 	}
 	
 	public TextureRegion getArmyTextureRegion(int armyId) {
-		int test = 6;
-		if(armyId == ArmyType.TANK){
-			test = 7;
-		}
-		return getBlockTextureRegion(test);
+		return new TextureRegion(this.get("army/"+armyId+"/zoulu/0.png",Texture.class));
 	}
 	
-	private TextureRegion[] army1;
+	private Map<Integer, TextureRegion[]> armyAnimations = new HashMap<Integer, TextureRegion[]>();
 	
 	public TextureRegion[] getArmyAnimation(int armyId) {
-		if(army1 != null){
-			return army1;
+		TextureRegion[] regions = armyAnimations.get(armyId);
+		if(regions != null && regions.length > 0){
+			return regions;
 		}
-		army1 = new TextureRegion[11];
+		
+		regions = new TextureRegion[6];
         //把Texture转换下
-        for (int i = 0; i < 11; i++) {
-        	Texture animation = this.get("army/1/zoulu/01/"+i+".png", Texture.class);
-        	army1[i] = new TextureRegion(animation);
+        for (int i = 0; i < 6; i++) {
+        	Texture animation = this.get("army/"+armyId+"/zoulu/"+i+".png", Texture.class);
+        	regions[i] = new TextureRegion(animation);
         }
-		return army1;
+        armyAnimations.put(armyId, regions);
+		return regions;
 	}
     
     public  TextureRegion getBulletTextureRegion(int value) {
@@ -176,9 +171,6 @@ public class ResUtil extends AssetManager{
     }
     
     public Texture getControlTextureRegion(ControlType value) {
-//    	Texture dirs = get("ui/controls.png", Texture.class);
-//    	TextureRegion[] regions = TextureRegion.split(dirs, 64 ,64 )[0];
-    	
     	Texture texture = null;
     	String fileName = null;
     	switch(value){
@@ -206,5 +198,6 @@ public class ResUtil extends AssetManager{
 
     public void dispose() {
     	super.dispose();
+    	armyAnimations.clear();
     }
 }
