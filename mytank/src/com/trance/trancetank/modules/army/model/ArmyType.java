@@ -9,7 +9,17 @@ public enum ArmyType {
 	
 	SISTER (3),
 	
-	FOOT(4);
+	FOOT(4),
+	
+	FIVE(5),
+	
+	SIX(6),
+	
+	SEVEN(7),
+	
+	EIGHT(8),
+	
+	NINE(9);
 	
 	public final int id;
 	

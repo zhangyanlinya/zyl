@@ -453,10 +453,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == map.length - 1){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					grass.setPosition(x, y - length * 2);
-					stage.addActor(grass);
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					grass.setPosition(x, y - length * 2);
+//					stage.addActor(grass);
 				}
 				
 				if(j == 0){

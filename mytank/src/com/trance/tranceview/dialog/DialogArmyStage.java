@@ -94,7 +94,17 @@ public class DialogArmyStage extends BaseStage {
 	    	image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
 	    	addActor(image);
 	    	
-	    	image.addListener(new ClickListener(){
+//	    	image.addListener(new ClickListener(){
+//
+//				@Override
+//				public void clicked(InputEvent event, float x, float y) {
+//					
+//				}
+//	    	});
+	    	
+	    	Image train  = new Image(ResUtil.getInstance().getUi(UiType.LEVELUP));
+	    	train.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side,  getHeight()/2 + bgImage.getHeight()/2 - side * i , side, side);
+	    	train.addListener(new ClickListener(){
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -106,6 +116,7 @@ public class DialogArmyStage extends BaseStage {
 					}
 				}
 	    	});
+	    	addActor(train);
 	    	
 	    	Image levelup  = new Image(ResUtil.getInstance().getUi(UiType.LEVELUP));
 	    	levelup.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side * 2,  getHeight()/2 + bgImage.getHeight()/2 - side * i , side, side);
@@ -117,6 +128,7 @@ public class DialogArmyStage extends BaseStage {
 				}
 	    	});
 	    	addActor(levelup);
+
 	    	i ++;
     	}
     }
