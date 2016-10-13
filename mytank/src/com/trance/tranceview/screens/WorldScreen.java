@@ -59,11 +59,14 @@ public class WorldScreen implements Screen, InputProcessor {
 	private Music music ;
 	private boolean init;
 	private Image home;
+	private Image fixed;
 	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
 	public final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
 	public final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
+	private float side;
+	
 	
 	public WorldScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
@@ -110,7 +113,7 @@ public class WorldScreen implements Screen, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		
+		side = WIDTH / 10;
 		spriteBatch = new SpriteBatch();
 		
 		StringBuilder sb = new StringBuilder();
@@ -280,7 +283,10 @@ public class WorldScreen implements Screen, InputProcessor {
 	
 		//Home
 		home = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
-		home.setBounds(10, 10, home.getWidth() + home.getWidth()/2, home.getHeight() + home.getHeight()/2);
+		home.setBounds(10, 10, side, side);
+		
+		fixed = new Image(ResUtil.getInstance().getUi(UiType.FIXED));
+		fixed.setBounds(WIDTH - home.getWidth()*2 , 10, side, side);
 		
 		//itembox
 		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
@@ -324,6 +330,10 @@ public class WorldScreen implements Screen, InputProcessor {
 		tranceGame.setScreen(tranceGame.mapScreen);
 	}
 	
+	private void fixedToLacation() {
+		camera.position.set(sw / 2, sh / 2, 0);
+	}
+	
 	@Override
 	public void pause() {
 
@@ -336,6 +346,7 @@ public class WorldScreen implements Screen, InputProcessor {
 		stage.draw();
 		spriteBatch.begin();
 		home.draw(spriteBatch, 1);
+		fixed.draw(spriteBatch, 1);
 		spriteBatch.end();
 	}
 
@@ -395,8 +406,10 @@ public class WorldScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(screenX < 150 && screenY > HEIGHT - 150 ){
+		if(screenX < side + 10  && screenY > HEIGHT - side ){
 			gotoHome();
+		}else if(screenX > WIDTH - side  && screenY > HEIGHT - side ){
+			fixedToLacation();
 		}
 		return false;
 	}

@@ -13,6 +13,7 @@ public enum UiType {
 	CLOSE("ui/close.png"),
 	LEVELUP("ui/levelup.png"),
 	UPBUILDING("ui/upbuilding.png"),
+	FIXED("ui/fixed.png"),
 	;
 	
 	private final String value;
