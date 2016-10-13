@@ -113,7 +113,7 @@ public class WorldScreen implements Screen, InputProcessor {
 	private void init(){
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		side = WIDTH / 10;
+		side = WIDTH / 8;
 		spriteBatch = new SpriteBatch();
 		
 		StringBuilder sb = new StringBuilder();
@@ -286,7 +286,7 @@ public class WorldScreen implements Screen, InputProcessor {
 		home.setBounds(10, 10, side, side);
 		
 		fixed = new Image(ResUtil.getInstance().getUi(UiType.FIXED));
-		fixed.setBounds(WIDTH - home.getWidth()*2 , 10, side, side);
+		fixed.setBounds(WIDTH - side , 10, side, side);
 		
 		//itembox
 		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
