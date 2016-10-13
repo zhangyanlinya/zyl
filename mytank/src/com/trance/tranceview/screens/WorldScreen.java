@@ -187,7 +187,16 @@ public class WorldScreen implements Screen, InputProcessor {
 					dto = getWorldPlayerDto(x, y);
 				}
 				
-				final WorldImage location = new WorldImage(ResUtil.getInstance().get("world/me1.png", Texture.class), font, dto);
+				String filename = "world/me1.png";
+				if(dto != null){
+					if(dto.getLevel() > 10){
+						filename ="world/me2.png";
+					}else if(dto.getLevel() > 30){
+						filename ="world/me3.png";
+					}
+				}
+				
+				final WorldImage location = new WorldImage(ResUtil.getInstance().get(filename, Texture.class), font, dto);
 				float opx =  x * 480 +(x ^ y) * 20;
 				float opy =  y * 800 + ((BASE - x) ^ (BASE - y)) * 40;
 				location.setPosition(opx , opy);
