@@ -78,7 +78,7 @@ public class MsgUtil {
 	}
 	
 	public static void showMsg(int module, int code){
-		Log.e(LogTag.TAG, "module :" + module +"  code :"+ code);
+//		Log.e(LogTag.TAG, "module :" + module +"  code :"+ code);
 		Msg msg = null;
 		if(code <= 0 && code > -999){
 			 msg = common.get(code);

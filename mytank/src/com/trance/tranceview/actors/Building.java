@@ -228,7 +228,7 @@ public class Building extends GameActor{
 			move();
 		}
 		
-		if(!firing && type > 3 && type < 9){
+		if(!firing && type > 3 && type < 8){
 			randomDir();
 		}
 		
