@@ -94,10 +94,10 @@ public class DialogBuildingStage extends BaseStage {
 			image.setWidth(side);
 			image.setHeight(side);
 			
-			int rate  = i % 4;
+			int rate  = i % 3;
 			float orgX =getWidth()/2 - bgImage.getWidth()/2;
-			float x = rate * side + orgX;
-			int rate2 = i/4 + 1;
+			float x = rate * side + orgX + side/2;
+			int rate2 = i/3 + 1;
 			float orgY = getHeight()/2 + bgImage.getHeight()/2;
 			float y =  orgY - (side/2 * 2 + rate2 * side );
 			
@@ -151,7 +151,7 @@ public class DialogBuildingStage extends BaseStage {
 					if(elementUpgrade != null){
 						Texture texture = ResUtil.getInstance().getBuildingTexture(buildingId);
 						ProgressImage image = new ProgressImage(new TextureRegion(texture), renderer, elementUpgrade.getTime(), coolQueueDto.getExpireTime());
-						image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
+						image.setBounds(getWidth()/2 - bgImage.getWidth()/2 + image.getWidth(),  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
 						addActor(image);
 					}
 				}

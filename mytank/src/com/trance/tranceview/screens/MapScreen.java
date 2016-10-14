@@ -241,13 +241,13 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(rename);
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
+			initHarvist();
 		}else{
 			stage.addActor(toChange);
 			stage.addActor(attack);
 		}
 		initPlayerInfo();
 		stage.addActor(toWorld);
-		initHarvist();
 		
 		inputMultiplexer = new InputMultiplexer(); 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);

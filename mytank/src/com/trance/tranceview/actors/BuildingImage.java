@@ -23,7 +23,7 @@ public class BuildingImage extends Image{
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(dto != null){
-			font.draw(batch, dto.getLevel() +"" ,this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 );
+			font.draw(batch, dto.getLevel() +"" ,this.getX() + this.getWidth()/2 ,this.getY() +  this.getHeight()/2 );
 		}
 	}
 }
