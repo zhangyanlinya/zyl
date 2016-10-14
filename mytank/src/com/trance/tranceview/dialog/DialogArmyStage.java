@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -171,6 +172,9 @@ public class DialogArmyStage extends BaseStage {
 				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
 				RewardService.executeRewards(valueResultSet);
 			}
+			
+			Sound sound = ResUtil.getInstance().getSound(1);
+			sound.play();
 		}
 	}
 
@@ -208,6 +212,9 @@ public class DialogArmyStage extends BaseStage {
 				armyDto.setExpireTime(expireTime);
 				armyDto.setAddAmount(addAmount);
 			}
+			
+			Sound sound = ResUtil.getInstance().getSound(3);
+			sound.play();
 		}
 	}
 	
@@ -241,6 +248,9 @@ public class DialogArmyStage extends BaseStage {
 				armyDto.setAmout(armyDto.getAmout() + armyDto.getAddAmount());
 				armyDto.setAddAmount(0);
 			}
+			
+			Sound sound = ResUtil.getInstance().getSound(4);
+			sound.play();
 		}
 	}
 	

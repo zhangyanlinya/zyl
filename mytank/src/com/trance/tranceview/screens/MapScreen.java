@@ -12,6 +12,7 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -348,6 +349,8 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 			playerDto.setMap(map);
 			show();
+			Sound sound = ResUtil.getInstance().getSound(8);
+			sound.play();
 		}
 	}
 	
@@ -465,6 +468,8 @@ public class MapScreen implements Screen ,InputProcessor{
 				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
 				RewardService.executeRewards(valueResultSet);
 			}
+			Sound sound = ResUtil.getInstance().getSound(5);
+			sound.play();
 		}
 	}
 	

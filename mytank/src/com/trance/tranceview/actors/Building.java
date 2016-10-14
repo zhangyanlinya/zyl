@@ -1,5 +1,6 @@
 package com.trance.tranceview.actors;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -74,17 +75,17 @@ public class Building extends GameActor{
 			break;
 		case BuildingType.CANNON:
 			range = 400;
-			fireDelay = 200;
+			fireDelay = 300;
 			atk = 20;
 			break;
 		case BuildingType.ROCKET:
-			range = 600;
-			fireDelay = 1500;
+			range = 700;
+			fireDelay = 2500;
 			atk = 2;
 			break;
 		case BuildingType.FLAME:
 			range = 100;
-			fireDelay = 100;
+			fireDelay = 200;
 			atk = 30;
 			break;
 		case BuildingType.GUN:
@@ -95,6 +96,12 @@ public class Building extends GameActor{
 		case BuildingType.MORTAR:
 			break;
 		
+		}
+		
+		if(dto != null){
+			atk += dto.getLevel();
+		    hp *= dto.getLevel();
+		    maxhp = hp;
 		}
 		
 		if(world == null){
@@ -179,6 +186,13 @@ public class Building extends GameActor{
 		bullet.init(body.getWorld(), BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
+		
+		int id = type;
+		if(id > 6){
+			id = 6;
+		}
+		Sound sound = ResUtil.getInstance().getSoundFire(id);
+		sound.play();
 	}
 
 	

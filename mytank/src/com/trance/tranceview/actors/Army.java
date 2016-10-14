@@ -1,6 +1,7 @@
 package com.trance.tranceview.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -74,8 +75,11 @@ public class Army extends GameActor{
 		}
 		
 		ArmyDto dto = MainActivity.player.getArmys().get(armyType.id);
-		if(dto.getLevel() > 0){
-			atk *= dto.getLevel();//等级加成
+		if(dto != null && dto.getLevel() > 0){
+//			atk *= dto.getLevel();//等级加成
+			atk += dto.getLevel();
+		    hp *= dto.getLevel();
+		    maxhp = hp;
 		}
 		
 		initAnimation(armyType.id);
@@ -145,6 +149,13 @@ public class Army extends GameActor{
 		bullet.init(body.getWorld(), BulletType.COMMON.getValue(), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
+		
+		int id = armyType.id;
+		if(id > 6){
+			id = 6;
+		}
+		Sound sound = ResUtil.getInstance().getSoundFire(id);
+		sound.play();
 	}
 	
 	@Override

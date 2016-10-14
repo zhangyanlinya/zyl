@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -271,6 +272,10 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 			System.out.println("无派出 ：已结算");
 			return;
 		}
+		
+		Sound sound = ResUtil.getInstance().getSound(5);
+		sound.play();
+		
 		Map<Integer,ArmyDto> myArmys = MainActivity.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){//原来的
 			if(dto.isGo()){

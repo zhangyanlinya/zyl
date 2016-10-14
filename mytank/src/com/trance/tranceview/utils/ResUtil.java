@@ -21,6 +21,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -101,7 +102,7 @@ public class ResUtil extends AssetManager{
     	
     	initAnimation();
     	
-//    	ininSound();
+    	ininSound();
     }
     
     /**
@@ -121,16 +122,23 @@ public class ResUtil extends AssetManager{
     	}
 	}
 
-//	/**
-//     */
-//    private void ininSound() {
-//    	load("audio/barrett.wav",Sound.class);
-//    	load("audio/begin.mp3",Music.class);
-//    	load("audio/game_over.mp3",Music.class);
-//    	load("audio/get_bomber.mp3",Music.class);
-//    	load("audio/get_barrett.mp3",Music.class);
-//		
-//	}
+	/**
+	 * sound
+     */
+    private void ininSound() {
+    	for(int i = 0 ; i < 10; i++)
+    		load("audio/" + i + ".ogg", Sound.class);
+    	
+    	for(int i = 1 ; i < 7; i++)
+        	load("audio/fire/" + i + ".ogg", Sound.class);
+	}
+    
+    public Sound getSound(int id){
+    	return this.get("audio/" + id + ".ogg", Sound.class);
+    }
+    public Sound getSoundFire(int id){
+    	return this.get("audio/fire/" + id + ".ogg", Sound.class);
+    }
 	
 	public TextureRegion getBuildingTextureRegion(int value) {
 		return new TextureRegion(getBuildingTexture(value));

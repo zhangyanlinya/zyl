@@ -6,13 +6,12 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.os.Message;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.audio.Sound;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.model.CodeJson;
 import com.trance.tranceview.MainActivity;
-import com.trance.tranceview.constant.LogTag;
 
 @SuppressLint("UseSparseArrays")
 public class MsgUtil {
@@ -79,6 +78,10 @@ public class MsgUtil {
 	
 	public static void showMsg(int module, int code){
 //		Log.e(LogTag.TAG, "module :" + module +"  code :"+ code);
+		if(code < 0){
+			Sound sound = ResUtil.getInstance().getSound(9);
+			sound.play();
+		}
 		Msg msg = null;
 		if(code <= 0 && code > -999){
 			 msg = common.get(code);

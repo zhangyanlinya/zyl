@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -199,6 +200,9 @@ public class DialogBuildingStage extends BaseStage {
 					}
 				}
 			}
+			
+			Sound sound = ResUtil.getInstance().getSound(0);
+			sound.play();
 		}
 	}
 	public void dispose(){
