@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentMap;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -25,14 +24,14 @@ import com.trance.trancetank.modules.building.handler.BuildingCmd;
 import com.trance.trancetank.modules.building.model.BuildingDto;
 import com.trance.trancetank.modules.building.model.BuildingType;
 import com.trance.trancetank.modules.building.model.basedb.CityElement;
-import com.trance.trancetank.modules.building.model.basedb.ElementUpgrade;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueType;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.BuildingImage;
-import com.trance.tranceview.actors.ProgressImage;
+import com.trance.tranceview.actors.Timer;
 import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.base.BaseStage;
 import com.trance.tranceview.utils.MsgUtil;
@@ -110,23 +109,36 @@ public class DialogBuildingStage extends BaseStage {
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					if(progress != null && !progress.isFinish()){
+					if(timer != null && !timer.isFinish()){
 						return;
 					}
 					updateBuilding(building.getId());
 				}
 			});
     	}
-    	if(progress != null && !progress.isFinish()){
-    		addActor(progress);
+    	
+    	if(timer != null && !timer.isFinish()){
+    		addActor(timer);
+    	}else{
+			CoolQueueDto cool = MainActivity.player.getCoolQueueByType(CoolQueueType.BUILDING.ordinal());
+	    	if(cool != null){
+	    		showTimer(cool.getExpireTime());
+	    	}
     	}
     }
+    
+    private void showTimer(long expireTime){
+    	timer = new Timer(expireTime);
+		timer.setPosition(getWidth()/2 - bgImage.getWidth()/2 + 100,  getHeight()/2 + bgImage.getHeight()/2 - 100);
+		addActor(timer);
+    }
+    
+    private Timer timer;
     
     public void hide(){
     	this.setVisible(false);
     }
     
-    public ProgressImage progress;
 
     @SuppressWarnings("unchecked")
 	private void updateBuilding(int buildingId){
@@ -155,14 +167,7 @@ public class DialogBuildingStage extends BaseStage {
 				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
 				if(coolQueueDto != null){
 					MainActivity.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-					
-					ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, buildingId);
-					if(elementUpgrade != null){
-						Texture texture = ResUtil.getInstance().getBuildingTexture(buildingId);
-						progress = new ProgressImage(new TextureRegion(texture), renderer, elementUpgrade.getTime(), coolQueueDto.getExpireTime());
-						progress.setBounds(getWidth()/2 - bgImage.getWidth()/2 + progress.getWidth(),  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
-						addActor(progress);
-					}
+					showTimer(coolQueueDto.getExpireTime());
 				}
 			}
 			
@@ -218,22 +223,3 @@ public class DialogBuildingStage extends BaseStage {
 		renderer.dispose();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

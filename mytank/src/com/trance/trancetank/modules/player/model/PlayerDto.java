@@ -199,6 +199,20 @@ public class PlayerDto{
 		return coolQueues;
 	}
 	
+	/**
+	 * 根据类型获得一个冷却队列
+	 * @param type
+	 * @return
+	 */
+	public CoolQueueDto getCoolQueueByType(int type){
+		for(CoolQueueDto cool : coolQueues.values()){
+			if(cool.getType() == type){
+				return cool;
+			}
+		}
+		return null;
+	}
+	
 	public void addCoolQueue(CoolQueueDto dto) {
 		coolQueues.put(dto.getId(), dto);
 	}

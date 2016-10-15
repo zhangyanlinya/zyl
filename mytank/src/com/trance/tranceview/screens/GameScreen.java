@@ -84,7 +84,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private Window window;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-//	private Music music;
 	public static PlayerDto playerDto;
 	
 	
@@ -126,7 +125,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	
 	private OrthographicCamera camera;
 	private Image bg;
-//	private final static ConcurrentMap<Integer,ArmyDto> armyDtos = new ConcurrentHashMap<Integer,ArmyDto>();
 
 	/**
 	 * 一局所用总时间
@@ -145,18 +143,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	public GameScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
-	
-	
-	//清除动态的
-//	private void stageClearActors(){
-//		Array<Actor> actors = stage.getActors();
-//		for(Actor a : actors){
-//			if(a instanceof GameActor){
-//				a.remove();
-//			}
-//		}
-//		window.remove();
-//	}
 	
 	@Override
 	public void show() {
@@ -186,8 +172,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 	private void init(){
 		spriteBatch = new SpriteBatch();
 		font = FontUtil.getFont(35, "点赞倒计时：", Color.RED);
-//		music = AssetsManager.getInstance().get("audio/begin.mp3");
-//		music.play();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(width * 2, height * 2, true);
@@ -232,8 +216,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 					Map<String,Object> params = new HashMap<String,Object>();
 					params.put("targetId", playerDto.getId());
 					SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
-//					Music music = AssetsManager.getInstance().get("audio/get_bomber.mp3");
-//					music.play();
 				}
 			}
 		});

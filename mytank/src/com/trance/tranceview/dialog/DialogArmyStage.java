@@ -23,11 +23,13 @@ import com.trance.trancetank.modules.army.handler.ArmyCmd;
 import com.trance.trancetank.modules.army.model.ArmyDto;
 import com.trance.trancetank.modules.army.model.basedb.ArmyTrain;
 import com.trance.trancetank.modules.coolqueue.model.CoolQueueDto;
+import com.trance.trancetank.modules.coolqueue.model.CoolQueueType;
 import com.trance.trancetank.modules.reward.result.ValueResultSet;
 import com.trance.trancetank.modules.reward.service.RewardService;
 import com.trance.tranceview.MainActivity;
 import com.trance.tranceview.TranceGame;
 import com.trance.tranceview.actors.ArmyImage;
+import com.trance.tranceview.actors.Timer;
 import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.dialog.base.BaseStage;
 import com.trance.tranceview.utils.MsgUtil;
@@ -80,8 +82,6 @@ public class DialogArmyStage extends BaseStage {
 	    });
 	    addActor(close);
     	
-    	
-    	
     	ConcurrentMap<Integer, ArmyDto> army_map = MainActivity.player.getArmys();
     	int i = 1;
     	float side = bgImage.getHeight() / armyTrains.size();
@@ -101,8 +101,17 @@ public class DialogArmyStage extends BaseStage {
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					int max = armyTrain.getMax();
+					if(armyDto.getAmout() >= max){
+						MsgUtil.showMsg("已达到最大训练数量");
+						return;
+					}
+					
 					long now = TimeUtil.getServerTime();
-					if(armyDto.getAddAmount() <= 0 || armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now){//未到期
+					if(armyDto.getAddAmount() > 0 && armyDto.getExpireTime() >  now){//正在训练
+						return;
+					}
+					if(armyDto.getAddAmount() <= 0 ){//未到期
 						trainArmy(armyTrain.getId());//
 					}else{
 						obtainArmy(armyTrain.getId());
@@ -117,6 +126,9 @@ public class DialogArmyStage extends BaseStage {
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					if(timer != null && !timer.isFinish()){
+						return;
+					}
 					levelup(armyTrain.getId());
 				}
 	    	});
@@ -124,7 +136,23 @@ public class DialogArmyStage extends BaseStage {
 
 	    	i ++;
     	}
+    	
+    	if(timer != null && !timer.isFinish()){
+    		addActor(timer);
+    	}else{
+			CoolQueueDto cool = MainActivity.player.getCoolQueueByType(CoolQueueType.TECH.ordinal());
+	    	if(cool != null){
+	    		showTimer(cool.getExpireTime());
+	    	}
+    	}
     }
+    private void showTimer(long expireTime){
+    	timer = new Timer(expireTime);
+		timer.setPosition(getWidth()/2 - bgImage.getWidth()/2 + 100,  getHeight() / 2 + bgImage.getHeight() / 2);
+		addActor(timer);
+    }
+    
+    private Timer timer;
 
 	public void hide(){
     	this.setVisible(false);
@@ -152,11 +180,11 @@ public class DialogArmyStage extends BaseStage {
 				armyDto.setLevel(armyDto.getLevel() + 1);
 			}
 			
-			Object cobj = result.get("coolQueueDto");
+			Object cobj = result.get("content");
 			if(cobj != null){
 				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(cobj).toString(), CoolQueueDto.class);
 				MainActivity.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-				//TODO
+				showTimer(coolQueueDto.getExpireTime());
 			}
 			
 			Object valueResult = result.get("valueResultSet");
@@ -251,22 +279,3 @@ public class DialogArmyStage extends BaseStage {
 		renderer.dispose();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
