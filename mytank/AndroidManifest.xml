@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.trance.trancetank"
     android:installLocation="auto"
-    android:versionCode="23"
-    android:versionName="1.23" >
+    android:versionCode="24"
+    android:versionName="1.24" >
 
     <uses-sdk
         android:minSdkVersion="8"
