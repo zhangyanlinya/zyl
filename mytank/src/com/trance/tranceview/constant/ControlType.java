@@ -1,28 +1,13 @@
 package com.trance.tranceview.constant;
 
 public enum ControlType {
-	/**
-	 * 上
-	 */
-	UP(1),
-
-	DOWN(2),
-
-	LEFT(3),
-
-	RIGHT(4),
-
-	FIRE(5),
-
-	SUPER(6), 
+	ATTACK(1), 
 	
-	ATTACK(7), 
+	WORLD(2),
 	
-	WORLD(8),
+	HOME(3),
 	
-	HOME(9),
-	
-	RENAME(10);
+	RENAME(4);
 
 	private final int value;
 
