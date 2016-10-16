@@ -36,6 +36,7 @@ public class MainActivity extends AndroidApplication {
 	public static String userName;
 	private boolean isInit;
 	
+	
 	static class MyHandler extends Handler{
 		
 		private WeakReference<Context> reference;
@@ -62,8 +63,6 @@ public class MainActivity extends AndroidApplication {
 			}
 		}
 	} 
-
-
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
