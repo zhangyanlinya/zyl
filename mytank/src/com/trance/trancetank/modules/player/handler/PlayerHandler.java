@@ -131,6 +131,9 @@ public class PlayerHandler extends HandlerSupport {
 				case 5:
 					msg ="服务器关闭, 请稍等。";
 					break;
+				case 6:
+					msg ="正在遭受攻击中,等待4分钟 ...";
+					break;
 				}
 				MsgUtil.showMsg(msg);
 			}

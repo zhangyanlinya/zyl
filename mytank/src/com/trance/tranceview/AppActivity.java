@@ -1,15 +1,25 @@
 package com.trance.tranceview;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.baidu.appx.BDInterstitialAd;
+import com.trance.tranceview.constant.LogTag;
 
 public class AppActivity extends Activity {
 	// 百度
@@ -50,11 +60,35 @@ public class AppActivity extends Activity {
 		};
 	};
 	
-	private int i = 1;
 	class TimeThread extends Thread{
 		
 		public void run(){
-//			int i = 3;
+			int i = 1;
+			//第一步：创建HttpClient对象
+            HttpClient httpCient = new DefaultHttpClient();
+            httpCient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 3000);  
+            httpCient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 3000);
+            //第二步：创建代表请求的对象,参数是访问的服务器地址
+            HttpGet httpGet = new HttpGet("http://112.74.30.92:8080/trance_admin/adservice");
+            try {
+                //第三步：执行请求，获取服务器发还的相应对象
+                HttpResponse httpResponse = httpCient.execute(httpGet);
+                //第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                    //第五步：从相应对象当中取出数据，放到entity当中
+                    HttpEntity entity = httpResponse.getEntity();
+                    String response = EntityUtils.toString(entity,"utf-8");//将entity当中的数据转换为字符串
+                    if(response!= null){
+                    	i = Integer.valueOf(response);
+                    }
+                }
+                
+            } catch (Exception e) {
+            	Log.e(LogTag.TAG,"webserver connect fail ...");
+            	handler.sendEmptyMessage(0);
+            	return;
+            }
+			
 			while(true){
 				try {
 					handler.sendEmptyMessage(i);
@@ -80,7 +114,6 @@ public class AppActivity extends Activity {
 		@Override
 		public void onAdvertisementDataDidLoadSuccess() {
 			System.out.println("    ad did load success");
-			//展示插屏广告
 			if ( interstitialAd .isLoaded()) {
 				interstitialAd .showAd();
 			}

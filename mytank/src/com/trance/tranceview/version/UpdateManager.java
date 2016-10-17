@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
@@ -249,9 +250,10 @@ public class UpdateManager {
         public void run() {//用HttpClient发送请求，分为五步
             //第一步：创建HttpClient对象
             HttpClient httpCient = new DefaultHttpClient();
+            httpCient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 3000);  
+            httpCient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 3000);
             //第二步：创建代表请求的对象,参数是访问的服务器地址
             HttpGet httpGet = new HttpGet(checkUrl);
-            
             try {
                 //第三步：执行请求，获取服务器发还的相应对象
                 HttpResponse httpResponse = httpCient.execute(httpGet);
