@@ -40,6 +40,8 @@ public class RewardService {
 				sb.append("粮食 : ");
 				break;
 			case PLAYER_EXP:
+				long exp = player.getExperience();
+				player.setExperience(exp + count);
 				sb.append("经验 : ");
 			default:
 				break;
