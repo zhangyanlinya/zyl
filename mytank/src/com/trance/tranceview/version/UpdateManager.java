@@ -35,7 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.trance.trancetank.R;
+import com.trance.tranceview.R;
 import com.trance.tranceview.constant.LogTag;
 
 @SuppressLint({ "HandlerLeak", "SdCardPath" })
