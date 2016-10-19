@@ -1,4 +1,4 @@
-package com.trance.tranceview;
+/*package com.trance.tranceview;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -154,3 +154,4 @@ public class AppActivity extends Activity {
 		AppActivity.this.finish();
 	}
 }
+*/
