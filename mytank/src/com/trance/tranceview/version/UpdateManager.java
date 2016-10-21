@@ -41,7 +41,7 @@ import com.trance.tranceview.constant.LogTag;
 @SuppressLint({ "HandlerLeak", "SdCardPath" })
 public class UpdateManager {
 	private Context mContext;
-	private final String updateMsg = "亲，有新版本，请下载最新版本！";            		//下载消息提示
+	private String updateMsg = "亲，有新版本，请下载最新版本！";            		//下载消息提示
 	private Dialog noticeDialog;                                        //下载提示对话框
 	private Dialog downloadDialog;                                      //下载进度对话框
 	private ProgressBar mProgressBar;                                   //进度条
@@ -100,6 +100,9 @@ public class UpdateManager {
     	String msg = (String) versionInfo;
     	String[] versions  = msg.split("_");
     	String vc = versions[0];//Server versionCode
+    	if(versions.length > 2){
+    		updateMsg = versions[2];
+    	}
     	int serverVersionCode = Integer.valueOf(vc);
     	PackageInfo pi = null;
 		try {
