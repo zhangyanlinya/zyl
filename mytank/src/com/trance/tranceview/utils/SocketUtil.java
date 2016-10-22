@@ -103,7 +103,9 @@ public class SocketUtil {
 		params.put("server", "1");
 		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params), false, false);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return false;
+			MsgUtil.showMsg("请重新登录");//心跳都超时了。
+			heartbeat = false;
+			return true;
 		}
 		byte[] bytes = response.getValueBytes();
 		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
