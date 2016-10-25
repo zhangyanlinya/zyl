@@ -32,6 +32,12 @@ public interface Module {
 	 * 地图
 	 */
 	int WORLD = 3;
+	
+	/**
+	 * RANKING
+	 */
+	int RANKING = 4;
+	
 	/**
 	 * army
 	 */

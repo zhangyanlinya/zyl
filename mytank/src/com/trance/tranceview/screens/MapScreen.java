@@ -54,6 +54,7 @@ import com.trance.tranceview.constant.UiType;
 import com.trance.tranceview.controller.GestureController;
 import com.trance.tranceview.dialog.DialogArmyStage;
 import com.trance.tranceview.dialog.DialogBuildingStage;
+import com.trance.tranceview.dialog.DialogRankUpStage;
 import com.trance.tranceview.mapdata.MapData;
 import com.trance.tranceview.textinput.RenameInputListener;
 import com.trance.tranceview.utils.FontUtil;
@@ -93,6 +94,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private Image toChange;
 	private Image toTrain;
 	private Image toUpBuilding;
+	private Image toRankUp;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -106,6 +108,7 @@ public class MapScreen implements Screen ,InputProcessor{
 	private InputMultiplexer inputMultiplexer;
     public DialogArmyStage dialogArmyStage;
     public DialogBuildingStage dialogBuildingStage;
+    public DialogRankUpStage dialogRankUpStage;
 	
 	public MapScreen(TranceGame game){
 		this.game = game;
@@ -131,10 +134,11 @@ public class MapScreen implements Screen ,InputProcessor{
 		
 		dialogArmyStage = new DialogArmyStage(game);
 		dialogBuildingStage = new DialogBuildingStage(game);
+		dialogRankUpStage = new DialogRankUpStage(game);
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
-		int side = width/6;
+		int side = width/8;
 		
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(0, 0, side, side);
@@ -178,9 +182,19 @@ public class MapScreen implements Screen ,InputProcessor{
 			}
 		});
 		
+		toRankUp = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
+		toRankUp.setBounds(side * 4, 0, side, side);
+		toRankUp.addListener(new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				rankUp();
+			}
+		});
+		
 
 		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
-		toChange.setBounds(side * 4, 0, side, side);
+		toChange.setBounds(side * 5, 0, side, side);
 		toChange.addListener(new ClickListener(){
 
 			@Override
@@ -190,7 +204,7 @@ public class MapScreen implements Screen ,InputProcessor{
 		});
 		
 		attack = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
-		attack.setBounds(side * 5, 0, side, side);
+		attack.setBounds(side * 6, 0, side, side);
 		attack.addListener(new ClickListener(){
 
 			@Override
@@ -242,6 +256,7 @@ public class MapScreen implements Screen ,InputProcessor{
 			stage.addActor(rename);
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
+			stage.addActor(toRankUp);
 			initHarvist();
 		}else{
 			stage.addActor(toChange);
@@ -362,6 +377,10 @@ public class MapScreen implements Screen ,InputProcessor{
 		setBuildingDailog(true);
 	}
 	
+	private void rankUp(){
+		setRankUpDailog(true);
+	}
+	
 	private void toWorld(){
 		this.game.setScreen(game.worldScreen);
 	}
@@ -390,6 +409,22 @@ public class MapScreen implements Screen ,InputProcessor{
 		if(dialogBuildingStage.isVisible()){
 			dialogBuildingStage.act();
 			dialogBuildingStage.draw();
+		}
+		if(dialogRankUpStage.isVisible()){
+			dialogRankUpStage.act();
+			dialogRankUpStage.draw();
+		}
+	}
+	
+	public void setRankUpDailog(boolean visible) {
+		if(visible){
+			dialogRankUpStage.show();
+			inputMultiplexer.removeProcessor(stage);
+			inputMultiplexer.removeProcessor(this);
+		}else{
+			dialogRankUpStage.hide();
+			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.addProcessor(this);
 		}
 	}
 	

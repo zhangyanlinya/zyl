@@ -46,10 +46,10 @@ public class DialogBuildingStage extends BaseStage {
     private Image bgImage;
     private ShapeRenderer renderer;
     private Collection<CityElement> buildings ;
+    private boolean init;
 
     public DialogBuildingStage(TranceGame tranceGame) {
         super(tranceGame);
-        init();
     }
 
     private void init() {
@@ -57,12 +57,11 @@ public class DialogBuildingStage extends BaseStage {
         buildings = BasedbService.listAll(CityElement.class);
     }
     
-//    public void show(){
-//    	bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
-//    	bgImage.addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
-//    }
-//    
     public void show(){
+    	if(!init){
+    		init();
+    		init = true;
+    	}
     	this.setVisible(true);
     	this.clear();
     	
@@ -220,6 +219,9 @@ public class DialogBuildingStage extends BaseStage {
 	}
 	public void dispose(){
 		super.dispose();
-		renderer.dispose();
+		if(init){
+			renderer.dispose();
+			init = false;
+		}
 	}
 }

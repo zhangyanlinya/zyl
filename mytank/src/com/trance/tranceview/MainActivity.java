@@ -149,9 +149,10 @@ public class MainActivity extends AndroidApplication {
 					public void run() {
 						if(tranceGame.mapScreen.dialogArmyStage.isVisible()){
 							tranceGame.mapScreen.setArmyDailog(false);
-						}else
-						if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){
+						}else if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){
 							tranceGame.mapScreen.setBuildingDailog(false);
+						}else if(tranceGame.mapScreen.dialogRankUpStage.isVisible()){
+							tranceGame.mapScreen.setRankUpDailog(false);
 						}else{
 							tranceGame.setScreen(tranceGame.worldScreen);
 						}

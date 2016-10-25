@@ -45,22 +45,22 @@ public class DialogArmyStage extends BaseStage {
     private Image bgImage;
     private ShapeRenderer renderer;
     private Collection<ArmyTrain> armyTrains;
-    
+    private boolean init;
 
     public DialogArmyStage(TranceGame tranceGame) {
         super(tranceGame);
-        init();
     }
 
     private void init() {
-//        bgImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.alpha(0.1F, 1F)));
-//        addAction(Actions.sequence(Actions.scaleTo(0.0F, 0.0F), Actions.scaleTo(1.0F, 1.0F, 0.2F, Interpolation.bounce)));
-        
         renderer = new ShapeRenderer();
         armyTrains = BasedbService.listAll(ArmyTrain.class);
     }
     
     public void show(){
+    	if(!init){
+    		init();
+    		init = true;
+    	}
     	this.clear();
     	this.setVisible(true);
     	
@@ -276,6 +276,9 @@ public class DialogArmyStage extends BaseStage {
 	
 	public void dispose(){
 		super.dispose();
-		renderer.dispose();
+		if(init){
+			renderer.dispose();
+			init = false;
+		}
 	}
 }

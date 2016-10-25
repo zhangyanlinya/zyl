@@ -479,7 +479,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 				continue;
 			}
 			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
-			font.setColor(Color.BLUE);
+//			font.setColor(Color.BLUE);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
 			i ++;
 		}
@@ -499,7 +499,6 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener{
 		//debug---
 		
 		scan();
-//		checkReadytogoArmy();
 		stage.draw();
 		stage.act(delta);
 		
