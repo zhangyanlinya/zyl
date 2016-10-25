@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -34,7 +33,6 @@ import com.trance.tranceview.utils.SocketUtil;
 public class DialogRankUpStage extends BaseStage {
 
     private Image bgImage;
-    private ShapeRenderer renderer;
     private List<PlayerDto> players;
     private BitmapFont font;
     private static final int MAX_RANKING = 10;
@@ -45,7 +43,6 @@ public class DialogRankUpStage extends BaseStage {
     }
 
     private void init() {
-        renderer = new ShapeRenderer();
         players = getUpRank();
         StringBuilder sb = new StringBuilder();
         if(players != null){
@@ -132,7 +129,7 @@ public class DialogRankUpStage extends BaseStage {
 	public void dispose(){
 		super.dispose();
 		if(init){
-			renderer.dispose();
+			font.dispose();
 			init = false;
 		}
 	}

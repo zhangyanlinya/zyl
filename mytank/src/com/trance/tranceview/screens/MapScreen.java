@@ -419,12 +419,14 @@ public class MapScreen implements Screen ,InputProcessor{
 	public void setRankUpDailog(boolean visible) {
 		if(visible){
 			dialogRankUpStage.show();
+			inputMultiplexer.addProcessor(dialogRankUpStage);
 			inputMultiplexer.removeProcessor(stage);
 			inputMultiplexer.removeProcessor(this);
 		}else{
 			dialogRankUpStage.hide();
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(this);
+			inputMultiplexer.removeProcessor(dialogRankUpStage);
 		}
 	}
 	
