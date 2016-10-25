@@ -16,13 +16,18 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
-	
+    
 	<!-- 百度-->
 <!-- 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 	<uses-permission android:name="android.permission.WRITE_SETTINGS"/> -->
 	<!-- 百度 -->
 	
+	<!-- Keymob -->
+<!--     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" /> -->
+	<!-- Keymob -->
 	
     <application
        android:allowBackup="true"
@@ -38,7 +43,7 @@
             </intent-filter>
         </activity>
 <!--         <activity android:name="com.trance.tranceview.MainActivity"
-            android:screenOrientation="portrait"></activity> -->
+            android:screenOrientation="portrait"></activity>  -->
         
         <!-- 百度 -->
        <!--  <meta-data android:name="BDAPPID" android:value="8750942"/>
@@ -59,6 +64,22 @@
             android:configChanges="orientation|screenSize" >
         </activity> -->
         <!-- 百度 -->
+        
+        <!-- Admob -->
+<!--         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="8115000" />
+
+        <activity
+            android:name="com.gg.e.abs.AaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
+
+        Keymob
+        <activity
+            android:name="com.keymob.sdk.core.KeymobActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Dialog" /> -->
         
     </application>
    

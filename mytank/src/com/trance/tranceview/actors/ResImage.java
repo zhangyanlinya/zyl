@@ -6,17 +6,20 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.trance.tranceview.MainActivity;
+import com.trance.trancetank.modules.player.model.PlayerDto;
 
 public class ResImage extends Image{
 	
 	private BitmapFont font;
 	
+	private PlayerDto player;
+	
 	private int resType;
 	
-	public ResImage(Texture texture, BitmapFont font, int resType) {
+	public ResImage(Texture texture, BitmapFont font, PlayerDto player, int resType) {
 		super(texture);
 		this.font = font;
+		this.player = player;
 		this.resType = resType;
 	}
 
@@ -26,13 +29,13 @@ public class ResImage extends Image{
 		font.setColor(Color.WHITE);
 		String number = "0";
 		if(resType == 1){
-			number = String.valueOf(MainActivity.player.getLevel());
+			number = String.valueOf(player.getLevel());
 		}else if(resType == 2){
-			number = String.valueOf(MainActivity.player.getGold());
+			number = String.valueOf(player.getGold());
 		}else if(resType == 3){
-			number = String.valueOf(MainActivity.player.getSilver());
+			number = String.valueOf(player.getSilver());
 		}else if(resType == 4){
-			number = String.valueOf(MainActivity.player.getFoods());
+			number = String.valueOf(player.getFoods());
 		}
 		font.draw(batch, number,this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 );
 	}

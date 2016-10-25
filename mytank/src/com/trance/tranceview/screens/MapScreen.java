@@ -477,16 +477,16 @@ public class MapScreen implements Screen ,InputProcessor{
 	
 	private void initPlayerInfo(){
 		int side = width / 5;
-		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, 1);
+		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, playerDto, 1);
 		level.setBounds(side, height - length , length, length);
 		stage.addActor(level);
-		ResImage gold = new ResImage(ResUtil.getInstance().getUi(UiType.GOLD),font, 2);
+		ResImage gold = new ResImage(ResUtil.getInstance().getUi(UiType.GOLD),font, playerDto, 2);
 		gold.setBounds(side * 2, height - length, length, length);
 		stage.addActor(gold);
-		ResImage silver = new ResImage(ResUtil.getInstance().getUi(UiType.SILVER),font, 3);
+		ResImage silver = new ResImage(ResUtil.getInstance().getUi(UiType.SILVER),font, playerDto, 3);
 		silver.setBounds(side * 3,  height - length, length, length);
 		stage.addActor(silver);
-		ResImage foods = new ResImage(ResUtil.getInstance().getUi(UiType.FOODS),font, 4);
+		ResImage foods = new ResImage(ResUtil.getInstance().getUi(UiType.FOODS),font, playerDto, 4);
 		foods.setBounds(side * 4, height - length, length, length);
 		stage.addActor(foods);
 	}
