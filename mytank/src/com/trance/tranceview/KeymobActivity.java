@@ -1,4 +1,4 @@
-/*package com.trance.tranceview;
+package com.trance.tranceview;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,7 +41,7 @@ public class KeymobActivity extends Activity {
 		AdManager.getInstance().initFromKeymobService(this, "10844", new AdEventListener(), false);// //10844  and set false 
 		AdManager.getInstance().showRelationBanner(BannerSizeType.BANNER, BannerPositions.BOTTOM_CENTER,800,this);
 //		AdManager.getInstance().loadInterstitial(this);
-//		new TimeThread().start();
+		new TimeThread().start();
 	}
 	
 	class AdEventListener implements IAdEventListener {
@@ -147,4 +147,4 @@ public class KeymobActivity extends Activity {
 		startActivity(intent);
 		KeymobActivity.this.finish();
 	}
-}*/
+}
