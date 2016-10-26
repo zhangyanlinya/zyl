@@ -62,13 +62,40 @@ public class Army extends GameActor{
 		case TANK:
 			range = 300;
 			atk = 20;
-			fireDelay = 200;
+			fireDelay = 300;
 			speed = 2;
 			break;
 		case FAT:
 			range = 100;
-			maxhp = 100;
 			hp = 100;
+			break;
+		case SISTER:
+			range = 500;
+			hp = 50;
+			speed = 1;
+			break;
+		case FOOT:
+			
+			break;
+		case FIVE:
+			fireDelay = 4000;
+			atk = 50;
+			speed = 0.5f;
+			break;
+		case SIX:
+			range = 800;
+			atk = 100;
+			move = false;
+			break;
+		case SEVEN:
+			hp = 100;
+			break;
+		case EIGHT:
+			speed = 4;
+			range = 20;
+			break;
+		case NINE:
+			atk = 150;
 			break;
 		default:
 			break;
@@ -77,7 +104,7 @@ public class Army extends GameActor{
 		ArmyDto dto = MainActivity.player.getArmys().get(armyType.id);
 		if(dto != null && dto.getLevel() > 0){
 //			atk *= dto.getLevel();//等级加成
-			atk += dto.getLevel();
+			atk *= dto.getLevel();
 		    hp *= dto.getLevel();
 		    maxhp = hp;
 		}

@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.keymob.networks.AdManager;
 import com.keymob.networks.core.BannerPositions;
@@ -39,7 +38,7 @@ public class KeymobActivity extends Activity {
 	private void initKeymobFromKeymobService(){
 		AdManager.setEnableLog(true);
 		AdManager.getInstance().initFromKeymobService(this, "10844", new AdEventListener(), false);// //10844  and set false 
-		AdManager.getInstance().showRelationBanner(BannerSizeType.BANNER, BannerPositions.BOTTOM_CENTER,800,this);
+//		AdManager.getInstance().showRelationBanner(BannerSizeType.BANNER, BannerPositions.BOTTOM_CENTER,800,this);
 //		AdManager.getInstance().loadInterstitial(this);
 		new TimeThread().start();
 	}
@@ -88,9 +87,12 @@ public class KeymobActivity extends Activity {
 		
 		public void handleMessage(android.os.Message msg) {
 			int count = msg.what;
-			if(count > 1){
-				Toast.makeText(KeymobActivity.this, count + "", Toast.LENGTH_SHORT).show();
+			if(count == 2){
+				AdManager.getInstance().showRelationBanner(BannerSizeType.BANNER, BannerPositions.BOTTOM_CENTER,600,KeymobActivity.this);
+			}else if (count == 3){
+				AdManager.getInstance().loadInterstitial(KeymobActivity.this);
 			}
+			
 			if(count <= 1){
 				startGme();
 			}

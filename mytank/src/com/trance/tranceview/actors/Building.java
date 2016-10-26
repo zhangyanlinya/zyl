@@ -64,10 +64,10 @@ public class Building extends GameActor{
 		}
 		
 		this.role = 0;
-		this.maxhp = hp;
 		
 		switch(type){
 		case BuildingType.OFFICE:
+			hp = 100; 
 			break;
 		case BuildingType.HOUSE:
 			break;
@@ -101,8 +101,9 @@ public class Building extends GameActor{
 		if(dto != null){
 			atk += dto.getLevel();
 		    hp *= dto.getLevel();
-		    maxhp = hp;
 		}
+		hp *= 10;
+		this.maxhp = hp;
 		
 		if(world == null){
 			body = null;
