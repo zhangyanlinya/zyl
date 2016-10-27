@@ -55,8 +55,10 @@ public class SocketUtil {
 	
 	public static Response send(Request request, boolean showDialog, boolean showMsg) {
 		Response response = clientService.send(request,showDialog);
-		if(response == null && showMsg){ 
-			MsgUtil.showMsg("连接服务器失败！");
+		if(response == null){
+			if(showDialog) {
+				MsgUtil.showMsg("连接服务器失败！");
+			}
 			return null;
 		}
 		
