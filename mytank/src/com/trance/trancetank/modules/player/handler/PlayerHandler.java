@@ -138,5 +138,33 @@ public class PlayerHandler extends HandlerSupport {
 				MsgUtil.showMsg(msg);
 			}
 		});
+
+		this.registerProcessor(new ResponseProcessorAdapter(){
+
+			@Override
+			public int getModule() {
+				return Module.PLAYER;
+			}
+
+			@Override
+			public int getCmd() {
+				return PlayerCmd.CLEAR_ANONYMOUS_SESSION;
+			}
+
+			@Override
+			public Object getType() {
+				return Integer.class;
+			}
+
+			@Override
+			public void callback(IoSession session, Response response,
+								 Object message) {
+				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+					return;
+				}
+
+				SocketUtil.heartbeat = false;
+			}
+		});
 	}
 }
