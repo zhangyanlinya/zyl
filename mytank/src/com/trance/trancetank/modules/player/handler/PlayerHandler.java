@@ -83,7 +83,7 @@ public class PlayerHandler extends HandlerSupport {
 					return;
 				}
 				int newLevel = (Integer) response.getValue();
-				System.out.println("收到推送等级提升...新等级＝" +newLevel);
+//				System.out.println("收到推送等级提升...新等级＝" +newLevel);
 				MsgUtil.showMsg("恭喜升级到"+newLevel +"级~");
 				MainActivity.player.setLevel(newLevel);
 			}
