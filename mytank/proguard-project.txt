@@ -31,11 +31,6 @@
 -optimizations !code/simplification/cast,!field/*,!class/merging/*
 
 
-#############################################
-#
-# Android开发中一些需要保留的公共部分
-#
-#############################################
 
 # 保留我们使用的四大组件，自定义的Application等等这些类不被混淆
 # 因为这些子类都有可能被外部调用
@@ -78,14 +73,6 @@
     public static ** valueOf(java.lang.String);
 }
 
-# 保留我们自定义控件（继承自View）不被混淆
--keep public class * extends android.view.View{
-    *** get*();
-    void set*(***);
-    public <init>(android.content.Context);
-    public <init>(android.content.Context, android.util.AttributeSet);
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-}
 
 # 保留Parcelable序列化类不被混淆
 -keep class * implements android.os.Parcelable {
@@ -114,11 +101,7 @@
 
 #-----------处理实体类---------------
 # 在开发的时候我们可以将所有的实体类放在一个包内，这样我们写一次混淆就行了。
--keep public class com.trance.trancetank.**.model.** {
-    public void set*(***);
-    public *** get*();
-    public *** is*();
-}
+-keep public class com.trance.trancetank.** {*;}
 
 
 # FastJson
