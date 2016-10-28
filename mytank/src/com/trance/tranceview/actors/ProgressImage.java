@@ -17,6 +17,8 @@ public class ProgressImage extends Image{
 	
 	private long expireTime;
 	
+	private boolean finish;
+	
 	public ProgressImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, long expireTime) {
 		super(region);
 		this.renderer = shapeRenderer;
@@ -50,6 +52,7 @@ public class ProgressImage extends Image{
 		
 		if(percent >= 1.0){
 			this.remove();
+			finish = true;
 		}
 			
 		renderer.setColor(Color.BLUE);
@@ -84,6 +87,10 @@ public class ProgressImage extends Image{
 
 	public void setExpireTime(long expireTime) {
 		this.expireTime = expireTime;
+	}
+
+	public boolean isFinish() {
+		return finish;
 	}
 	
 }

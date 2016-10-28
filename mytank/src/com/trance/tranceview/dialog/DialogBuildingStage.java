@@ -110,15 +110,23 @@ public class DialogBuildingStage extends BaseStage {
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					if(progress != null && !progress.isFinish()){
+						return;
+					}
 					updateBuilding(building.getId());
 				}
 			});
+    	}
+    	if(progress != null && !progress.isFinish()){
+    		addActor(progress);
     	}
     }
     
     public void hide(){
     	this.setVisible(false);
     }
+    
+    public ProgressImage progress;
 
     @SuppressWarnings("unchecked")
 	private void updateBuilding(int buildingId){
@@ -151,9 +159,9 @@ public class DialogBuildingStage extends BaseStage {
 					ElementUpgrade elementUpgrade = BasedbService.get(ElementUpgrade.class, buildingId);
 					if(elementUpgrade != null){
 						Texture texture = ResUtil.getInstance().getBuildingTexture(buildingId);
-						ProgressImage image = new ProgressImage(new TextureRegion(texture), renderer, elementUpgrade.getTime(), coolQueueDto.getExpireTime());
-						image.setBounds(getWidth()/2 - bgImage.getWidth()/2 + image.getWidth(),  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
-						addActor(image);
+						progress = new ProgressImage(new TextureRegion(texture), renderer, elementUpgrade.getTime(), coolQueueDto.getExpireTime());
+						progress.setBounds(getWidth()/2 - bgImage.getWidth()/2 + progress.getWidth(),  getHeight()/2 + bgImage.getHeight()/2 - 100, 100, 100);
+						addActor(progress);
 					}
 				}
 			}

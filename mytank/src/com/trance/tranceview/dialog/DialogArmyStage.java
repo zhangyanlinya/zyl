@@ -95,14 +95,6 @@ public class DialogArmyStage extends BaseStage {
 	    	image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
 	    	addActor(image);
 	    	
-//	    	image.addListener(new ClickListener(){
-//
-//				@Override
-//				public void clicked(InputEvent event, float x, float y) {
-//					
-//				}
-//	    	});
-	    	
 	    	Image train  = new Image(ResUtil.getInstance().getUi(UiType.LEVELUP));
 	    	train.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side,  getHeight()/2 + bgImage.getHeight()/2 - side * i , side, side);
 	    	train.addListener(new ClickListener(){
@@ -110,7 +102,7 @@ public class DialogArmyStage extends BaseStage {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					long now = TimeUtil.getServerTime();
-					if(armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now){//未到期
+					if(armyDto.getAddAmount() <= 0 || armyDto.getExpireTime() <= 0 || armyDto.getExpireTime() >  now){//未到期
 						trainArmy(armyTrain.getId());//
 					}else{
 						obtainArmy(armyTrain.getId());
