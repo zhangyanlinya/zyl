@@ -67,7 +67,7 @@ public class SocketUtil {
 				MsgUtil.showMsg("请重新登录");
 				return null;
 			}
-			offlineReconnect();
+//			offlineReconnect();
 		}
 		
 		return response;
@@ -105,9 +105,9 @@ public class SocketUtil {
 		params.put("server", "1");
 		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params), false, false);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			MsgUtil.showMsg("请重新登录");//心跳都超时了。
-			heartbeat = false;
-			return true;
+//			MsgUtil.showMsg("请重新登录");//心跳都超时了。
+//			heartbeat = false;
+			return false;
 		}
 		byte[] bytes = response.getValueBytes();
 		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
