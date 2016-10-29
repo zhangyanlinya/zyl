@@ -1,20 +1,14 @@
 package com.trance.tranceview.version;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -250,33 +244,43 @@ public class UpdateManager {
     //匿名内部类，apk文件下载线程
     private Runnable checkVersionRunnable = new Runnable() {
  
-        public void run() {//用HttpClient发送请求，分为五步
-            //第一步：创建HttpClient对象
-            HttpClient httpCient = new DefaultHttpClient();
-            httpCient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 3000);  
-            httpCient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 3000);
-            //第二步：创建代表请求的对象,参数是访问的服务器地址
-            HttpGet httpGet = new HttpGet(checkUrl);
-            try {
-                //第三步：执行请求，获取服务器发还的相应对象
-                HttpResponse httpResponse = httpCient.execute(httpGet);
-                //第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
-                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    //第五步：从相应对象当中取出数据，放到entity当中
-                    HttpEntity entity = httpResponse.getEntity();
-                    String response = EntityUtils.toString(entity,"utf-8");//将entity当中的数据转换为字符串
-                    
-                    //在子线程中将Message对象发出去
-                    Message message = new Message();
-                    message.what = VERSION_INFO;
-                    message.obj = response.toString();
-                    mhandler.sendMessage(message);
-                }
-                
-            } catch (Exception e) {
-            	Log.e(LogTag.TAG,"webserver connect fail ...");
-            }
-            
+        public void run() {
+			// 获得的数据
+        	InputStreamReader in = null;
+        	HttpURLConnection urlConn = null;
+			try {
+				// 构造一个URL对象
+				URL url = new URL(checkUrl);
+				urlConn = (HttpURLConnection) url.openConnection();
+				// 得到读取的内容(流)
+				in = new InputStreamReader(urlConn.getInputStream());
+				// 为输出创建BufferedReader
+				BufferedReader buffer = new BufferedReader(in);
+				String inputLine = null;
+				// 使用循环来读取获得的数据
+				String resultData = "";
+				while (((inputLine = buffer.readLine()) != null)) {
+					// 我们在每一行后面加上一个"\n"来换行
+					resultData += inputLine + "\n";
+				}
+				// 在子线程中将Message对象发出去
+				Message message = new Message();
+				message.what = VERSION_INFO;
+				message.obj = resultData;
+				mhandler.sendMessage(message);
+			} catch (Exception e) {
+				Log.e(LogTag.TAG, "http connect error");
+			}finally{
+				// 关闭InputStreamReader
+				if(in != null)
+					try {
+						in.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if(urlConn != null)
+				urlConn.disconnect();
+			}
         }
     };
     /*
