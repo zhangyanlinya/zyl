@@ -252,6 +252,7 @@ public class UpdateManager {
 				// 构造一个URL对象
 				URL url = new URL(checkUrl);
 				urlConn = (HttpURLConnection) url.openConnection();
+				urlConn.setConnectTimeout(3000);//三秒超时
 				// 得到读取的内容(流)
 				in = new InputStreamReader(urlConn.getInputStream());
 				// 为输出创建BufferedReader
