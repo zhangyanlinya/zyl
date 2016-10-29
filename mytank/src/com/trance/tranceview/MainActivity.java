@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,7 @@ import com.trance.common.socket.model.Request;
 import com.trance.trancetank.config.Module;
 import com.trance.trancetank.modules.player.handler.PlayerCmd;
 import com.trance.trancetank.modules.player.model.PlayerDto;
+import com.trance.tranceview.pay.Act;
 import com.trance.tranceview.screens.LoginScreen;
 import com.trance.tranceview.screens.WorldScreen;
 import com.trance.tranceview.utils.GetDeviceId;
@@ -95,7 +97,7 @@ public class MainActivity extends AndroidApplication {
 	    
 	    GetDeviceId getDeviceId  = new GetDeviceId(this);
 		userName = getDeviceId.getCombinedId();
-//		userName ="cc";//TODO TEST;
+		userName ="cc";//TODO TEST;
 		
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条  
@@ -115,6 +117,10 @@ public class MainActivity extends AndroidApplication {
 		
 		MsgUtil.init();
 		BasedbService.init(this);
+		
+		Intent intent = new Intent(this, Act.class);
+		startActivity(intent);
+		
 		isInit = true;
 	}
 	

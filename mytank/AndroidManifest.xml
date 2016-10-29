@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.trance.tranceview"
     android:installLocation="auto"
-    android:versionCode="25"
-    android:versionName="1.2.5" >
+    android:versionCode="26"
+    android:versionName="1.2.6" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -23,26 +23,21 @@
 	<uses-permission android:name="android.permission.WRITE_SETTINGS"/> -->
 	<!-- 百度 -->
 	
-	<!-- Keymob -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" /> 
-	<!-- Keymob -->
-	
     <application
        android:allowBackup="true"
        android:icon="@drawable/logo"
        android:label="@string/app_name"
        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.trance.tranceview.KeymobActivity"
+            android:name="com.trance.tranceview.MainActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.trance.tranceview.MainActivity"
+        <activity android:name="com.trance.tranceview.pay.Act"
+            android:theme="@android:style/Theme.Dialog"
             android:screenOrientation="portrait"></activity> 
         
         <!-- 百度 -->
@@ -64,22 +59,6 @@
             android:configChanges="orientation|screenSize" >
         </activity> -->
         <!-- 百度 -->
-        
-        <!-- Admob -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="8115000" />
-
-        <activity
-            android:name="com.gg.e.abs.AaActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
-
-       <!-- Keymob -->
-        <activity
-            android:name="com.keymob.sdk.core.KeymobActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Dialog" /> 
         
     </application>
    
